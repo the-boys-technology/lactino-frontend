@@ -3,6 +3,7 @@ import Campo from "./Campo";
 import Select from "./Select";
 import Botao from "./Botao";
 import { CampoConfig } from '../types/campos'; 
+import { useNavigate  } from "react-router-dom";
 
 
 interface GestaoFormProps {
@@ -12,6 +13,8 @@ interface GestaoFormProps {
 }
 
 function GestaoForm({ title, fields }: GestaoFormProps): React.ReactElement {
+    const navigate = useNavigate();
+
     return (
         <main className="paginaGestao">
             <section className="paginaGestao__container">
@@ -38,7 +41,7 @@ function GestaoForm({ title, fields }: GestaoFormProps): React.ReactElement {
                     })}
                 </section>
                 <section className="paginaGestao__botoes">
-                    <Botao label="Retornar" tipo="secondary"></Botao>
+                    <Botao label="Retornar" tipo="secondary" onClick={() => navigate('/selecionar-produto')}></Botao>
                     <Botao label="Salvar" tipo="primary"></Botao>
                 </section>
             </section>

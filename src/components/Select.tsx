@@ -9,14 +9,16 @@ interface Option {
 interface SelectProps {
     nome: string;
     options: Option[];
+    value?: string;
+    onChange?: (value: string) => void;
 }
 
-function Select({ nome, options }: SelectProps): React.ReactElement {
-    const [selectedValue, setSelectedValue] = useState<string | undefined>(undefined);
-
+function Select({ nome, options, value, onChange }: SelectProps): React.ReactElement {
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const value = event.target.value || undefined;
-        setSelectedValue(value);
+        const selected = event.target.value;
+        if (onChange) {
+            onChange(selected);
+        }
     };
 
     return (
@@ -24,17 +26,12 @@ function Select({ nome, options }: SelectProps): React.ReactElement {
             <h4 className="campo__nome">{nome}</h4>
             <select
                 className="campo__select"
-                name="produto"
-                value={selectedValue ?? ''}
+                value={value ?? ''}
                 onChange={handleChange}
             >
-                <option className="campo__select__opcao--padrao" value="" disabled>Selecione uma opção</option>
+                <option value="" disabled>Selecione uma opção</option>
                 {options.map((option) => (
-                    <option
-                        key={option.value}
-                        className="campo__select__opcao"
-                        value={option.value}
-                    >
+                    <option key={option.value} value={option.value}>
                         {option.label}
                     </option>
                 ))}
@@ -42,5 +39,6 @@ function Select({ nome, options }: SelectProps): React.ReactElement {
         </section>
     );
 }
+
 
 export default Select;

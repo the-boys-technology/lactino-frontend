@@ -21,8 +21,10 @@
   "homepage": "https://github.com/the-boys-technology/lactino-frontend#readme",
   "description": "",
   "dependencies": {
+    "lactino-frontend": "file:",
     "react": "^19.1.0",
-    "react-dom": "^19.1.0"
+    "react-dom": "^19.1.0",
+    "react-router-dom": "^7.5.3"
   },
   "devDependencies": {
     "@types/react": "^19.1.3",
