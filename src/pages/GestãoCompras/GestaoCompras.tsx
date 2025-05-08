@@ -1,4 +1,6 @@
-import './Buy.css';
+import Botao from '../../components/Botao';
+import Header from '../../components/Header';
+import './GestaoCompras.css';
 
 export default function GestaoCompras() {
   return (
@@ -58,7 +60,7 @@ export default function GestaoCompras() {
       </section>
 
       <footer className="compras__footer">
-        <button className="compras__submit">Registrar Compra</button>
+      <Botao tipo="primary" label="Registrar Compra" />
       </footer>
     </div>
   );
