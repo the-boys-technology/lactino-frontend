@@ -1,0 +1,92 @@
+.compras {
+    position: relative;
+    padding: 2rem;
+  }
+  
+  .compras__header {
+    background-color: #0F306E;
+    padding: 1rem;
+    color: #F9FAFB;
+  }
+  
+  .compras__header-title {
+    font-size: 2.5rem;
+    font-weight: 600;
+  }
+  
+  .compras__filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 2rem 0;
+  }
+  
+  .compras__filter {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+  }
+  
+  .compras__label {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    color: #000;
+  }
+  
+  .compras__input {
+    height: 40px;
+    padding: 0 1rem;
+    border: 1px solid #464433;
+    border-radius: 20px;
+  }
+  
+  .compras__table-container {
+    background: #f9fafb;
+    padding: 1rem;
+    border-radius: 10px;
+    margin-bottom: 2rem;
+  }
+  
+  .compras__table-head,
+  .compras__table-row {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 1rem;
+    padding: 1rem 0;
+    align-items: center;
+    border-bottom: 1px solid #000;
+  }
+  
+  .compras__th {
+    font-weight: 700;
+    color: #1F2937;
+  }
+  
+  .compras__td {
+    font-weight: 400;
+    color: #1F2937;
+  }
+  
+  .compras__button {
+    padding: 0.5rem 1rem;
+    background: #00000037;
+    border-radius: 5%;
+    cursor: pointer;
+  }
+  
+  .compras__footer {
+    display: flex;
+    justify-content: flex-end;
+  }
+  
+  .compras__submit {
+    width: 240px;
+    height: 66px;
+    background: #2563EB;
+    color: #F9FAFB;
+    font-size: 1.25rem;
+    font-weight: 700;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
