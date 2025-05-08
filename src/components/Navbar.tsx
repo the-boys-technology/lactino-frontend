@@ -1,16 +1,25 @@
-import "../css/navbar.css"
+import { Link } from "react-router-dom";
+import "../css/navbar.css";
 
 function Navbar(): React.ReactElement {
     return (
-    <nav className="navbar">
-        <ul className="navbar__lista">
-            <li className="navbar__lista__item"><a href="/selecionar-produto">Gerenciamento do Produto</a></li>
-            <li className="navbar__lista__item"><a href="#">Estoque</a></li>
-            <li className="navbar__lista__item"><a href="#">Compra</a></li>
-            <li className="navbar__lista__item"><a href="#">Venda</a></li>
-        </ul>
-    </nav>
-    )
+        <nav className="navbar">
+            <ul className="navbar__lista">
+                <li className="navbar__lista__item">
+                    <Link to="/selecionar-produto">Gerenciamento do Produto</Link>
+                </li>
+                <li className="navbar__lista__item">
+                    <Link to="/estoque">Estoque</Link>
+                </li>
+                <li className="navbar__lista__item">
+                    <Link to="/compra">Compra</Link>
+                </li>
+                <li className="navbar__lista__item">
+                    <Link to="/venda">Venda</Link>
+                </li>
+            </ul>
+        </nav>
+    );
 }
 
 export default Navbar;
