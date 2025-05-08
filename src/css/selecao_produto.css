@@ -1,0 +1,56 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+}
+
+:root {
+    --primary-font-color: #F9FAFB;
+    --primary-text-color: #1F2937;
+    --secondary-text-color: #4B5563;
+    --unfocused-background-color: rgba(0, 0, 0, 0.3);
+    --border-color: #E5E7EB;
+    --border-color-dark: #464433;
+    --border-radius-value: 27px;
+    --regular: 400;
+    --semibold: 600;
+    --bold: 700;
+}
+
+.paginaSelecao {
+    display: flex;
+    justify-content: center;  
+    align-items: center;      
+    height: 100vh;            
+    width: 100vw;
+}
+
+.paginaSelecao__container {
+    background-color: var(--primary-font-color);
+    width: 60%;
+    height: 50%;
+    display: flex;             
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    border-radius: var(--border-radius-value); 
+    border: 1px solid var(--border-color);       
+    box-shadow: 0 0 10px rgba(0,0,0,0.1); 
+}
+
+.paginaSelecao__titulo {
+    color: var(--primary-text-color);
+    font-weight: var(--bold);
+    font-size: 35px;
+}
+
+.paginaSelecao__select {
+    width: 80%;
+}
+
+.paginaSelecao__botoes {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+}
