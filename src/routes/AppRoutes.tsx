@@ -1,15 +1,16 @@
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { Home } from '../pages/Home/Home';
-import Compras from '../pages/GestãoCompras/GestaoCompras';
 import NotFound from '../pages/NotFound/NotFound';
 import SelecaoProdutoPage from '../pages/SelecaoProdutoPage';
 import GestaoLeitePage from '../pages/GestaoLeitePage';
 import GestaoLaticinioPage from '../pages/GestaoLaticinioPage';
 import GestaoCompras from '../pages/GestãoCompras/GestaoCompras';
+import Header from '../components/Header';
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
+    <Header />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/gestao-compras" element={<GestaoCompras />} />
