@@ -1,0 +1,38 @@
+.campo {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    margin-bottom: 1rem;
+}
+
+.campo__nome {
+    color: var(--secondary-text-color);
+    font-weight: var(--semibold);
+    width: 30%; 
+    text-align: right;
+    padding-right: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.campo__select {
+    flex: 1;
+    max-width: 100%;
+    border-radius: var(--border-radius-value);
+    background-color: var(--primary-font-color);
+    border: 1px solid var(--border-color-dark);
+    padding: 0.5rem;
+    text-align: center;
+    text-align-last: center;
+}
+
+
+.campo__select__opcao--padrao {
+    color: var(--secondary-text-color);
+}
+
+.campo__select__opcao {
+    color: var(--primary-text-color);
+}

@@ -1,7 +1,7 @@
-import React from 'react'
+import AppRoutes from './routes/AppRoutes';
 
 function App() {
-  return <h1>Hello, React + TypeScript!</h1>
+  return <AppRoutes />;
 }
 
-export default App
+export default App;
