@@ -1,6 +1,6 @@
 import './Buy.css';
 
-export default function Compras() {
+export default function GestaoCompras() {
   return (
     <div className="compras">
       <header className="compras__header">
