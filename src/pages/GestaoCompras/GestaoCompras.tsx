@@ -21,36 +21,33 @@ export default function GestaoCompras() {
       {/* Filtros (campos de busca) */}
       <section className="compras__filtros">
         <div className="compras__linha">
-          <Campo type="text" placeholder="Pedido" />
+          <Campo type="text" placeholder="Fornecedor" />
           <Campo type="text" placeholder="Tipo de Insumo" />
           <Campo type="text" placeholder="Produto" />
         </div>
         <div className="compras__linha">
-          <Campo type="text" placeholder="Fornecedor" />
-          <Campo type="text" placeholder="Período da Compra" />
-          <Campo type="text" placeholder="Faixa de Valor" />
+          <Campo type="date" placeholder="Período da Compra" />
+          <Campo type="number" placeholder="Faixa de Valor" />
         </div>
       </section>
 
       {/* Tabela de compras */}
       <section className="compras__tabela">
         <div className="compras__tabela-cabecalho">
-          <span className="compras__coluna">Pedido</span>
+                    <span className="compras__coluna">Fornecedor</span>
           <span className="compras__coluna">Tipo</span>
           <span className="compras__coluna">Produto</span>
           <span className="compras__coluna">Quantidade</span>
-          <span className="compras__coluna">Fornecedor</span>
           <span className="compras__coluna">Data</span>
           <span className="compras__coluna">Total</span>
           <span className="compras__coluna">Ações</span>
         </div>
         {compras.map((item, index) => (
           <div key={index} className="compras__tabela-linha">
-            <span className="compras__coluna-dado">{item.pedido}</span>
+            <span className="compras__coluna-dado">{item.fornecedor}</span>
             <span className="compras__coluna-dado">{item.tipoInsumo}</span>
             <span className="compras__coluna-dado">{item.produto}</span>
             <span className="compras__coluna-dado">{item.quantidade}</span>
-            <span className="compras__coluna-dado">{item.fornecedor}</span>
             <span className="compras__coluna-dado">{item.dataCompra}</span>
             <span className="compras__coluna-dado">{item.valorTotal}</span>
             <span className="compras__coluna-dado">
