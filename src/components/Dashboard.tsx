@@ -1,6 +1,7 @@
 import React from 'react'
 import Header from './Header'
 import Card from './Card'
+import Botao from './Botao'
 import '../css/dashboard.css'
 
 export default function Dashboard() {
@@ -9,11 +10,11 @@ export default function Dashboard() {
         <h1 className='dashboard__welcome'>Bem-vindo(a), Fulano!</h1>
       <div className="dashboard__grid">
         <Card title="A Receber" value="R$ 2.460,00" type='inflow' size='medium'>
-          <button className="dashboard__button">Novo Recebimento</button>
+          <Botao label='Novo Recebimento' tipo='primary'></Botao>
         </Card>
 
         <Card title="A Pagar" value="R$ 3.276,00" type='outflow' size='medium'>
-          <button className="dashboard__button">Novo Pagamento</button>
+          <Botao label='Novo Pagamento' tipo='primary'></Botao>
         </Card>
 
         <Card title="A Vencer">
@@ -36,11 +37,11 @@ export default function Dashboard() {
         </Card>
 
         <Card title="Gerencie seus clientes">
-          <button className="dashboard__button">Acessar CRM</button>
+          <Botao label='Acessar CRM 'tipo='primary'></Botao>
         </Card>
 
         <Card title="Mantenha-se em dia com a Vigilância Sanitária">
-          <button className="dashboard__button">Saiba Mais</button>
+          <Botao label='Saiba Mais 'tipo='primary'></Botao>
         </Card>
       </div>
     </div>
