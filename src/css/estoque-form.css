@@ -1,0 +1,33 @@
+.estoque-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 1rem 0;
+    padding: 0rem 1.5rem;
+}
+
+.estoque-form__label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem; 
+}
+
+.estoque-form__row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.estoque-form__input {
+    padding: 0.5rem;
+    border: 1px solid #464433;
+    border-radius: 20px;
+    min-width: 180px;
+}
+
+.estoque-form__input--large {
+    padding: 0.5rem;
+    border: 1px solid #464433;
+    border-radius: 20px;
+    min-width: 600px;
+}
