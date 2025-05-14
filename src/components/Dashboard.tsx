@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Header from './Header'
 import Card from './Card'
 import '../css/dashboard.css'
+import Botao from './Botao'
 
 export default function Dashboard() {
+  const [showPopup, setShowPopup] = useState(false)
+  
   return (
     <div className="dashboard">
         <h1 className='dashboard__welcome'>Bem-vindo(a), Fulano!</h1>
@@ -39,10 +42,16 @@ export default function Dashboard() {
           <button className="dashboard__button">Acessar CRM</button>
         </Card>
 
-        <Card title="Mantenha-se em dia com a Vigilância Sanitária">
-          <button className="dashboard__button">Saiba Mais</button>
+        <Card 
+          title="Mantenha-se em dia com a Vigilância Sanitária">
+          <Botao 
+            tipo="primary" 
+            label="Saiba Mais" 
+            onClick={() => setShowPopup(true)} />
         </Card>
+
       </div>
+      {showPopup && <PopupVigilancia onClose={() => setShowPopup(false)} />}
     </div>
   )
 }
