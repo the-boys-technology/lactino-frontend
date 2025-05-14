@@ -8,16 +8,21 @@ export default function EstoqueTable() {
         <thead>
           <tr>
             <th>Código</th>
-            <th>Descrição</th>
+            <th className="estoque-table__table__th--large">Nome</th>
+            <th>Categoria</th>
+            <th>Unidade de medida</th>
+            <th>Quantidade</th>
+            <th>Quantidade mínima</th>
+            <th>Preço</th>
             <th>Fornecedor</th>
-            <th>Setor</th>
             <th>Validade</th>
+            <th>Status</th>
           </tr>
         </thead>
         <tbody>
           {/* MAPEAMENTO DE DADOS DINAMICOS AQUI */}
           <tr>
-            <td colSpan={5} style={{ textAlign: 'center' }}>Nenhum item cadastrado</td>
+            <td colSpan={10} style={{ textAlign: 'center' }}>Nenhum item cadastrado</td>
           </tr>
         </tbody>
       </table>

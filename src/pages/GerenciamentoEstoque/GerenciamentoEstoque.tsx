@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import '../../css/gerenciamento-estoque.css'
 import EstoqueForm from '../../components/EstoqueForm'
 import EstoqueTable from '../../components/EstoqueTable'
+import EstoqueItemForm from '../../components/EstoqueItemForm'
 import Botao from '../../components/Botao'
 import Modal from '../../components/Modal'
 
@@ -28,7 +29,7 @@ export default function EstoquePage() {
 
       {modalAberto === 'adicionar' && (
         <Modal titulo="Adicionar item" onClose={() => setModalAberto(null)}>
-          <EstoqueForm />
+          <EstoqueItemForm />
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
             <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} />
             <Botao label="Adicionar" tipo="primary" onClick={() => {
@@ -39,7 +40,7 @@ export default function EstoquePage() {
       )}
       {modalAberto === 'editar' && (
         <Modal titulo="Editar item" onClose={() => setModalAberto(null)}>
-          <EstoqueForm />
+          <EstoqueItemForm />
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
             <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} />
             <Botao label="Salvar" tipo="primary" onClick={() => {

@@ -10,7 +10,7 @@ export default function EstoqueForm() {
           <input type="text" className="estoque-form__input" />
         </label>
         <label className="estoque-form__label">
-          Descrição: 
+          Nome: 
           <input type="text" className="estoque-form__input--large" />
         </label>
         <label className="estoque-form__label">
@@ -20,11 +20,12 @@ export default function EstoqueForm() {
       </div>
       <div className="estoque-form__row">
         <label className="estoque-form__label">
-          Setor: 
+          Categoria: 
           <select className="estoque-form__input">
             <option value="">Selecione</option>
-            <option value="1">Refrigeração</option>
-            <option value="2">Armazenamento</option>
+            <option value="1">Ração</option>
+            <option value="2">Remédio</option>\
+            <option value="3">Outros</option>
           </select>
         </label>
         <label className="estoque-form__label">
