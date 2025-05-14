@@ -2,23 +2,24 @@ import React, { useState } from "react";
 import Campo from "../../../components/Campo";
 import Botao from "../../../components/Botao";
 import "../ModalCompras/ModalCompras.css";
+import { Compra } from "../../../types/compras";
 
 interface Props {
   onClose: () => void;
-  onSave: (data: any) => void;
+  onSave: (data: Compra) => void;
 }
 
 export default function ModalCompra({ onClose, onSave }: Props) {
-  const [form, setForm] = useState({
+  const [form, setForm] = useState<Omit<Compra, "valorTotal">>({
     fornecedor: "",
     tipoInsumo: "",
     produto: "",
-    dataCompra: "",
+    dataCompra: new Date(),
     formaPagamento: "",
-    quantidade: "",
-    valorUnitario: "",
+    quantidade: 0,
+    valorUnitario: 0,
     valorTotal: "",
-    validadeProduto: "",
+    validadeProduto: new Date(),
     observacao: ""
   });
 

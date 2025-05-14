@@ -3,10 +3,11 @@ import ModalCompra from "../../features/GestãoCompras/ModalCompras/ModalCompras
 import Campo from "../../components/Campo";
 import Botao from "../../components/Botao";
 import "../GestaoCompras/GestaoCompras.css";
+import { Compra } from "../../types/compras";
 
 export default function GestaoCompras() {
   const [modalAberto, setModalAberto] = useState(false);
-  const [compras, setCompras] = useState<any[]>([]);
+  const [compras, setCompras] = useState<Compra[]>([]);
 
   const handleNovaCompra = (compra: any) => {
     setCompras([...compras, compra]);
@@ -32,40 +33,44 @@ export default function GestaoCompras() {
       </section>
 
       {/* Tabela de compras */}
-      <section className="compras__tabela">
+            <section className="compras__tabela">
         <div className="compras__tabela-cabecalho">
-                    <span className="compras__coluna">Fornecedor</span>
-          <span className="compras__coluna">Tipo</span>
-          <span className="compras__coluna">Produto</span>
-          <span className="compras__coluna">Quantidade</span>
-          <span className="compras__coluna">Data</span>
-          <span className="compras__coluna">Total</span>
-          <span className="compras__coluna">Ações</span>
+          <span>Fornecedor</span>
+          <span>Produto</span>
+          <span>Quantidade</span>
+          <span>Data</span>
+          <span>Valor</span>
+          <span>Forma</span>
+          <span>Validade</span>
+          <span>Ações</span>
         </div>
+
         {compras.map((item, index) => (
           <div key={index} className="compras__tabela-linha">
-            <span className="compras__coluna-dado">{item.fornecedor}</span>
-            <span className="compras__coluna-dado">{item.tipoInsumo}</span>
-            <span className="compras__coluna-dado">{item.produto}</span>
-            <span className="compras__coluna-dado">{item.quantidade}</span>
-            <span className="compras__coluna-dado">{item.dataCompra}</span>
-            <span className="compras__coluna-dado">{item.valorTotal}</span>
-            <span className="compras__coluna-dado">
-              <button className="compras__ver-relatorio">🔍 Ver Relatório</button>
-            </span>
+            <span>{item.fornecedor}</span>
+            <span>{item.produto}</span>
+            <span>{item.quantidade}</span>
+            <span>{item.dataCompra.toLocaleDateString()}</span>
+            <span>R$ {item.valorTotal.toFixed(2)}</span>
+            <span>{item.formaPagamento}</span>
+            <span>{item.validadeProduto.toLocaleDateString()}</span>
+            <button className="compras__ver-relatorio">🔍 Ver Relatório</button>
           </div>
         ))}
       </section>
 
-      {/* Botão para abrir modal */}
       <footer className="compras__footer">
-        <Botao tipo="primary" label="Registrar Compra" onClick={() => setModalAberto(true)} />
+        <Botao 
+          tipo="primary" 
+          label="Registrar Compra" 
+          onClick={() => setModalAberto(true)} 
+        />
       </footer>
 
       {modalAberto && (
-        <ModalCompra
-          onClose={() => setModalAberto(false)}
-          onSave={handleNovaCompra}
+        <ModalCompra 
+          onClose={() => setModalAberto(false)} 
+          onSave={handleNovaCompra} 
         />
       )}
     </div>
