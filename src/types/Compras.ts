@@ -1,15 +1,28 @@
-export type TipoInsumo = "Medicamento" | "Ração" | "Vacina" | "Outro";
-export type FormaPagamento = "Dinheiro" | "Cartão" | "Boleto" | "Pix" | "Outro";
+export enum TipoInsumo {
+  "Medicamento",
+  "Ração",
+  "Vacina",
+  "Leite",
+  "Queijo",
+  "Outro",
+}
+export enum FormaPagamento {
+  "Dinheiro",
+  "Cartão",
+  "Boleto",
+  "Pix",
+  "Outro",
+}
 
 export interface Compra {
-  tipoInsumo: TipoInsumo;
+  tipoInsumo?: TipoInsumo | undefined;
   produto: string;
   dataCompra: Date;
-  formaPagamento: FormaPagamento;
+  formaPagamento?: FormaPagamento | undefined;
   quantidade: number;
   valorUnitario: number;
-  valorTotal: number;
+  valorTotal?: number | undefined;
   validadeProduto: Date;
-  fornecedor: string;
-  observacao: string;
+  fornecedor: string | undefined;
+  observacao?: string;
 }
