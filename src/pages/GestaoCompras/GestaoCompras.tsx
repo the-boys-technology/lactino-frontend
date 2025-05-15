@@ -23,7 +23,7 @@ export default function GestaoCompras() {
       <section className="compras__filtros">
         <div className="compras__linha">
           <Campo type="text" placeholder="Fornecedor" />
-          <Campo type="text" placeholder="Tipo de Insumo" />
+          <Campo type="select" placeholder="Tipo de Insumo" />
           <Campo type="text" placeholder="Produto" />
         </div>
         <div className="compras__linha">

@@ -11,7 +11,7 @@ import Header from '../components/Header';
 export default function AppRoutes() {
   return (
     <BrowserRouter>
-    <Header />
+    <Header/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />

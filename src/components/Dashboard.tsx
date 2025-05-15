@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Header from './Header'
 import Card from './Card'
 import '../css/dashboard.css'
@@ -45,7 +45,7 @@ export default function Dashboard() {
 
         <Card 
           title="Mantenha-se em dia com a Vigilância Sanitária">
-          <Botao 
+          <Botao
             tipo="primary" 
             label="Saiba Mais" 
             onClick={() => setShowPopup(true)} />
