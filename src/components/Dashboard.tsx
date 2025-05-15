@@ -2,7 +2,7 @@ import { useState } from 'react'
 import Header from './Header'
 import Card from './Card'
 import '../css/dashboard.css'
-import Botao from './Botao'
+import Botao from '../components/Botao'
 import PopupVigilancia from '../features/Home/PopUpVigilancia/PopupVigilancia'
 
 export default function Dashboard() {
