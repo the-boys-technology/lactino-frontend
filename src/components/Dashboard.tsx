@@ -1,10 +1,13 @@
-import React from 'react'
+import { useState } from 'react'
 import Header from './Header'
 import Card from './Card'
-import Botao from './Botao'
 import '../css/dashboard.css'
+import Botao from '../components/Botao'
+import PopupVigilancia from '../features/Home/PopUpVigilancia/PopupVigilancia'
 
 export default function Dashboard() {
+  const [showPopup, setShowPopup] = useState(false)
+  
   return (
     <div className="dashboard">
         <h1 className='dashboard__welcome'>Bem-vindo(a), Fulano!</h1>
@@ -40,10 +43,16 @@ export default function Dashboard() {
           <Botao label='Acessar CRM 'tipo='primary'></Botao>
         </Card>
 
-        <Card title="Mantenha-se em dia com a Vigilância Sanitária">
-          <Botao label='Saiba Mais 'tipo='primary'></Botao>
+        <Card 
+          title="Mantenha-se em dia com a Vigilância Sanitária">
+          <Botao
+            tipo="primary" 
+            label="Saiba Mais" 
+            onClick={() => setShowPopup(true)} />
         </Card>
+
       </div>
+      {showPopup && <PopupVigilancia onClose={() => setShowPopup(false)} />}
     </div>
   )
 }

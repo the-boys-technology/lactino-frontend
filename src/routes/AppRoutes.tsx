@@ -4,14 +4,14 @@ import NotFound from '../pages/NotFound/NotFound';
 import SelecaoProdutoPage from '../pages/SelecaoProdutoPage';
 import GestaoLeitePage from '../pages/GestaoLeitePage';
 import GestaoLaticinioPage from '../pages/GestaoLaticinioPage';
-import GestaoCompras from '../pages/GestãoCompras/GestaoCompras';
+import GestaoCompras from '../pages/GestaoCompras/GestaoCompras';
 import GerenciamentoEstoque from '../pages/GerenciamentoEstoque/GerenciamentoEstoque'
 import Header from '../components/Header';
 
 export default function AppRoutes() {
   return (
     <BrowserRouter>
-    <Header />
+    <Header/>
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
