@@ -15,7 +15,7 @@
   background: #F9FAFB;
   border: 1px solid #464433;
   border-radius: 27px;
-  width: 80%;
+  width: 60%;
   max-width: 1140px;
   padding: 3rem;
   position: relative;
@@ -23,7 +23,7 @@
 }
 
 .popup-vigilancia__titulo {
-  font-size: 2.5rem;
+  font-size: 2.2rem;
   font-weight: 700;
   color: #1F2937;
 }
