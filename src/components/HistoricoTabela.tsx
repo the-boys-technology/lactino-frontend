@@ -58,7 +58,7 @@ export default function HistoricoTabela() {
           <button className='historico-container__botao-retornar' onClick={handleAddItem}>
             <img
               className='historico-container__img-retornar'
-              src='../img/retornar.png'
+              src='../img/arrow-left-circle.svg'
               alt='retornar'
             />
           </button>
