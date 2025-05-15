@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import Header from './Header'
 import Card from './Card'
-import Botao from './Botao'
 import '../css/dashboard.css'
 import Botao from './Botao'
 import PopupVigilancia from '../features/Home/PopUpVigilancia/PopupVigilancia'
