@@ -3,6 +3,7 @@ import Header from './Header'
 import Card from './Card'
 import '../css/dashboard.css'
 import Botao from './Botao'
+import PopupVigilancia from '../features/Home/PopUpVigilancia/PopupVigilancia'
 
 export default function Dashboard() {
   const [showPopup, setShowPopup] = useState(false)
