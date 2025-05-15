@@ -42,7 +42,7 @@ function GestaoForm({ title, fields }: GestaoFormProps): React.ReactElement {
                 </section>
                 <section className="paginaGestao__botoes">
                     <Botao label="Retornar" tipo="secondary" onClick={() => navigate('/selecionar-produto')}></Botao>
-                    <Botao label="Salvar" tipo="primary"></Botao>
+                    <Botao label="Salvar" tipo="primary" onClick={() => navigate('/historico')}></Botao>
                 </section>
             </section>
         </main>

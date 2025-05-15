@@ -1,0 +1,46 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+}
+
+:root {
+    --primary-button-color: #2563EB;
+    --secondary-button-color: #DAE0ED;
+    --danger-button-color: #EF4444;
+    --success-button-color: #10B981;
+    --primary-font-color: #F9FAFB;
+    --secondary-font-color: #1F2937;
+    --border-color: #E5E7EB;
+    --primary-background-color: #0F306E;
+    --primary-text-color: #1F2937;
+    --secondary-text-color: #4B5563;
+    --header-cell-color: #D9D9D9;
+    --table-lines-color: #000000;
+    --border-radius-value: 25px;
+    --regular: 400;
+    --semibold: 600;
+    --bold: 700;
+}
+
+/* Header cells */
+.tabela-container__table th {
+  background-color: var(--header-cell-color);
+  color: var(--primary-text-color);
+  font-weight: var(--bold);
+  padding: 5px;
+  border: 1px solid var(--table-lines-color);
+  text-align: center;
+  position: sticky;  /* keep headers visible */
+  top: 0;
+  z-index: 1;
+}
+
+/* Data cells */
+.tabela-container__table td {
+  padding: 12px;
+  border: 1px solid var(--table-lines-color);
+  color: var(--primary-text-color);
+  background-color: var(--primary-font-color);
+  vertical-align: middle;
+}
