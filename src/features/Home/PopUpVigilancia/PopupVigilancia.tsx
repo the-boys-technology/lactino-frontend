@@ -1,6 +1,7 @@
 import "../PopUpVigilancia/PopupVigilancia.css";
 import infoIcon from "../../../assets/FaInfoCircle.png";
 import arrowIcon from "../../../assets/FaArrowRight.png";
+import closeIcon from "../../../assets/Close.png";
 
 interface Props {
   onClose: () => void;
@@ -25,7 +26,7 @@ export default function PopupVigilancia({ onClose }: Props) {
 
         <button
           className="popup-vigilancia__botao"
-          onClick={() => window.open("https://sistema.vigilancia.gov.br", "_blank")}
+          onClick={() => window.open("https://wikisda.agricultura.gov.br/pt-br/Inspe%C3%A7%C3%A3o-Animal/Produto-Origem-Animal/manual_leite", "_blank")}
         >
           Acessar Sistema da Vigilância Sanitária
           <img src={arrowIcon} alt="Acessar" />
@@ -34,7 +35,9 @@ export default function PopupVigilancia({ onClose }: Props) {
         <p className="popup-vigilancia__suporte">
           Em caso de dúvidas, entre em contato com o suporte técnico
         </p>
-        <button className="popup-vigilancia__fechar" onClick={onClose}>Fechar</button>
+        <button className="popup-vigilancia__fechar" onClick={onClose}>
+            <img src={closeIcon} alt="Close" />
+        </button>
       </div>
     </div>
   );
