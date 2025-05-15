@@ -29,6 +29,7 @@
 
 .botao:hover {
     cursor: pointer;
+    background-color: #0d47a1;
 }
 
 .primary {

@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import "../css/header.css"
 import Navbar from "./Navbar"
 
@@ -10,7 +11,9 @@ function Header(): React.ReactElement {
                 <section className="header__menu--linha"></section>
                 <section className="header__menu--linha"></section>
             </a>
-            <h1 className="header__nome-empresa">LACTINO</h1>
+            <h1 className="header__nome-empresa">
+            <Link to="/">LACTINO</Link>
+            </h1>
         </section>
         <Navbar />
     </header>

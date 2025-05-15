@@ -49,10 +49,11 @@
     border-radius: var(--border-radius-value);
 }
 
-.header__nome-empresa {
+.header__nome-empresa a {
     font-size: 30px;
     color: var(--primary-font-color);
     font-weight: var(--semibold);
+    text-decoration: none;
 }
 
 
