@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Campo from "../../../components/Campo";
 import Botao from "../../../components/Botao";
 import "../ModalCompras/ModalCompras.css";
-import { Compra } from "../../../types/compras";
+import { Compra, FormaPagamento, TipoInsumo } from "../../../types/compras";
 
 interface Props {
   onClose: () => void;
@@ -11,26 +11,42 @@ interface Props {
 
 export default function ModalCompra({ onClose, onSave }: Props) {
   const [form, setForm] = useState<Omit<Compra, "valorTotal">>({
-    fornecedor: "",
-    tipoInsumo: "",
-    produto: "",
-    dataCompra: new Date(),
-    formaPagamento: "",
-    quantidade: 0,
-    valorUnitario: 0,
-    valorTotal: "",
-    validadeProduto: new Date(),
-    observacao: ""
-  });
+  fornecedor: "",
+  tipoInsumo: TipoInsumo.Medicamento,
+  produto: "",
+  dataCompra: new Date(),
+  formaPagamento: FormaPagamento.Dinheiro,
+  quantidade: 0,
+  valorUnitario: 0,
+  validadeProduto: new Date(),
+  observacao: ""
+});
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (
+  e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
+) => {
+  const { name, value } = e.target;
+
+  setForm(prev => ({
+    ...prev,
+    [name]: name === "quantidade" || name === "valorUnitario"
+      ? Number(value)
+      : name === "dataCompra" || name === "validadeProduto"
+      ? new Date(value)
+      : value
+  }));
+};
 
   const handleSubmit = () => {
-    onSave(form);
-    onClose();
+  const compraCompleta: Compra = {
+    ...form,
+    valorTotal: form.quantidade * form.valorUnitario
   };
+
+  onSave(compraCompleta);
+  onClose();
+};
+
 
   return (
     <div className="modal">

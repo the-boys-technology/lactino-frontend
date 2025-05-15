@@ -21,7 +21,7 @@ export interface Compra {
   formaPagamento?: FormaPagamento | undefined;
   quantidade: number;
   valorUnitario: number;
-  valorTotal?: number | undefined;
+  valorTotal: number;
   validadeProduto: Date;
   fornecedor: string | undefined;
   observacao?: string;
