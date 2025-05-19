@@ -2,23 +2,11 @@ import React, { useEffect, useState } from 'react'
 import '../css/estoque-table.css'
 import { buscarInsumos } from '../services/estoque'
 
-export default function EstoqueTable() {
-  const [insumos, setInsumos] = useState<any[]>([])
+interface EstoqueTableProps {
+  insumos: any[]
+}
 
-  useEffect(() => {
-    const carregarInsumos = async () => {
-      try {
-        const resposta = await buscarInsumos()
-        console.log(`RES: ${resposta}`)
-        setInsumos(resposta.data.content)
-      } catch (erro) {
-        console.error('Erro ao carregar insumos:', erro)
-      }
-    }
-
-    carregarInsumos()
-  }, [])
-
+export default function EstoqueTable({ insumos }: EstoqueTableProps) {
   return (
     <div className="estoque-table">
       <table className="estoque-table__table">
@@ -37,25 +25,25 @@ export default function EstoqueTable() {
           </tr>
         </thead>
         <tbody>
-          {insumos.length > 0 ? (
-            insumos.map((item) => (
-              <tr key={item.id}>
-                <td>{item.id}</td>
-                <td>{item.nome}</td>
-                <td>{item.categoria}</td>
-                <td>{item.unidadeMedida}</td>
-                <td>{item.quantidadeTotal}</td>
-                <td>{item.quantidadeMinima}</td>
-                <td>{item.preco}</td>
-                <td>{item.fornecedor}</td>
-                <td>{item.validade ? new Date(item.validade).toLocaleDateString() : ''}</td>
-                <td>{item.status}</td>
-              </tr>
-            ))
-          ) : (
+          {insumos.length === 0 ? (
             <tr>
               <td colSpan={10} style={{ textAlign: 'center' }}>Nenhum item cadastrado</td>
             </tr>
+          ) : (
+            insumos.map((insumo) => (
+              <tr key={insumo.id}>
+                <td>{insumo.id}</td>
+                <td>{insumo.nome}</td>
+                <td>{insumo.categoria}</td>
+                <td>{insumo.unidadeMedida}</td>
+                <td>{insumo.quantidadeTotal}</td>
+                <td>{insumo.quantidadeMinima}</td>
+                <td>{insumo.preco}</td>
+                <td>{insumo.fornecedor}</td>
+                <td>{insumo.validade}</td>
+                <td>{insumo.status}</td>
+              </tr>
+            ))
           )}
         </tbody>
       </table>

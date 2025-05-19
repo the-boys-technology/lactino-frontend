@@ -21,7 +21,16 @@ export default function EstoqueItemForm({ onSubmit, formRef }: EstoqueItemFormPr
       onSubmit={(e) => {
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
-        const dados = Object.fromEntries(formData.entries())
+        const dados = {
+          nome: formData.get('nome') as string,
+          categoria: formData.get('categoria') as string,
+          unidadeMedida: formData.get('unidadeMedida') as string,
+          quantidadeTotal: parseFloat(formData.get('quantidadeTotal') as string),
+          quantidadeMinima: parseFloat(formData.get('quantidadeMinima') as string),
+          validade: formData.get('validade') as string,
+          preco: parseFloat(formData.get('preco') as string),
+          fornecedor: formData.get('fornecedor') as string
+        }
         if (onSubmit) onSubmit(dados)
       }}
     >
@@ -36,9 +45,9 @@ export default function EstoqueItemForm({ onSubmit, formRef }: EstoqueItemFormPr
           Categoria:
           <select className="estoque-form__input" name="categoria" required>
             <option value="">Selecione</option>
-            <option value="1">Ração</option>
-            <option value="2">Remédio</option>
-            <option value="3">Outros</option>
+            <option value="racao">Ração</option>
+            <option value="remedio">Remédio</option>
+            <option value="outros">Outros</option>
           </select>
         </label>
         <label className="estoque-form__label">
@@ -68,15 +77,6 @@ export default function EstoqueItemForm({ onSubmit, formRef }: EstoqueItemFormPr
         <label className="estoque-form__label">
           Data Validade:
           <input type="date" name="validade" className="estoque-form__input" />
-        </label>
-        <label className="estoque-form__label">
-          Status:
-          <select className="estoque-form__input" name="status">
-            <option value="">Selecione</option>
-            <option value="1">Ativo</option>
-            <option value="2">Vencido</option>
-            <option value="3">Esgotado</option>
-          </select>
         </label>
       </div>
     </form>
