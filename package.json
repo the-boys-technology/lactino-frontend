@@ -21,6 +21,7 @@
   "homepage": "https://github.com/the-boys-technology/lactino-frontend#readme",
   "description": "",
   "dependencies": {
+    "@tanstack/react-table": "^8.21.3",
     "lactino-frontend": "file:",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",

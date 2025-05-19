@@ -1,0 +1,231 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+}
+
+:root {
+    --primary-button-color: #2563EB;
+    --secondary-button-color: #DAE0ED;
+    --danger-button-color: #EF4444;
+    --success-button-color: #10B981;
+    --primary-font-color: #F9FAFB;
+    --secondary-font-color: #1F2937;
+    --border-color: #E5E7EB;
+    --primary-background-color: #0F306E;
+    --primary-text-color: #1F2937;
+    --secondary-text-color: #4B5563;
+    --header-cell-color: #D9D9D9;
+    --border-radius-value: 25px;
+    --regular: 400;
+    --semibold: 600;
+    --bold: 700;
+}
+
+
+/* ─────────── Container ─────────── */
+.historico-container {
+  position: absolute;
+  top: 55%; 
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%; 
+  height: 80%;
+  background: var(--primary-font-color);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-value);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+
+  display: flex;
+  flex-direction: column;
+  /* space-between puts header at top, footer at bottom, body fills the gap */
+  justify-content: space-between;
+}
+
+/* ─────────── Header Bar ─────────── */
+.historico-container__header {
+  background-color: var(--primary-background-color);
+  color: var(--primary-font-color);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.historico-container__title {
+  font-size: 1.5rem;
+  font-weight: var(--semibold);
+}
+
+.historico-container__input-container {
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+  align-items: center;
+}
+
+.historico-container__botao-retornar {
+  cursor: pointer;
+}
+
+.historico-container__filter-group {
+  display: flex;
+  flex-direction: row;
+  column-gap: 8px;
+  align-items: center;
+}
+
+.historico-container__filter-group label {
+  display: inline-flex;
+  align-items: center;  
+  gap: 0.5rem;          
+  margin-right: 0.5rem;   
+}
+
+.historico-container__input-label {
+  color: var(--primary-text-color);
+  font-weight: var(--semibold);
+  font-size: 20px;
+}
+
+.historico-container__input-buscar {
+  border-radius: var(--border-radius-value);
+  border-color: var(--border-color);
+  width: 300px;
+  height: 30px;
+}
+
+/* ─────────── Table Scroll Wrapper ─────────── */
+/* 2a) BODY grows to fill */
+.historico-container__body {
+  flex: 1;               /* take up all space between header & footer */
+  padding: 24px;         /* match your mockup gutters */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.historico-container__tabela-wrapper {
+  max-height: 300px;
+  min-height: 300px;
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+}
+
+/* Custom scrollbar to match mockup */
+.historico-container__tabela-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+.historico-container__tabela-wrapper::-webkit-scrollbar-track {
+  background: var(--primary-font-color);
+}
+.historico-container__tabela-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--primary-background-color);
+  border-radius: 4px;
+}
+
+/* ─────────── Table Styles ─────────── */
+.historico-container__tabela {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+/* Header cells */
+.historico-container__tabela th {
+  background-color: var(--header-cell-color);
+  color: var(--primary-text-color);
+  font-weight: var(--semibold);
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+  position: sticky;  /* keep headers visible */
+  top: 0;
+  z-index: 1;
+}
+
+/* Data cells */
+.historico-container__tabela td {
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  color: var(--secondary-text-color);
+  background-color: var(--primary-font-color);
+  vertical-align: middle;
+}
+
+/* ─────────── Status Badges ─────────── */
+.historico-container__tabela__status--disponível {
+  background-color: var(--success-button-color);
+  color: var(--primary-font-color);
+}
+.historico-container__tabela__status--utilizado {
+  background-color: var(--primary-button-color);
+  color: var(--primary-font-color);
+}
+.historico-container__tabela__status--vencido {
+  background-color: var(--danger-button-color);
+  color: var(--primary-font-color);
+}
+.historico-container__tabela__status--descartado {
+  background-color: var(--danger-button-color);
+  color: var(--primary-font-color);
+}
+
+/* common badge styles */
+.historico-container__tabela__status--disponível,
+.historico-container__tabela__status--utilizado,
+.historico-container__tabela__status--vencido,
+.historico-container__tabela__status--descartado {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  font-weight: var(--regular);
+}
+
+/* 2b) CONTROLS on one line, with a bit of margin-bottom */
+.historico-container__controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+/* ─────────── Pill Buttons ─────────── */
+/* 2d) FOOTER with three buttons */
+.historico-container__footer {
+  padding: 0px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.historico-container__footer--botoes-criacao {
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+}
+
+.btn {
+  border: none;
+  width: 200px;
+  padding: 12px 24px;
+  border-radius: var(--border-radius-value);
+  font-size: 1rem;
+  font-weight: var(--semibold);
+  cursor: pointer;
+}
+
+.btn-add {
+  background-color: var(--primary-button-color);
+  color: var(--primary-font-color);
+}
+
+.btn-edit {
+  background-color: var(--secondary-button-color);
+  color: var(--primary-text-color);
+}
+
+.btn-delete {
+  background-color: var(--danger-button-color);
+  color: var(--primary-font-color);
+}
