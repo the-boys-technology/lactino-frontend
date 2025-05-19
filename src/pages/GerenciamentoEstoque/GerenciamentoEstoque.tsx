@@ -1,13 +1,15 @@
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import '../../css/gerenciamento-estoque.css'
 import EstoqueForm from '../../components/EstoqueForm'
 import EstoqueTable from '../../components/EstoqueTable'
 import EstoqueItemForm from '../../components/EstoqueItemForm'
 import Botao from '../../components/Botao'
 import Modal from '../../components/Modal'
+import { criarInsumo } from '../../services/estoque'
 
 export default function EstoquePage() {
   const [modalAberto, setModalAberto] = useState<null | 'adicionar' | 'editar' | 'remover'>(null)
+  const formRef = useRef<HTMLFormElement>(null)
 
   return (
     <div className="estoque">
@@ -29,11 +31,21 @@ export default function EstoquePage() {
 
       {modalAberto === 'adicionar' && (
         <Modal titulo="Adicionar item" onClose={() => setModalAberto(null)}>
-          <EstoqueItemForm />
+          <EstoqueItemForm 
+            onSubmit={async (dados) => {
+              try {
+                await criarInsumo(dados)
+              } catch (error) {
+                console.log(`ERRO: ${error}`)
+              }
+              setModalAberto(null) 
+            }}
+            formRef={formRef}
+          />
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
             <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} />
             <Botao label="Adicionar" tipo="primary" onClick={() => {
-              setModalAberto(null)
+              formRef.current?.requestSubmit()
             }} />
           </div>
         </Modal>
