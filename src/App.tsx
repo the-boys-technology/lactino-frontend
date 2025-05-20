@@ -1,4 +1,3 @@
-// App.tsx
 import React from "react";
 import { Routes, Route, Outlet } from "react-router-dom";
 
@@ -9,6 +8,7 @@ import GestaoLeitePage      from "./pages/GestaoLeitePage";
 import GestaoLaticinioPage  from "./pages/GestaoLaticinioPage";
 import HistoricoPage        from "./pages/HistoricoPage";
 import LoginPage            from "./pages/LoginPage";
+import CadastroPage from "./pages/CadastroPage";
 
 function LayoutWithHeader(): React.ReactElement {
   return (
@@ -30,6 +30,7 @@ export default function App(): React.ReactElement {
         <Route index                       element={<SelecaoProdutoPage />} />
       </Route>
       <Route path="/login"  element={<LoginPage />} />
+      <Route path="/cadastro"  element={<CadastroPage />} />
     </Routes>
   );
 }
