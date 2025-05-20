@@ -7,6 +7,7 @@ import GestaoLaticinioPage from '../pages/GestaoLaticinioPage';
 import GestaoCompras from '../pages/GestaoCompras/GestaoCompras';
 import GerenciamentoEstoque from '../pages/GerenciamentoEstoque/GerenciamentoEstoque'
 import Header from '../components/Header';
+import HistoricoPage from '../pages/HistoricoPage';
 
 export default function AppRoutes() {
   return (
@@ -20,6 +21,7 @@ export default function AppRoutes() {
         <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
         <Route path="/gerenciar-leite" element={<GestaoLeitePage />} />
         <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
+        <Route path="/historico" element={<HistoricoPage />} />
       </Routes>
     </BrowserRouter>
   );
