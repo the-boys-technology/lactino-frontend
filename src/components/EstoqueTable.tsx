@@ -1,7 +1,12 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import '../css/estoque-table.css'
+import { buscarInsumos } from '../services/estoque'
 
-export default function EstoqueTable() {
+interface EstoqueTableProps {
+  insumos: any[]
+}
+
+export default function EstoqueTable({ insumos }: EstoqueTableProps) {
   return (
     <div className="estoque-table">
       <table className="estoque-table__table">
@@ -20,10 +25,26 @@ export default function EstoqueTable() {
           </tr>
         </thead>
         <tbody>
-          {/* MAPEAMENTO DE DADOS DINAMICOS AQUI */}
-          <tr>
-            <td colSpan={10} style={{ textAlign: 'center' }}>Nenhum item cadastrado</td>
-          </tr>
+          {insumos.length === 0 ? (
+            <tr>
+              <td colSpan={10} style={{ textAlign: 'center' }}>Nenhum item cadastrado</td>
+            </tr>
+          ) : (
+            insumos.map((insumo) => (
+              <tr key={insumo.id}>
+                <td>{insumo.id}</td>
+                <td>{insumo.nome}</td>
+                <td>{insumo.categoria}</td>
+                <td>{insumo.unidadeMedida}</td>
+                <td>{insumo.quantidadeTotal}</td>
+                <td>{insumo.quantidadeMinima}</td>
+                <td>{insumo.preco}</td>
+                <td>{insumo.fornecedor}</td>
+                <td>{insumo.validade}</td>
+                <td>{insumo.status}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
     </div>
