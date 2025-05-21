@@ -24,7 +24,7 @@ export default function EstoqueItemForm({ onSubmit, formRef }: EstoqueItemFormPr
         const dados = {
           nome: formData.get('nome') as string,
           categoria: formData.get('categoria') as string,
-          unidadeMedida: formData.get('unidadeMedida') as string,
+          unidadeMedida: (formData.get('unidadeMedida') as string).toLowerCase(),
           quantidadeTotal: parseFloat(formData.get('quantidadeTotal') as string),
           quantidadeMinima: parseFloat(formData.get('quantidadeMinima') as string),
           validade: formData.get('validade') as string,
