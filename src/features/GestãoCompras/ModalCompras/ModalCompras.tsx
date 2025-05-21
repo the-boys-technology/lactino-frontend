@@ -2,97 +2,75 @@ import React, { useState } from "react";
 import Campo from "../../../components/Campo";
 import Botao from "../../../components/Botao";
 import "../ModalCompras/ModalCompras.css";
-import { Compra, FormaPagamento, TipoInsumo } from "../../../types/compras";
+import { 
+  FormaPagamento, 
+  Transacao, 
+  TipoTransacao, 
+  CategoriaItem, 
+  ItemTransacao 
+} from "../../../types/transacao";
 
 interface Props {
   onClose: () => void;
-  onSave: (data: Compra) => void;
+  onSave: (data: Transacao) => void;
 }
 
 export default function ModalCompra({ onClose, onSave }: Props) {
-  const [form, setForm] = useState<Omit<Compra, "valorTotal">>({
-    fornecedor: "",
-    tipoInsumo: TipoInsumo.Medicamento,
-    produto: "",
-    dataCompra: new Date(),
-    formaPagamento: FormaPagamento.Dinheiro,
-    quantidade: 0,
-    valorUnitario: 0,
-    validadeProduto: new Date(),
-    observacao: ""
+  const [produtoId, setProdutoId] = useState<number>(0);
+  const [quantidade, setQuantidade] = useState<number>(1);
+  const [precoUnitario, setPrecoUnitario] = useState<number>(0);
+  const [categoria, setCategoria] = useState<CategoriaItem>(CategoriaItem.INSUMO);
+
+  const [form, setForm] = useState<Omit<Transacao, "id" | "valorTotal" | "itens" | "tipo">>({
+    data: new Date().toISOString(),
+    descricao: "",
+    formaPagamento: FormaPagamento.DINHEIRO,
+    fornecedorId: undefined,
+    clienteId: undefined,
+    leiteId: undefined,
+    laticinioId: undefined,
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-
-    setForm(prev => ({
+    setForm((prev) => ({
       ...prev,
-      [name]:
-        name === "quantidade" || name === "valorUnitario"
-          ? Number(value)
-          : name === "dataCompra" || name === "validadeProduto"
-          ? new Date(value)
-          : value
+      [name]: name === "fornecedorId" ? Number(value) : value
     }));
   };
 
   const handleSubmit = () => {
-    const compraCompleta: Compra = {
-      ...form,
-      valorTotal: form.quantidade * form.valorUnitario
+    const item: ItemTransacao = {
+      id: Date.now(),
+      transacaoId: 0,
+      produtoId,
+      quantidade,
+      precoUnitario,
+      categoria
     };
 
-    onSave(compraCompleta);
+    const novaTransacao: Transacao = {
+      ...form,
+      id: Date.now(),
+      tipo: TipoTransacao.COMPRA,
+      valorTotal: quantidade * precoUnitario,
+      itens: [item]
+    };
+
+    onSave(novaTransacao);
     onClose();
   };
 
   return (
     <div className="modal">
       <div className="modal__container">
-        <h2 className="modal__titulo">Registrar Compras</h2>
+        <h2 className="modal__titulo">Registrar Compra</h2>
 
         <div className="modal__form">
           <div className="modal__coluna">
-            <Campo
-              name="fornecedor"
-              placeholder="Fornecedor"
-              type="text"
-              onChange={handleChange}
-              value={form.fornecedor}
-            />
-
-            <section className="campo-container">
-              <h4 className="campo-container__nome">Tipo de Insumo:</h4>
-              <select
-                name="tipoInsumo"
-                className="campo-container__input"
-                onChange={handleChange}
-                value={form.tipoInsumo}
-              >
-                {Object.values(TipoInsumo).map((tipo) => (
-                  <option key={tipo} value={tipo}>{tipo}</option>
-                ))}
-              </select>
-            </section>
-
-            <Campo
-              name="produto"
-              placeholder="Produto"
-              type="text"
-              onChange={handleChange}
-              value={form.produto}
-            />
-
-            <Campo
-              name="dataCompra"
-              placeholder="Data da Compra"
-              type="date"
-              onChange={handleChange}
-              value={form.dataCompra.toISOString().split("T")[0]}
-            />
-
+            <Campo name="fornecedorId" placeholder="ID do Fornecedor" type="number" onChange={handleChange} />
+            <Campo name="data" placeholder="Data da Compra" type="date" value={form.data.split("T")[0]} onChange={handleChange} />
+            <Campo name="descricao" placeholder="Descrição" type="text" onChange={handleChange} />
             <section className="campo-container">
               <h4 className="campo-container__nome">Forma de Pagamento:</h4>
               <select
@@ -109,39 +87,21 @@ export default function ModalCompra({ onClose, onSave }: Props) {
           </div>
 
           <div className="modal__coluna">
-            <Campo
-              name="quantidade"
-              placeholder="Quantidade"
-              type="number"
-              onChange={handleChange}
-              value={form.quantidade}
-            />
-
-            <Campo
-              name="valorUnitario"
-              placeholder="Valor Unitário"
-              type="number"
-              onChange={handleChange}
-              value={form.valorUnitario}
-            />
-
-            <Campo
-              name="validadeProduto"
-              placeholder="Validade do Produto"
-              type="date"
-              onChange={handleChange}
-              value={form.validadeProduto.toISOString().split("T")[0]}
-            />
-
+            <Campo name="produtoId" placeholder="ID do Produto" type="number" onChange={(e) => setProdutoId(Number(e.target.value))} />
+            <Campo name="quantidade" placeholder="Quantidade" type="number" value={quantidade} onChange={(e) => setQuantidade(Number(e.target.value))} />
+            <Campo name="precoUnitario" placeholder="Preço Unitário" type="number" value={precoUnitario} onChange={(e) => setPrecoUnitario(Number(e.target.value))} />
             <section className="campo-container">
-              <h4 className="campo-container__nome">Observação:</h4>
-              <textarea
-                name="observacao"
+              <h4 className="campo-container__nome">Categoria:</h4>
+              <select
+                name="categoria"
                 className="campo-container__input"
-                rows={3}
-                value={form.observacao}
-                onChange={handleChange}
-              />
+                onChange={(e) => setCategoria(e.target.value as CategoriaItem)}
+                value={categoria}
+              >
+                {Object.values(CategoriaItem).map((cat) => (
+                  <option key={cat} value={cat}>{cat}</option>
+                ))}
+              </select>
             </section>
           </div>
         </div>
