@@ -28,7 +28,7 @@ export default function EstoqueItemForm({ onSubmit, formRef }: EstoqueItemFormPr
           quantidadeTotal: parseFloat(formData.get('quantidadeTotal') as string),
           quantidadeMinima: parseFloat(formData.get('quantidadeMinima') as string),
           validade: formData.get('validade') as string,
-          preco: parseFloat(formData.get('preco') as string),
+          preco: parseFloat((formData.get('preco') as string).replace(',', '.')),
           fornecedor: formData.get('fornecedor') as string
         }
         if (onSubmit) onSubmit(dados)
@@ -66,7 +66,7 @@ export default function EstoqueItemForm({ onSubmit, formRef }: EstoqueItemFormPr
         </label>
         <label className="estoque-form__label">
           Preço:
-          <input type="number" name="preco" className="estoque-form__input" />
+          <input type="number" step="0.01" name="preco" className="estoque-form__input" />
         </label>
         <label className="estoque-form__label">
           Fornecedor:
