@@ -1,4 +1,4 @@
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, Outlet } from 'react-router-dom';
 import { Home } from '../pages/Home/Home';
 import NotFound from '../pages/NotFound/NotFound';
 import SelecaoProdutoPage from '../pages/SelecaoProdutoPage';
@@ -9,22 +9,37 @@ import GerenciamentoEstoque from '../pages/GerenciamentoEstoque/GerenciamentoEst
 import Header from '../components/Header';
 import HistoricoPage from '../pages/HistoricoPage';
 import GestaoVendas from '../pages/GestaoVendas/GestaoVendas';
+import LoginPage from '../pages/LoginPage';
+import CadastroPage from '../pages/CadastroPage';
 
+
+function LayoutWithHeader(): React.ReactElement {
+  return (
+    <>
+      <Header />
+      <Outlet />
+    </>
+  );
+}
 export default function AppRoutes() {
   return (
-    <BrowserRouter>
-    <Header/>
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="*" element={<NotFound />} />
-        <Route path="/gestao-vendas" element={<GestaoVendas />} />
-        <Route path="/gestao-compras" element={<GestaoCompras />} />
-        <Route path="/estoque" element={<GerenciamentoEstoque />} />
-        <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
-        <Route path="/gerenciar-leite" element={<GestaoLeitePage />} />
-        <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
-        <Route path="/historico" element={<HistoricoPage />} />
+        <Route element={<LayoutWithHeader />}>
+
+          <Route path="/" element={<Home />} />
+          <Route path="*" element={<NotFound />} />
+          <Route path="/gestao-vendas" element={<GestaoVendas />} />
+          <Route path="/gestao-compras" element={<GestaoCompras />} />
+          <Route path="/estoque" element={<GerenciamentoEstoque />} />
+          <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
+          <Route path="/gerenciar-leite" element={<GestaoLeitePage />} />
+          <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
+          <Route path="/historico" element={<HistoricoPage />} />
+        </Route>
+
+        <Route path="/login"  element={<LoginPage />} />
+        <Route path="/cadastro"  element={<CadastroPage />} />
+
       </Routes>
-    </BrowserRouter>
   );
 }
