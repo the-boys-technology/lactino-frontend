@@ -25,8 +25,11 @@ export default function RelatorioVendas({
   const imprimir = () => window.print();
 
   return (
-    <div className="relatorio-vendas">
-      <div className="relatorio-vendas__container" id="relatorio-pdf">
+    <div className="relatorio-vendas" onClick={onClose}>
+      <div
+        className="relatorio-vendas__container"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="relatorio-vendas__titulo">Relatório de Venda</h2>
 
         <div className="modal-relatorio__acoes-topo">

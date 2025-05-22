@@ -46,8 +46,11 @@ export default function ModalCliente({ onClose, onSave }: Props) {
   }
 
   return (
-    <div className="modal-cliente">
-      <div className="modal-cliente__container">
+    <div className="modal-cliente" onClick={onClose}>
+      <div
+        className="modal-cliente__container"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="modal-cliente__titulo">Cadastrar Cliente</h2>
         <div className="modal-cliente__form">
           <Campo name="nome" placeholder="Nome" type="text" value={form.nome} onChange={handleChange} />

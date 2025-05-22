@@ -29,8 +29,8 @@ export default function ModalRelatorio({
   };
 
   return (
-    <div className="modal-relatorio">
-      <div className="modal-relatorio__container" id="relatorio-pdf">
+    <div className="modal-relatorio" onClick={onClose}>
+      <div className="modal-relatorio__container" id="relatorio-pdf" onClick={(e) => e.stopPropagation()}>
         <h2 className="modal-relatorio__titulo">Relatório de Compra</h2>
         <div className="modal-relatorio__acoes-topo">
           <span className="relatorio__acao" onClick={() => setConfirmarExclusao(true)}>🗑️ Excluir</span>

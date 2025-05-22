@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import "../PopUpVigilancia/PopupVigilancia.css";
 import infoIcon from "../../../assets/FaInfoCircle.png";
 import arrowIcon from "../../../assets/FaArrowRight.png";
@@ -8,9 +9,24 @@ interface Props {
 }
 
 export default function PopupVigilancia({ onClose }: Props) {
+  const modalRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickFora(event: MouseEvent) {
+      if (modalRef.current && !modalRef.current.contains(event.target as Node)) {
+        onClose();
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickFora);
+    return () => {
+      document.removeEventListener("mousedown", handleClickFora);
+    };
+  }, [onClose]);
+
   return (
     <div className="popup-overlay">
-      <div className="popup-vigilancia">
+      <div className="popup-vigilancia" ref={modalRef}>
         <h2 className="popup-vigilancia__titulo">Direcionamento para a Vigilância Sanitária</h2>
         <p className="popup-vigilancia__subtitulo">
           É responsabilidade do produtor garantir que os dados estejam atualizados e corretos
@@ -36,7 +52,7 @@ export default function PopupVigilancia({ onClose }: Props) {
           Em caso de dúvidas, entre em contato com o suporte técnico
         </p>
         <button className="popup-vigilancia__fechar" onClick={onClose}>
-            <img src={closeIcon} alt="Close" />
+          <img src={closeIcon} alt="Close" />
         </button>
       </div>
     </div>
