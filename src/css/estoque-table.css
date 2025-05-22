@@ -1,0 +1,26 @@
+.estoque-table {
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    padding: 1rem 1.5rem;
+}
+
+.estoque-table__table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+}
+
+.estoque-table__table th,
+.estoque-table__table td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.estoque-table__table__th--large {
+  min-width: 350px;
+}
+
+.linha-selecionada {
+  background-color: #e0f0ff;
+}

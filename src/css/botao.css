@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+}
+
+:root {
+    --primary-button-color: #2563EB;
+    --secondary-button-color: #DAE0ED;
+    --danger-button-color: #EF4444;
+    --success-button-color: #10B981;
+    --primary-font-color: #F9FAFB;
+    --secondary-font-color: #1F2937;
+    --border-color: #E5E7EB;
+    --border-radius-value: 27px;
+    --regular: 400;
+    --semibold: 600;
+    --bold: 700;
+}
+
+.botao {
+    width: 200px;
+    height: 50px;
+    border-radius: var(--border-radius-value);
+    font-size: 20px;
+    font-weight: var(--bold);
+    border: 1px solid var(--border-color);
+}
+
+.botao:hover {
+    cursor: pointer;
+    background-color: #0d47a1;
+}
+
+.primary {
+    background-color: var(--primary-button-color);
+    color: var(--primary-font-color);
+}
+
+.secondary{
+    background-color: var(--secondary-button-color);
+    color: var(--secondary-font-color);
+}
+
+.danger {
+    background-color: var(--danger-button-color);
+    color: var(--primary-font-color);
+}
+
+.success{
+    background-color: var(--success-button-color);
+    color: var(--primary-font-color);
+}
+
+
