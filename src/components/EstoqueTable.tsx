@@ -4,9 +4,11 @@ import { buscarInsumos } from '../services/estoque'
 
 interface EstoqueTableProps {
   insumos: any[]
+  itemSelecionado?: any
+  onSelecionar?: (insumo: any) => void
 }
 
-export default function EstoqueTable({ insumos }: EstoqueTableProps) {
+export default function EstoqueTable({ insumos, itemSelecionado, onSelecionar }: EstoqueTableProps) {
   return (
     <div className="estoque-table">
       <table className="estoque-table__table">
@@ -31,7 +33,12 @@ export default function EstoqueTable({ insumos }: EstoqueTableProps) {
             </tr>
           ) : (
             insumos.map((insumo) => (
-              <tr key={insumo.id}>
+              <tr
+                key={insumo.id}
+                onClick={() => onSelecionar?.(insumo)}
+                className={itemSelecionado?.id === insumo.id ? 'linha-selecionada' : ''}
+                style={{ cursor: 'pointer' }}
+              >
                 <td>{insumo.id}</td>
                 <td>{insumo.nome}</td>
                 <td>{insumo.categoria}</td>

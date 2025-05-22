@@ -1,0 +1,116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Open Sans", sans-serif;
+}
+
+:root {
+    --primary-font-color: #F9FAFB;
+    --primary-text-color: #1F2937;
+    --secondary-text-color: #4B5563;
+    --unfocused-background-color: rgba(0, 0, 0, 0.3);
+    --border-color: #E5E7EB;
+    --border-color-dark: #464433;
+    --border-radius: 1.5rem;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+    --font-regular: 400;
+    --font-semibold: 600;
+    --font-bold: 700;
+}
+
+
+.login-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2.5rem 1rem 4rem;
+  min-height: 100vh;
+  background: var(--primary-font-color);
+}
+
+.login-main__titulo {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: var(--font-regular);
+  color: var(--primary-text-color);
+  margin-bottom: 2rem;
+}
+
+.login-main__forms {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 460px;            
+  padding: 2.5rem 3rem;        
+  border: 1px solid var(--border-color-dark);
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+}
+
+.login-main__forms__descricao {
+  font-size: 1.35rem;
+  font-weight: var(--font-semibold);
+  color: var(--primary-text-color);
+}
+
+.login-main__forms__campos {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.login-main__forms__campos--email,
+.login-main__forms__campos--senha {
+  width: 100%;
+  height: 48px;
+  padding: 0 1rem;
+
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius);
+  font-size: 1rem;
+  outline: none;
+  transition: border-color .15s;
+}
+
+.login-main__forms__campos--email:focus,
+.login-main__forms__campos--senha:focus {
+  border-color: var(--secondary-text-color);
+}
+
+.login-main__forms__botoes {
+    display: flex;
+    flex-direction: row;
+    column-gap: 10px;
+}
+
+.login-main__nome-empresa {
+    margin: 2rem;
+    font-size: .875rem;
+    color: var(--secondary-text-color);
+}
+/*
+.login-main__linha-divisoria {
+  width: 100%;
+  border: 0;
+  border-top: 1px solid var(--border-color-dark);
+  margin: 3rem 0 2rem;
+}
+
+.login-main__links {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+}
+
+.login-main__links a {
+  font-size: .875rem;
+  color: var(--secondary-text-color);
+  text-decoration: none;
+}
+
+.login-main__links a:hover { text-decoration: underline; }
+*/

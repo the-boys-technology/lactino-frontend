@@ -1,20 +1,38 @@
-import React from "react";
+import React, { useState } from "react";
+import Botao from "../../../components/Botao";
+import ModalCompra from "../ModalVendas/ModalVendas";
 import { Transacao } from "../../../types/transacao";
 import "./RelatorioVendas.css";
 
 interface Props {
   transacao: Transacao;
   onClose: () => void;
-  onEdit: (editada: Transacao) => void;
   onDelete: (id: number) => void;
+  onEdit: (atualizada: Transacao) => void;
 }
 
+export default function RelatorioVendas({
+  transacao,
+  onClose,
+  onDelete,
+  onEdit,
+}: Props) {
+  const [modoEdicao, setModoEdicao] = useState(false);
+  const [confirmarExclusao, setConfirmarExclusao] = useState(false);
+  const [confirmarSalvar, setConfirmarSalvar] = useState<Transacao | null>(null);
+  const [sucessoEdicao, setSucessoEdicao] = useState(false);
 
-export default function RelatorioVendas({ transacao, onClose }: Props) {
+  const imprimir = () => window.print();
+
   return (
     <div className="relatorio-vendas">
-      <div className="relatorio-vendas__container">
+      <div className="relatorio-vendas__container" id="relatorio-pdf">
         <h2 className="relatorio-vendas__titulo">Relatório de Venda</h2>
+
+        <div className="modal-relatorio__acoes-topo">
+          <span className="relatorio__acao" onClick={() => setConfirmarExclusao(true)}>🗑️ Excluir</span>
+          <span className="relatorio__acao" onClick={() => setModoEdicao(true)}>✏️ Editar</span>
+        </div>
 
         <div className="relatorio-vendas__info">
           <p><strong>Cliente:</strong> N/A</p>
@@ -30,6 +48,7 @@ export default function RelatorioVendas({ transacao, onClose }: Props) {
               <p><strong>Categoria:</strong> {item.categoria}</p>
               <p><strong>Quantidade:</strong> {item.quantidade}</p>
               <p><strong>Preço Unitário:</strong> R$ {item.precoUnitario.toFixed(2)}</p>
+              <p><strong>Total:</strong> R$ {(item.precoUnitario * item.quantidade).toFixed(2)}</p>
             </div>
           ))}
         </div>
@@ -38,10 +57,65 @@ export default function RelatorioVendas({ transacao, onClose }: Props) {
           <strong>Total:</strong> R$ {transacao.valorTotal.toFixed(2)}
         </p>
 
-        <div className="relatorio-vendas__botoes">
-          <button onClick={onClose}>Fechar</button>
+        <div className="modal-relatorio__botoes">
+          <Botao label="Cancelar" tipo="secondary" onClick={onClose} />
+          <Botao label="Exportar PDF" tipo="primary" onClick={() => window.print()} />
+          <Botao label="Imprimir" tipo="primary" onClick={imprimir} />
         </div>
       </div>
+
+      {modoEdicao && (
+        <ModalCompra
+          transacaoParaEditar={transacao}
+          onClose={() => setModoEdicao(false)}
+          onSave={(nova) => {
+            setConfirmarSalvar(nova);
+            setModoEdicao(false);
+          }}
+        />
+      )}
+
+      {confirmarSalvar && (
+        <div className="modal-confirmacao">
+          <div className="modal-confirmacao__container">
+            <h3>Confirmar edição</h3>
+            <p>Deseja salvar as alterações feitas nesta venda?</p>
+            <div className="modal-confirmacao__botoes">
+              <Botao label="Cancelar" tipo="secondary" onClick={() => setConfirmarSalvar(null)} />
+              <Botao label="Salvar" tipo="primary" onClick={() => {
+                onEdit(confirmarSalvar);
+                setConfirmarSalvar(null);
+                setSucessoEdicao(true);
+              }} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {sucessoEdicao && (
+        <div className="modal-confirmacao">
+          <div className="modal-confirmacao__container">
+            <h3>Edição Concluída</h3>
+            <p>A venda foi atualizada com sucesso!</p>
+            <div className="modal-confirmacao__botoes">
+              <Botao label="Fechar" tipo="primary" onClick={() => setSucessoEdicao(false)} />
+            </div>
+          </div>
+        </div>
+      )}
+
+      {confirmarExclusao && (
+        <div className="modal-confirmacao">
+          <div className="modal-confirmacao__container">
+            <h3>Confirmar exclusão</h3>
+            <p>Tem certeza que deseja excluir esta venda?</p>
+            <div className="modal-confirmacao__botoes">
+              <Botao label="Cancelar" tipo="secondary" onClick={() => setConfirmarExclusao(false)} />
+              <Botao label="Remover" tipo="danger" onClick={() => onDelete(transacao.id)} />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
