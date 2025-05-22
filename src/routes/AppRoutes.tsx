@@ -8,6 +8,7 @@ import GestaoCompras from '../pages/GestaoCompras/GestaoCompras';
 import GerenciamentoEstoque from '../pages/GerenciamentoEstoque/GerenciamentoEstoque'
 import Header from '../components/Header';
 import HistoricoPage from '../pages/HistoricoPage';
+import GestaoVendas from '../pages/GestaoVendas/GestaoVendas';
 
 export default function AppRoutes() {
   return (
@@ -16,6 +17,7 @@ export default function AppRoutes() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/gestao-vendas" element={<GestaoVendas />} />
         <Route path="/gestao-compras" element={<GestaoCompras />} />
         <Route path="/estoque" element={<GerenciamentoEstoque />} />
         <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />

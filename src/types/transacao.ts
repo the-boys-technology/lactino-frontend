@@ -16,6 +16,16 @@ export enum CategoriaItem {
   INSUMO = "INSUMO",
 }
 
+export interface ItemTransacao {
+  id: number;
+  transacaoId: number;
+  produtoId: number;
+  produtoNome?: string; // Nome do produto
+  quantidade: number;
+  precoUnitario: number;
+  categoria: CategoriaItem;
+}
+
 export interface Transacao {
   id: number;
   tipo: TipoTransacao;
@@ -23,20 +33,13 @@ export interface Transacao {
   valorTotal: number;
   formaPagamento: FormaPagamento;
   clienteId?: number;
+  clienteNome?: string; // Nome do cliente
   fornecedorId?: number;
+  fornecedorNome?: string; // Nome do fornecedor
   leiteId?: number;
   laticinioId?: number;
   descricao: string;
   itens: ItemTransacao[];
-}
-
-export interface ItemTransacao {
-  id: number;
-  transacaoId: number;
-  produtoId: number;
-  quantidade: number;
-  precoUnitario: number;
-  categoria: CategoriaItem;
 }
 
 export interface Cliente {
@@ -50,7 +53,7 @@ export interface Cliente {
 export interface Fornecedor {
   id: number;
   nome: string;
-  email: string;
-  localizacao: string;
+  email?: string;
+  localizacao?: string;
   transacoes?: Transacao[];
 }

@@ -24,6 +24,19 @@
   color: #1F2937;
 }
 
+.modal-fornecedor__form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.modal-fornecedor__mensagem {
+  margin: 1rem 0;
+  text-align: center;
+  color: #2563eb;
+  font-weight: bold;
+}
+
 .modal-fornecedor__botoes {
   margin-top: 2rem;
   display: flex;
