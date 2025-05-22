@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react'
 import '../css/estoque-form.css'
 
-interface EstoqueItemFormProps {
+interface EstoqueAddFormProps {
   onSubmit?: (data: any) => void
   formRef?: React.MutableRefObject<HTMLFormElement | null>
 }
 
-export default function EstoqueItemForm({ onSubmit, formRef }: EstoqueItemFormProps) {
+export default function EstoqueAddForm({ onSubmit, formRef }: EstoqueAddFormProps) {
   const localRef = useRef<HTMLFormElement>(null)
 
   useEffect(() => {

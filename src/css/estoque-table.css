@@ -20,3 +20,7 @@
 .estoque-table__table__th--large {
   min-width: 350px;
 }
+
+.linha-selecionada {
+  background-color: #e0f0ff;
+}
