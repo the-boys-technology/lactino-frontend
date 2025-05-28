@@ -19,8 +19,9 @@ function LoginPage(): React.ReactElement {
     async function realizarLogin(data: Record<string, any>) {
             try {
                 console.log(data);
-                const req = await fazerLogin(data);
-                console.log(req);
+                const res = await fazerLogin(data);
+                console.log(res);
+                sessionStorage.setItem('token', res.data.token);
                 navigate("/");
             } catch (error) {
                 console.log(data);
