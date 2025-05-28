@@ -21,7 +21,7 @@ function LoginPage(): React.ReactElement {
                 console.log(data);
                 const req = await fazerLogin(data);
                 console.log(req);
-                navigate("/selecionar-produto");
+                navigate("/");
             } catch (error) {
                 console.log(data);
                 console.error('Erro ao fazer login:', error)

@@ -6,7 +6,7 @@ import ModalRelatorio from "../../features/GestaoCompras/ModalRelatorio/ModalRel
 import ModalFornecedor from "../../features/GestaoCompras/ModalFornecedor/ModalFornecedor";
 import { Transacao, Fornecedor, FormaPagamento } from "../../types/transacao";
 import "../GestaoCompras/GestaoCompras.css";
-import api from "../../services/api";
+import { api } from "../../services/api";
 
 export default function GestaoCompras() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -106,7 +106,7 @@ export default function GestaoCompras() {
         </div>
 
         <div className="compras__buscar">
-          <Botao tipo="primary" label="🔍 Buscar" onClick={buscarTransacoes} />
+          <Botao tipo="primary" label="🔍 Buscar" onClick={buscarTransacoes} htmlType="button"/>
         </div>
       </section>
 
@@ -142,11 +142,14 @@ export default function GestaoCompras() {
 
       <footer className="compras__footer">
         <Botao
+          htmlType="button"
           tipo="primary"
           label="Cadastrar Fornecedor"
-          onClick={() => setModalFornecedor(true)}
+          onClick={() => setModalFornecedor(true)
+          }
         />
         <Botao
+          htmlType="button"
           tipo="primary"
           label="Registrar Compra"
           onClick={() => setModalAberto(true)}

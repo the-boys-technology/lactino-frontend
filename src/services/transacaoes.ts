@@ -1,5 +1,5 @@
 import { AxiosError } from "axios";
-import api from "./api";
+import { api } from "./api";
 import { Transacao } from "../types/transacao";
 
 export const criarTransacao = async (dados: Omit<Transacao, "id">) => {

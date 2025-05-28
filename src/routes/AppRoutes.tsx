@@ -27,7 +27,6 @@ export default function AppRoutes(): React.ReactElement {
   return (
     <BrowserRouter>
       <Routes>
-      {/* Rotas com Header */}
       <Route element={<LayoutWithHeader />}>
         <Route path="/" element={<Home />} />
         <Route path="/gestao-vendas" element={<GestaoVendas />} />
@@ -39,8 +38,6 @@ export default function AppRoutes(): React.ReactElement {
         <Route path="/historico" element={<HistoricoPage />} />
         <Route path="*" element={<NotFound />} />
         </Route>
-
-        {/* Rotas sem Header */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/cadastro" element={<CadastroPage />} />
       </Routes>
