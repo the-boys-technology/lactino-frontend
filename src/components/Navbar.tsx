@@ -12,10 +12,10 @@ function Navbar(): React.ReactElement {
                     <Link to="/estoque">Estoque</Link>
                 </li>
                 <li className="navbar__lista__item">
-                    <Link to="/compra">Compra</Link>
+                    <Link to="/gestao-compras">Compra</Link>
                 </li>
                 <li className="navbar__lista__item">
-                    <Link to="/venda">Venda</Link>
+                    <Link to="/gestao-vendas">Venda</Link>
                 </li>
             </ul>
         </nav>

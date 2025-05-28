@@ -1,6 +1,6 @@
-import AppRoutes from '../src/routes/AppRoutes';
+import AppRoutes from './routes/AppRoutes';
 
-function App() {
+function App(): React.ReactElement {
   return <AppRoutes />;
 }
 
