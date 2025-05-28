@@ -10,7 +10,6 @@ import '../css/tabela.css';
 export interface DataTableProps<TData extends object> {
   data: TData[];
   columns: ColumnDef<TData, any>[];
-  /** Optional: allow passing any other table options (sorting, pagination, etc) */
   tableOptions?: Partial<TableOptions<TData>>;
 }
 
@@ -19,7 +18,6 @@ export function DataTable<TData extends object>({
   columns,
   tableOptions = {},
 }: DataTableProps<TData>) {
-  // build the table instance
   const table = useReactTable<TData>({
     data,
     columns,

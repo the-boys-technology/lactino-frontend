@@ -49,6 +49,11 @@
     transform: translateY(-2px);
 }
 
+.paginaGestao__forms {
+    display: flex;
+    flex-direction: column;
+}
+
 .paginaGestao__titulo {
     color: var(--primary-text-color);
     font-weight: var(--font-bold);

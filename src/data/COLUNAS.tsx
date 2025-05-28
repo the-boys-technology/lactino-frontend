@@ -1,6 +1,5 @@
-// src/data/colunas.ts
 import { type ColumnDef } from '@tanstack/react-table';
-import { RowData } from './MOCK_DATA';
+import { RowData } from './ROW_DATA';
 
 export const COLUNAS: ColumnDef<RowData, any>[] = [
   {

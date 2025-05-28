@@ -66,8 +66,11 @@ export default function ModalVendas({ onClose, onSave, transacaoParaEditar }: Pr
   };
 
   return (
-    <div className="modal">
-      <div className="modal__container">
+    <div className="modal" onClick={onClose}>
+      <div
+        className="modal__container"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="modal__titulo">Registrar Venda</h2>
         <div className="modal__form">
           <div className="modal__coluna">

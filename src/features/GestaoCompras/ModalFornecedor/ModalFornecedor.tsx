@@ -42,8 +42,8 @@ export default function ModalFornecedor({ onClose, onSave }: Props) {
   };
 
   return (
-    <div className="modal-fornecedor">
-      <div className="modal-fornecedor__container">
+    <div className="modal-fornecedor" onClick={onClose}>
+      <div className="modal-fornecedor__container" onClick={(e) => e.stopPropagation()}>
         <h2 className="modal-fornecedor__titulo">Cadastrar Fornecedor</h2>
 
         <div className="modal-fornecedor__form">
