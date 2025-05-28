@@ -103,21 +103,23 @@
   gap: 1rem;
 }
 
-/* visually identical to your text inputs, but lets us remove the native arrow */
 .cadastro-main__forms__campos--select {
-  flex: 1;                       /* both take 50 % of the row */
+  flex: 1;                       
   height: 48px;
   padding: 0 1rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-size: 1rem;
   outline: none;
-  appearance: none;              /* gets rid of default browser chevron */
-  background-image: url("data:image/svg+xml, \
-    %3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' \
-    viewBox='0 0 20 20'%3E%3Cpath fill='%239CA3AF' \
-    d='M5 7l5 5 5-5'%3E%3C/path%3E%3C/svg%3E");
+  appearance: none;              
+  background-image: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%239CA3AF' d='M5 7l5 5 5-5'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 0.9rem center;
   background-size: 12px;
+}
+
+.cadastro-main__forms__campos--select:disabled {
+  color: #6c6c6c;          
+  background: #f5f5f5;     
+  cursor: not-allowed;
 }

@@ -6,7 +6,7 @@ import ModalCliente from "../../features/GestaoVendas/ModalCliente/ModalCliente"
 import RelatorioVendas from "../../features/GestaoVendas/RelatorioVendas/RelatorioVendas";
 import { Cliente, Transacao } from "../../types/transacao";
 import "../GestaoVendas/GestaoVendas.css";
-import api from "../../services/api";
+import { api } from "../../services/api";
 
 export default function GestaoVendas() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -98,7 +98,7 @@ export default function GestaoVendas() {
         </div>
 
         <div className="compras__buscar">
-          <Botao tipo="primary" label="🔍 Buscar" onClick={buscarTransacoes} />
+          <Botao tipo="primary" label="🔍 Buscar" onClick={buscarTransacoes} htmlType="button"/>
         </div>
       </section>
 
@@ -130,8 +130,8 @@ export default function GestaoVendas() {
       </section>
 
       <footer className="compras__footer">
-        <Botao tipo="primary" label="Cadastrar Cliente" onClick={() => setModalCliente(true)} />
-        <Botao tipo="primary" label="Registrar Venda" onClick={() => setModalAberto(true)} />
+        <Botao tipo="primary" label="Cadastrar Cliente" onClick={() => setModalCliente(true)} htmlType="button"/>
+        <Botao tipo="primary" label="Registrar Venda" onClick={() => setModalAberto(true)} htmlType="button"/>
       </footer>
 
       {modalAberto && (

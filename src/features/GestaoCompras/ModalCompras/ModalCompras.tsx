@@ -64,8 +64,8 @@ export default function ModalCompra({ onClose, onSave }: Props) {
   };
 
   return (
-    <div className="modal">
-      <div className="modal__container">
+    <div className="modal" onClick={onClose}>
+      <div className="modal__container" onClick={(e) => e.stopPropagation()}>
         <h2 className="modal__titulo">Registrar Compra</h2>
 
         <div className="modal__form">

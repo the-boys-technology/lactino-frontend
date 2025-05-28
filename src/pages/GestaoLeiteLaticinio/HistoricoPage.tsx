@@ -1,4 +1,4 @@
-import HistoricoTabela from '../components/HistoricoTabela';
+import HistoricoTabela from '../../components/HistoricoTabela';
 
 function HistoricoPage(): React.ReactElement {
     return (

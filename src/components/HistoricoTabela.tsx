@@ -1,17 +1,23 @@
-import { useState, useMemo } from 'react';
-import { DataTable } from './Tabela';
-import { MOCK_DATA, type RowData } from '../data/MOCK_DATA';
-import { COLUNAS } from '../data/COLUNAS';
-import { useNavigate  } from "react-router-dom";
-import '../css/historico_tabela.css';
+import { useEffect, useState, useMemo } from "react";
+import { DataTable } from "./Tabela";
+import { COLUNAS } from "../data/COLUNAS";
+import { type RowData } from "../data/ROW_DATA";   
+import { useNavigate } from "react-router-dom";
+import { buscarLaticinios, buscarLeites } from "../services/gestao_leite_laticinio";
+import "../css/historico_tabela.css";
 
 export default function HistoricoTabela() {
   const navigate = useNavigate();
-  const [search, setSearch] = useState('');
-  const [turnoFilter, setTurnoFilter] = useState<string[]>([]);
-  const [statusFilter,  setStatusFilter]  = useState<string[]>([]);
 
-  // helper to toggle a value on/off in an array
+  const [rows, setRows] = useState<RowData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const [search, setSearch] = useState("");
+  const [turnoFilter, setTurnoFilter] = useState<string[]>([]);
+  const [statusFilter, setStatusFilter] = useState<string[]>([]);
+
+
   const toggle = (arr: string[], val: string) =>
     arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val];
 
@@ -27,28 +33,60 @@ export default function HistoricoTabela() {
     navigate('/gerenciar-leite');
   }
 
-  const filteredData = useMemo<RowData[]>(() =>
-    MOCK_DATA.filter((r) => {
-      // if any product filters are active, only keep matching rows
-      if (turnoFilter.length > 0 && !turnoFilter.includes(r.turno)) 
-        return false;
-      // if any status filters are active, only keep matching rows
-      if (statusFilter.length > 0 && !statusFilter.includes(r.status)) 
-        return false;
-      // apply your text search
-      if (search) {
-        const term = search.toLowerCase();
-        const hay = [
-          r.id.toString(),
-          r.nome,
-          r.descricao,
-          r.fornecedor,
-        ].map(f => f.toLowerCase());
-        if (!hay.some(f => f.includes(term))) return false;
+  useEffect(() => {
+  let isMounted = true;               
+
+  async function buscarProdutos() {
+    try {
+      setLoading(true);
+      const [resLeite, resLaticinio] = await Promise.all([
+        buscarLeites(),
+        buscarLaticinios(),
+      ]);
+      if (isMounted) {
+        setRows([...resLeite.data, ...resLaticinio.data]);
       }
-      return true;
-    }),
-  [search, turnoFilter, statusFilter]);
+    } catch (err: any) {
+      if (isMounted) {
+        console.log("Erro ao carregar leites e laticínios:", err)
+        setError(err.message ?? "Erro ao carregar dados");
+      }
+    } finally {
+      if (isMounted) {
+        setLoading(false);
+      }
+    }
+  }
+  buscarProdutos();      
+  return () => {
+    isMounted = false;   
+  };
+}, []);
+
+    const filteredData = useMemo<RowData[]>(
+    () =>
+      rows.filter((r) => {
+        if (turnoFilter.length > 0 && !turnoFilter.includes(r.turno))
+          return false;
+        if (statusFilter.length > 0 && !statusFilter.includes(r.status))
+          return false;
+        if (search) {
+          const term = search.toLowerCase();
+          const hay = [
+            r.id.toString(),
+            r.nome,
+            r.descricao,
+            r.fornecedorId,
+          ].map((f) => f.toLowerCase());
+          if (!hay.some((f) => f.includes(term))) return false;
+        }
+        return true;
+      }),
+    [rows, search, turnoFilter, statusFilter]
+  );
+
+  if (loading) return <p>Carregando…</p>;
+  if (error)   return <p style={{color:"red"}}>{error}</p>;
 
   return (
     <section className="historico-container">

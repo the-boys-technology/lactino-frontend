@@ -1,4 +1,4 @@
-import api from './api'
+import { api } from "./api";
 
 export const criarInsumo = (dados: any) => api.post('/insumos', dados);
 export const editarInsumo = (id: string, dados: any) => api.put(`/insumos/${id}`, dados);

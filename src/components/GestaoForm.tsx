@@ -1,52 +1,74 @@
-import "../css/gestao_produto.css"
-import Campo from "./Campo";
-import Select from "./Select";
+import "../css/gestao_produto.css";
+import Campo   from "./Campo";
+import Select  from "./Select";
+import { useState } from "react";
+import { CampoConfig } from "../types/campos";
 import Botao from "./Botao";
-import { CampoConfig } from '../types/campos'; 
-import { useNavigate  } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 interface GestaoFormProps {
-    title: string;
-
-    fields: CampoConfig[];
+  title:      string;
+  fields:     CampoConfig[];
+  onSubmit:   (data: Record<string, any>) => Promise<void>;   
+  submitText?: string;                                       
 }
 
-function GestaoForm({ title, fields }: GestaoFormProps): React.ReactElement {
-    const navigate = useNavigate();
+export default function GestaoForm({
+  title,
+  fields,
+  onSubmit,
+}: GestaoFormProps) {
+  const [formData, setFormData] = useState<Record<string, any>>({});
+  const navigate = useNavigate();
 
-    return (
-        <main className="paginaGestao">
-            <section className="paginaGestao__container">
-                <h2 className="paginaGestao__titulo">{title}</h2>
-                <section className="paginaGestao__campos">
-                    {fields.map((field, index) => {
-                        if (field.type === "select") {
-                            return (
-                                <Select
-                                    key={index}
-                                    nome={field.label}
-                                    options={field.options}
-                                />
-                            );
-                        }
+  const handleChange = (name: string, value: string) =>
+    setFormData(prev => ({ ...prev, [name]: value }));
 
-                        return (
-                            <Campo
-                                key={index}
-                                type={field.type}
-                                placeholder={field.placeholder}
-                            />
-                        );
-                    })}
-                </section>
-                <section className="paginaGestao__botoes">
-                    <Botao label="Retornar" tipo="secondary" onClick={() => navigate('/selecionar-produto')}></Botao>
-                    <Botao label="Salvar" tipo="primary" onClick={() => navigate('/historico')}></Botao>
-                </section>
-            </section>
-        </main>
-    );
+  const handleSubmit: React.FormEventHandler = async (e) => {
+    e.preventDefault();
+    await onSubmit(formData);          
+  };
+
+  return (
+    <section className="paginaGestao__forms">
+      <h2 className="paginaGestao__titulo">{title}</h2>
+
+      <form onSubmit={handleSubmit} className="paginaGestao__campos">
+        {fields.map((field, idx) =>
+          field.type === "select" ? (
+            <Select
+              key={idx}
+              nome={field.label}
+              value={formData[field.name] || ""}
+              options={field.options}
+              onChange={(v) => handleChange(field.name, v)}
+            />
+          ) : (
+            <Campo
+              key={idx}
+              type={field.type}
+              placeholder={field.placeholder}
+              value={formData[field.name] || ""}
+              onChange={(e) => handleChange(field.name, e.target.value)}
+            />
+          )
+        )}
+
+        <section className="paginaGestao__botoes">
+          <Botao
+            label="Retornar"
+            tipo="secondary"
+            onClick={() => navigate("/selecionar-produto")}
+            htmlType="button"
+          />
+
+          <Botao
+            label="Salvar"
+            tipo="primary"
+            htmlType="submit"
+          />
+        </section>
+      </form>
+    </section>
+  );
 }
-
-export default GestaoForm;

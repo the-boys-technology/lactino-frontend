@@ -42,8 +42,9 @@ export default function EstoquePage() {
         />
         <div className="estoque__buttons">
             <div className="estoque__buttons-group">
-                <Botao label="Adicionar" tipo="primary" onClick={() => setModalAberto('adicionar')}/>
+                <Botao label="Adicionar" tipo="primary" onClick={() => setModalAberto('adicionar')} htmlType='button'/>
                 <Botao 
+                  htmlType='button'
                   label="Editar" 
                   tipo="secondary" 
                   onClick={() => {
@@ -54,6 +55,7 @@ export default function EstoquePage() {
 
             <div className="estoque__buttons-group">
                 <Botao 
+                htmlType='button'
                 label="Remover" 
                 tipo="danger" 
                 onClick={() => {
@@ -79,8 +81,8 @@ export default function EstoquePage() {
             formRef={formRef}
           />
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-            <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} />
-            <Botao label="Adicionar" tipo="primary" onClick={() => {
+            <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} htmlType='button'/>
+            <Botao htmlType='button' label="Adicionar" tipo="primary" onClick={() => {
               formRef.current?.requestSubmit()
             }} />
           </div>
@@ -105,10 +107,10 @@ export default function EstoquePage() {
           formRef={formRef}
         />
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
-          <Botao label="Cancelar" tipo="secondary" onClick={() => {setModalAberto(null); setItemSelecionado(null)}} />
+          <Botao label="Cancelar" tipo="secondary" onClick={() => {setModalAberto(null); setItemSelecionado(null)}} htmlType='button'/>
           <Botao label="Salvar" tipo="primary" onClick={() => {
             formRef.current?.requestSubmit()
-          }} />
+          }} htmlType='submit'/>
         </div>
       </Modal>
     )}
@@ -116,8 +118,9 @@ export default function EstoquePage() {
           <Modal titulo="Confirmar remoção" onClose={() => setModalAberto(null)}>
             <p>Tem certeza que deseja remover este item?</p>
             <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-              <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} />
+              <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} htmlType='button'/>
               <Botao
+                htmlType='button'
                 label="Remover"
                 tipo="danger"
                 onClick={async () => {
