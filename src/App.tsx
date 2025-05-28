@@ -1,36 +1,7 @@
-import React from "react";
-import { Routes, Route, Outlet } from "react-router-dom";
+import AppRoutes from '../src/routes/AppRoutes';
 
-import Header from "./components/Header";
-
-import SelecaoProdutoPage   from "./pages/SelecaoProdutoPage";
-import GestaoLeitePage      from "./pages/GestaoLeitePage";
-import GestaoLaticinioPage  from "./pages/GestaoLaticinioPage";
-import HistoricoPage        from "./pages/HistoricoPage";
-import LoginPage            from "./pages/LoginPage";
-import CadastroPage from "./pages/CadastroPage";
-
-function LayoutWithHeader(): React.ReactElement {
-  return (
-    <>
-      <Header />
-      <Outlet />
-    </>
-  );
+function App() {
+  return <AppRoutes />;
 }
 
-export default function App(): React.ReactElement {
-  return (
-    <Routes>
-      <Route element={<LayoutWithHeader />}>
-        <Route path="/selecionar-produto"  element={<SelecaoProdutoPage />} />
-        <Route path="/gerenciar-leite"     element={<GestaoLeitePage />} />
-        <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
-        <Route path="/historico"           element={<HistoricoPage />} />
-        <Route index                       element={<SelecaoProdutoPage />} />
-      </Route>
-      <Route path="/login"  element={<LoginPage />} />
-      <Route path="/cadastro"  element={<CadastroPage />} />
-    </Routes>
-  );
-}
+export default App;
