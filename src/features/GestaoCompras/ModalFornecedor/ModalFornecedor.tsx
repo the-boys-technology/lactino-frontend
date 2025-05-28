@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import Campo from "../../../components/Campo";
+import { useState } from "react";
 import Botao from "../../../components/Botao";
 import { criarFornecedor } from "../../../services/fornecedores";
 import "../../../features/GestaoCompras/ModalFornecedor/ModalFornecedor.css";
 import { Fornecedor } from "../../../types/transacao";
+import { Campo } from "../../../components/Campo";
 
 interface Props {
   onClose: () => void;
@@ -29,7 +29,7 @@ export default function ModalFornecedor({ onClose, onSave }: Props) {
         id: Date.now(),
         nome,
         email: "",
-        localizacao: ""
+        localizacao: "",
       };
       onSave(novoFornecedor);
       setTimeout(() => {
@@ -43,30 +43,33 @@ export default function ModalFornecedor({ onClose, onSave }: Props) {
 
   return (
     <div className="modal-fornecedor" onClick={onClose}>
-      <div className="modal-fornecedor__container" onClick={(e) => e.stopPropagation()}>
+      <div
+        className="modal-fornecedor__container"
+        onClick={(e) => e.stopPropagation()}
+      >
         <h2 className="modal-fornecedor__titulo">Cadastrar Fornecedor</h2>
 
         <div className="modal-fornecedor__form">
           <Campo
-            name="nome"
-            placeholder="Nome do Fornecedor"
+            label="Nome do Fornecedor"
+            placeHolder="Insira o nome do fornecedor"
             type="text"
             value={nome}
-            onChange={(e) => setNome(e.target.value)}
+            inputFunction={(e) => setNome(e.target.value)}
           />
           <Campo
-            name="email"
-            placeholder="E-mail (opcional)"
-            type="email"
+            label="E-mail (opcional)"
+            placeHolder="Insira o email do fornecerdor"
+            type="text"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            inputFunction={(e) => setEmail(e.target.value)}
           />
           <Campo
-            name="localizacao"
-            placeholder="Localização (opcional)"
+            label="Localização (opcional)"
+            placeHolder="Insira o endereço do fornecedor"
             type="text"
             value={localizacao}
-            onChange={(e) => setLocalizacao(e.target.value)}
+            inputFunction={(e) => setLocalizacao(e.target.value)}
           />
         </div>
 

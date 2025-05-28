@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Campo from "../../../components/Campo";
 import Botao from "../../../components/Botao";
 import "../ModalVendas/ModalVendas.css";
 import {
@@ -9,6 +8,7 @@ import {
   CategoriaItem,
   ItemTransacao,
 } from "../../../types/transacao";
+import { Campo } from "../../../components/Campo";
 
 interface Props {
   onClose: () => void;
@@ -34,7 +34,7 @@ export default function ModalVendas({ onClose, onSave, transacaoParaEditar }: Pr
     }
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
@@ -74,8 +74,19 @@ export default function ModalVendas({ onClose, onSave, transacaoParaEditar }: Pr
         <h2 className="modal__titulo">Registrar Venda</h2>
         <div className="modal__form">
           <div className="modal__coluna">
-            <Campo name="data" placeholder="Data da Venda" type="date" value={form.data.split("T")[0]} onChange={handleChange} />
-            <Campo name="descricao" placeholder="Descrição" type="text" onChange={handleChange} />
+            <Campo 
+              label="Data da Venda" 
+              placeHolder="Insira a data da venda" 
+              type="date" 
+              value={form.data.split("T")[0]} 
+              inputFunction={handleChange} 
+              />
+            <Campo 
+              label="descricao" 
+              placeHolder="Descrição" 
+              type="text" 
+              textAreaFuction={handleChange} 
+              />
             <section className="campo-container">
               <h4 className="campo-container__nome">Forma de Pagamento:</h4>
               <select name="formaPagamento" className="campo-container__input" onChange={handleChange} value={form.formaPagamento}>
@@ -87,8 +98,20 @@ export default function ModalVendas({ onClose, onSave, transacaoParaEditar }: Pr
           </div>
 
           <div className="modal__coluna">
-            <Campo name="quantidade" placeholder="Quantidade" type="number" value={quantidade} onChange={(e) => setQuantidade(Number(e.target.value))} />
-            <Campo name="precoUnitario" placeholder="Preço Unitário" type="number" value={precoUnitario} onChange={(e) => setPrecoUnitario(Number(e.target.value))} />
+            <Campo 
+              label="quantidade" 
+              placeHolder="Quantidade" 
+              type="number" 
+              value={quantidade} 
+              inputFunction={(e) => setQuantidade(Number(e.target.value))} 
+              />
+            <Campo 
+              label="Preço Unitário" 
+              placeHolder="Insira o preço da unidade do produto" 
+              type="number" 
+              value={precoUnitario} 
+              inputFunction={(e) => setPrecoUnitario(Number(e.target.value))} 
+              />
             <section className="campo-container">
               <h4 className="campo-container__nome">Categoria:</h4>
               <select name="categoria" className="campo-container__input" onChange={(e) => setCategoria(e.target.value as CategoriaItem)} value={categoria}>

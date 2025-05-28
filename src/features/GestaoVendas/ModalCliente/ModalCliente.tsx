@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import Campo from "../../../components/Campo";
 import Botao from "../../../components/Botao";
 import { Cliente } from "../../../types/transacao";
 import { criarCliente } from "../../../services/clientes"; // service separado
 import "./ModalCliente.css";
+import { Campo } from "../../../components/Campo";
 
 interface Props {
   onClose: () => void;
@@ -53,9 +53,27 @@ export default function ModalCliente({ onClose, onSave }: Props) {
       >
         <h2 className="modal-cliente__titulo">Cadastrar Cliente</h2>
         <div className="modal-cliente__form">
-          <Campo name="nome" placeholder="Nome" type="text" value={form.nome} onChange={handleChange} />
-          <Campo name="email" placeholder="Email" type="email" value={form.email} onChange={handleChange} />
-          <Campo name="localizacao" placeholder="Localização" type="text" value={form.localizacao} onChange={handleChange} />
+          <Campo 
+            label="Nome" 
+            placeHolder="Insira o nome do cliente" 
+            type="text" 
+            value={form.nome} 
+            inputFunction={handleChange} 
+            />
+          <Campo 
+            label="Email" 
+            placeHolder="Insiraa o email do cliente" 
+            type="text" 
+            value={form.email} 
+            inputFunction={handleChange} 
+            />
+          <Campo 
+            label="localizacao" 
+            placeHolder="Localização" 
+            type="text" 
+            value={form.localizacao} 
+            inputFunction={handleChange} 
+            />
         </div>
         <div className="modal-cliente__botoes">
           <Botao tipo="secondary" label="Cancelar" onClick={onClose} />

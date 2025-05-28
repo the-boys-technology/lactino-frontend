@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Campo from "../../../components/Campo";
 import Botao from "../../../components/Botao";
 import "../ModalCompras/ModalCompras.css";
 import { 
@@ -9,6 +8,7 @@ import {
   CategoriaItem, 
   ItemTransacao 
 } from "../../../types/transacao";
+import { Campo } from "../../../components/Campo";
 
 interface Props {
   onClose: () => void;
@@ -76,8 +76,18 @@ export default function ModalCompra({ onClose, onSave }: Props) {
               type="text"
               onChange={(e) => setProdutoNome(e.target.value)}
             />*/}
-            <Campo name="data" placeholder="Data da Compra" type="date" value={form.data.split("T")[0]} onChange={handleChange} />
-            <Campo name="descricao" placeholder="Descrição" type="text" onChange={handleChange} />
+            <Campo 
+              label="data" 
+              placeHolder="Data da Compra" 
+              type="date" 
+              value={form.data.split("T")[0]} 
+              inputFunction={handleChange} />
+            <Campo 
+              label="descricao" 
+              placeHolder="Descrição" 
+              type="text" 
+              textAreaFuction={handleChange} 
+              />
             <section className="campo-container">
               <h4 className="campo-container__nome">Forma de Pagamento:</h4>
               <select
@@ -94,8 +104,21 @@ export default function ModalCompra({ onClose, onSave }: Props) {
           </div>
 
           <div className="modal__coluna">
-            <Campo name="quantidade" placeholder="Quantidade" type="number" value={quantidade} onChange={(e) => setQuantidade(Number(e.target.value))} />
-            <Campo name="precoUnitario" placeholder="Preço Unitário" type="number" value={precoUnitario} onChange={(e) => setPrecoUnitario(Number(e.target.value))} />
+            <Campo 
+              label="quantidade" 
+              placeHolder="Quantidade" 
+              type="number" 
+              value={quantidade} 
+              inputFunction={handleChange} 
+              />
+            
+            <Campo 
+              label="precoUnitario" 
+              placeHolder="Preço Unitário" 
+              type="number" 
+              value={precoUnitario} 
+              inputFunction={(e) => setPrecoUnitario(Number(e.target.value))} />
+            
             <section className="campo-container">
               <h4 className="campo-container__nome">Categoria:</h4>
               <select

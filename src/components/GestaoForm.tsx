@@ -1,9 +1,9 @@
 import "../css/gestao_produto.css"
-import Campo from "./Campo";
 import Select from "./Select";
 import Botao from "./Botao";
-import { CampoConfig } from '../types/campos'; 
 import { useNavigate  } from "react-router-dom";
+import { CampoConfig } from "../types/campos";
+import { Campo } from "./Campo";
 
 
 interface GestaoFormProps {
@@ -35,7 +35,7 @@ function GestaoForm({ title, fields }: GestaoFormProps): React.ReactElement {
                             <Campo
                                 key={index}
                                 type={field.type}
-                                placeholder={field.placeholder}
+                                placeHolder={field.placeholder}
                             />
                         );
                     })}

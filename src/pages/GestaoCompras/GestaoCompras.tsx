@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import Campo from "../../components/Campo";
+import { SetStateAction, useEffect, useState } from "react";
 import Botao from "../../components/Botao";
 import ModalCompra from "../../features/GestaoCompras/ModalCompras/ModalCompras";
 import ModalRelatorio from "../../features/GestaoCompras/ModalRelatorio/ModalRelatorio";
@@ -7,6 +6,7 @@ import ModalFornecedor from "../../features/GestaoCompras/ModalFornecedor/ModalF
 import { Transacao, Fornecedor, FormaPagamento } from "../../types/transacao";
 import "../GestaoCompras/GestaoCompras.css";
 import api from "../../services/api";
+import { Campo } from "../../components/Campo";
 
 export default function GestaoCompras() {
   const [modalAberto, setModalAberto] = useState(false);
@@ -66,11 +66,11 @@ export default function GestaoCompras() {
         <div className="compras__linha">
           <Campo
             type="text"
-            name="fornecedor"
-            placeholder="Fornecedor"
+            label="fornecedor"
+            placeHolder="Fornecedor"
             list="lista-fornecedores"
             value={filtroFornecedor}
-            onChange={(e) => setFiltroFornecedor(e.target.value)}
+            inputFunction={(e) => setFiltroFornecedor(e.target.value)}
           />
           <datalist id="lista-fornecedores">
             {fornecedores.map((f) => (
@@ -87,21 +87,21 @@ export default function GestaoCompras() {
         <div className="compras__linha">
           <Campo
             type="date"
-            placeholder="Data Inicial"
+            placeHolder="Data Inicial"
             value={dataInicial}
-            onChange={(e) => setDataInicial(e.target.value)}
+            inputFunction={(e) => setDataInicial(e.target.value)}
           />
           <Campo
             type="date"
-            placeholder="Data Final"
+            placeHolder="Data Final"
             value={dataFinal}
-            onChange={(e) => setDataFinal(e.target.value)}
+            inputFunction={(e) => setDataFinal(e.target.value)}
           />
           <Campo
             type="number"
-            placeholder="Valor Máximo"
+            placeHolder="Valor Máximo"
             value={filtroValor}
-            onChange={(e) => setFiltroValor(e.target.value)}
+            inputFunction={(e) => setFiltroValor(e.target.value)}
           />
         </div>
 
