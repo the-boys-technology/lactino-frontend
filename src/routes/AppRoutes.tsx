@@ -13,6 +13,9 @@ import LoginPage from '../pages/Auth/LoginPage';
 import CadastroPage from '../pages/Auth/CadastroPage';
 
 import Header from '../components/Header';
+import { ProtectedRoute } from './ProtectedRoute';
+
+
 
 function LayoutWithHeader(): React.ReactElement {
   return (
@@ -27,16 +30,18 @@ export default function AppRoutes(): React.ReactElement {
   return (
     <BrowserRouter>
       <Routes>
-      <Route element={<LayoutWithHeader />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/gestao-vendas" element={<GestaoVendas />} />
-        <Route path="/gestao-compras" element={<GestaoCompras />} />
-        <Route path="/estoque" element={<GerenciamentoEstoque />} />
-        <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
-        <Route path="/gerenciar-leite" element={<GestaoLeitePage />} />
-        <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
-        <Route path="/historico" element={<HistoricoPage />} />
-        <Route path="*" element={<NotFound />} />
+        <Route element={<ProtectedRoute />}> 
+          <Route element={<LayoutWithHeader />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/gestao-vendas" element={<GestaoVendas />} />
+            <Route path="/gestao-compras" element={<GestaoCompras />} />
+            <Route path="/estoque" element={<GerenciamentoEstoque />} />
+            <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
+            <Route path="/gerenciar-leite" element={<GestaoLeitePage />} />
+            <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
+            <Route path="/historico" element={<HistoricoPage />} />
+            <Route path="/*" element={<NotFound />} />
+          </Route>
         </Route>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/cadastro" element={<CadastroPage />} />

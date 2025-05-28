@@ -1,6 +1,6 @@
 import Botao from "../../components/Botao";
 import { Link, useNavigate } from "react-router-dom";   
-import '../css/login_page.css';
+import '../../css/login_page.css';
 import { useState } from "react";
 import { fazerLogin } from "../../services/auth";
 
@@ -21,7 +21,7 @@ function LoginPage(): React.ReactElement {
                 console.log(data);
                 const res = await fazerLogin(data);
                 console.log(res);
-                sessionStorage.setItem('token', res.data.token);
+                sessionStorage.setItem('access_token', res.data.token);
                 navigate("/");
             } catch (error) {
                 console.log(data);

@@ -1,6 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";   
 import Botao from "../../components/Botao";
-import "../css/cadastro_page.css";
+import "../../css/cadastro_page.css";
 import { useEffect, useState } from "react";
 import { EstadoRaw, MunicipioRaw } from "../../types/ibge";
 import { api_ibge } from "../../services/api";

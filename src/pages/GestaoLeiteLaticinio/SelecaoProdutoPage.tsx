@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import Select from "../../components/Select";
 import Botao from "../../components/Botao";
-import "../css/selecao_produto.css";
+import "../../css/selecao_produto.css";
 
 const produtos = [
     { label: 'Leite', value: 'leite' },
