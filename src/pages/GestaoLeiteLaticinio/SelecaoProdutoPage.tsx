@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from 'react-router-dom';
-import Select from "../components/Select";
-import Botao from "../components/Botao";
-import "../css/selecao_produto.css";
+import Select from "../../components/Select";
+import Botao from "../../components/Botao";
+import "../../css/selecao_produto.css";
 
 const produtos = [
     { label: 'Leite', value: 'leite' },
@@ -32,8 +32,8 @@ function SelecaoProdutoPage(): React.ReactElement {
                     />
                 </section>
                 <section className="paginaSelecao__botoes">
-                    <Botao label="Retornar" tipo="secondary" onClick={() => navigate('/')} />
-                    <Botao label="Ir" tipo="primary" onClick={handleIrClick} />
+                    <Botao label="Retornar" tipo="secondary" onClick={() => navigate('/')} htmlType="button" />
+                    <Botao label="Ir" tipo="primary" onClick={handleIrClick} htmlType="button" />
                 </section>
             </section>
         </main>

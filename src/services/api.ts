@@ -1,7 +1,19 @@
-import axios from 'axios'
+import axios, { AxiosRequestConfig } from 'axios'
 
-const api = axios.create({
+export const api = axios.create({
   baseURL: '/api',
 })
 
-export default api; 
+export const api_ibge = axios.create({
+  baseURL: 'http://servicodados.ibge.gov.br/api/v1/localidades',
+})
+
+api.interceptors.request.use(config => {
+  const token = sessionStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, error => Promise.reject(error));
+
+

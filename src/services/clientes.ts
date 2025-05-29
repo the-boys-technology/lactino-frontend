@@ -1,5 +1,5 @@
 import { AxiosError } from 'axios';
-import api from './api';
+import { api } from "./api";
 import { Cliente } from '../types/transacao';
 
 export const criarCliente = async (dados: Omit<Cliente, 'id'>) => {

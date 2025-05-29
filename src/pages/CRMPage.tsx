@@ -1,22 +1,18 @@
 import React, { useRef, useState, useEffect } from 'react'
-import '../../css/gerenciamento-estoque.css'
-import EstoqueForm from '../../components/EstoqueForm'
-import EstoqueTable from '../../components/EstoqueTable'
-import EstoqueAddForm from '../../components/EstoqueAddForm'
-import EstoqueEditForm from '../../components/EstoqueEditForm'
-import Botao from '../../components/Botao'
-import Modal from '../../components/Modal'
-import { criarInsumo } from '../../services/estoque'
-import { buscarInsumos } from '../../services/estoque'
-import { editarInsumo } from '../../services/estoque'
-import { removerInsumo } from '../../services/estoque'
+import '../css/gerenciamento-estoque.css'
+import Botao from '../components/Botao'
+import Modal from '../components/Modal'
+import CRMForm from '../components/CRMForm'
+import CRMTable from '../components/CRMTable'
+import CRMAddForm from '../components/CRMAddForm'
 
-export default function EstoquePage() {
+export default function CRMPage() {
   const [modalAberto, setModalAberto] = useState<null | 'adicionar' | 'editar' | 'remover'>(null)
-  const [insumos, setInsumos] = useState<any[]>([])
+  const [clientes, setClientes] = useState<any[]>([])
   const [itemSelecionado, setItemSelecionado] = useState<any | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
+  /*
   async function carregarInsumos() {
     try {
       const res = await buscarInsumos()
@@ -29,14 +25,15 @@ export default function EstoquePage() {
   useEffect(() => {
     carregarInsumos()
   }, [])
+  */
 
   return (
     <div className="estoque">
       <div className="estoque__card">
-        <h2 className="estoque__title">Estoque</h2>
-        <EstoqueForm />
-        <EstoqueTable
-          insumos={insumos}
+        <h2 className="estoque__title">CRM</h2>
+        <CRMForm />
+        <CRMTable
+          clientes={clientes}
           itemSelecionado={itemSelecionado}
           onSelecionar={setItemSelecionado}
         />
@@ -68,7 +65,8 @@ export default function EstoquePage() {
 
       {modalAberto === 'adicionar' && (
         <Modal titulo="Adicionar item" onClose={() => setModalAberto(null)}>
-          <EstoqueAddForm 
+          <CRMAddForm 
+            /*
             onSubmit={async (dados) => {
               try {
                 await criarInsumo(dados)
@@ -79,6 +77,8 @@ export default function EstoquePage() {
               setModalAberto(null) 
             }}
             formRef={formRef}
+            */
+           onSubmit={async (dados) => {setModalAberto(null)}}
           />
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
             <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} htmlType='button'/>
@@ -90,21 +90,20 @@ export default function EstoquePage() {
       )}
       {modalAberto === 'editar' && itemSelecionado && (
       <Modal titulo="Editar item" onClose={() => setModalAberto(null)}>
-        <EstoqueEditForm
-          dadosIniciais={itemSelecionado}
-          onSubmit={ async (dadosEditados) => {
-            try {
-              console.log('ID para editar:', itemSelecionado.id);
-              console.log('Dados enviados:', dadosEditados);
-              await editarInsumo(itemSelecionado.id, dadosEditados)
-              await carregarInsumos()
-            } catch (error) {
-              console.log(`ERRO: ${error}`)
-            }
-            setModalAberto(null) 
-            setItemSelecionado(null)
-          }}
-          formRef={formRef}
+        <CRMAddForm 
+            /*
+            onSubmit={async (dados) => {
+                try {
+                await criarInsumo(dados)
+                await carregarInsumos()
+                } catch (error) {
+                console.log(`ERRO: ${error}`)
+                }
+                setModalAberto(null) 
+            }}
+            formRef={formRef}
+            */
+           onSubmit={async (dados) => {setModalAberto(null)}}
         />
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
           <Botao label="Cancelar" tipo="secondary" onClick={() => {setModalAberto(null); setItemSelecionado(null)}} htmlType='button'/>
@@ -123,16 +122,7 @@ export default function EstoquePage() {
                 htmlType='button'
                 label="Remover"
                 tipo="danger"
-                onClick={async () => {
-                  try {
-                    await removerInsumo(itemSelecionado.id)
-                    await carregarInsumos()
-                  } catch (error) {
-                    console.error('Erro ao remover insumo:', error)
-                  }
-                  setModalAberto(null)
-                  setItemSelecionado(null)
-                }}
+                onClick={async () => {setModalAberto(null)}}
               />
             </div>
           </Modal>
