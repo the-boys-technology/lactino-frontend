@@ -27,14 +27,14 @@
     border: 1px solid var(--border-color);
 }
 
-.botao:hover {
-    cursor: pointer;
-    background-color: #0d47a1;
-}
-
 .primary {
     background-color: var(--primary-button-color);
     color: var(--primary-font-color);
+}
+
+.primary:hover {
+    cursor: pointer;
+    background-color: #0d47a1;
 }
 
 .secondary{
@@ -42,9 +42,19 @@
     color: var(--secondary-font-color);
 }
 
+.secondary:hover {
+    cursor: pointer;
+    background-color: #9ca1aa;
+}
+
 .danger {
     background-color: var(--danger-button-color);
     color: var(--primary-font-color);
+}
+
+.danger:hover {
+    cursor: pointer;
+    background-color: #9a2c2c;
 }
 
 .success{
@@ -52,4 +62,7 @@
     color: var(--primary-font-color);
 }
 
-
+.success:hover {
+    cursor: pointer;
+    background-color: #0b7350;
+}

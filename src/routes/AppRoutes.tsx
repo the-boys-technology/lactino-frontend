@@ -1,4 +1,9 @@
 import { Routes, Route, Outlet, BrowserRouter } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+
+import Header from '../components/Header';
+import Sidebar from '../components/SideBar';
+import { ProtectedRoute } from './ProtectedRoute';
 
 import { Home } from '../pages/Home/Home';
 import NotFound from '../pages/NotFound/NotFound';
@@ -12,16 +17,31 @@ import GestaoVendas from '../pages/GestaoVendas/GestaoVendas';
 import LoginPage from '../pages/Auth/LoginPage';
 import CadastroPage from '../pages/Auth/CadastroPage';
 
-import Header from '../components/Header';
-import { ProtectedRoute } from './ProtectedRoute';
-
 
 
 function LayoutWithHeader(): React.ReactElement {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setSidebarOpen(false);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, []);
+
   return (
     <>
-      <Header />
-      <Outlet />
+      {/* pass the toggle callback into your existing Header */}
+      <Header onMenuClick={() => setSidebarOpen(o => !o)} />
+
+      {/* shows/hides the sidebar */}
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* your routed pages live here; shifts right when open */}
+      <main>
+        <Outlet />
+      </main>
     </>
   );
 }

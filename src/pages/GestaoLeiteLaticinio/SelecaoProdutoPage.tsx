@@ -32,7 +32,7 @@ function SelecaoProdutoPage(): React.ReactElement {
                     />
                 </section>
                 <section className="paginaSelecao__botoes">
-                    <Botao label="Retornar" tipo="secondary" onClick={() => navigate('/')} htmlType="button" />
+                    <Botao label="Retornar" tipo="secondary" onClick={() => navigate('/historico')} htmlType="button" />
                     <Botao label="Ir" tipo="primary" onClick={handleIrClick} htmlType="button" />
                 </section>
             </section>

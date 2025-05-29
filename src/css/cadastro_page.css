@@ -97,25 +97,29 @@
     color: var(--secondary-text-color);
 }
 
-/* puts Estado + Cidade on the same row */
 .cadastro-main__forms__campos--linha-dupla {
   display: flex;
   gap: 1rem;
 }
 
+.cadastro-main__forms__campos--linha-dupla .cadastro-main__forms__campos--select {
+  flex: 1 1 0;     
+  min-width: 0;
+  font-size: 0.9rem;  
+}
+
 .cadastro-main__forms__campos--select {
-  flex: 1;                       
   height: 48px;
   padding: 0 1rem;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius);
   font-size: 1rem;
-  outline: none;
   appearance: none;              
   background-image: url("data:image/svg+xml, %3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 20 20'%3E%3Cpath fill='%239CA3AF' d='M5 7l5 5 5-5'%3E%3C/path%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right 0.9rem center;
-  background-size: 12px;
+  background-position: right 0.4rem center;
+  background-size: 25px;
+  background-color: white;
 }
 
 .cadastro-main__forms__campos--select:disabled {
