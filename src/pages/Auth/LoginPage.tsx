@@ -1,8 +1,8 @@
-import Botao from "../components/Botao";
+import Botao from "../../components/Botao";
 import { Link, useNavigate } from "react-router-dom";   
 import '../css/login_page.css';
 import { useState } from "react";
-import { fazerLogin } from "../services/auth";
+import { fazerLogin } from "../../services/auth";
 
 function LoginPage(): React.ReactElement {
     const navigate = useNavigate();

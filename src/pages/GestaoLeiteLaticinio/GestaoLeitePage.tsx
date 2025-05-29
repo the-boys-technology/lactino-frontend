@@ -1,7 +1,7 @@
-import GestaoForm   from "../components/GestaoForm";
+import GestaoForm   from "../../components/GestaoForm";
 import { useNavigate } from "react-router-dom";
-import { CampoConfig } from "../types/campos";
-import { registrarLeite } from "../services/gestao_leite_laticinio";
+import { CampoConfig } from "../../types/campos";
+import { registrarLeite } from "../../services/gestao_leite_laticinio";
 
 const camposProduto: CampoConfig[] = [
   { name: "nome",        type: "text",  placeholder: "Nome" },
