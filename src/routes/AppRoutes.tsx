@@ -13,6 +13,7 @@ import LoginPage from '../pages/Auth/LoginPage';
 import CadastroPage from '../pages/Auth/CadastroPage';
 
 import Header from '../components/Header';
+import CRMPage from '../pages/CRMPage';
 
 function LayoutWithHeader(): React.ReactElement {
   return (
@@ -35,6 +36,7 @@ export default function AppRoutes(): React.ReactElement {
         <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
         <Route path="/gerenciar-leite" element={<GestaoLeitePage />} />
         <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
+        <Route path="/crm" element={<CRMPage />}/>
         <Route path="/historico" element={<HistoricoPage />} />
         <Route path="*" element={<NotFound />} />
         </Route>
