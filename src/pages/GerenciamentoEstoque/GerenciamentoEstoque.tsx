@@ -53,11 +53,13 @@ const insumosFiltrados = insumos.filter((item) => {
       <div className="estoque__card">
         <h2 className="estoque__title">Estoque</h2>
         <EstoqueForm filtros={filtros} onFiltrosChange={setFiltros}/>
-        <EstoqueTable
-          insumos={insumosFiltrados}
-          itemSelecionado={itemSelecionado}
-          onSelecionar={setItemSelecionado}
-        />
+        <div className="estoque__tabela-wrapper">
+          <EstoqueTable
+            insumos={insumosFiltrados}
+            itemSelecionado={itemSelecionado}
+            onSelecionar={setItemSelecionado}
+          />
+        </div>
         <div className="estoque__buttons">
             <div className="estoque__buttons-group">
                 <Botao label="Adicionar" tipo="primary" onClick={() => setModalAberto('adicionar')} htmlType='button'/>

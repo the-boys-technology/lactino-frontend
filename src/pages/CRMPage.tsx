@@ -36,11 +36,13 @@ export default function CRMPage() {
       <div className="estoque__card">
         <h2 className="estoque__title">CRM</h2>
         <CRMForm />
-        <CRMTable
-          clientes={clientes}
-          itemSelecionado={itemSelecionado}
-          onSelecionar={setItemSelecionado}
-        />
+        <div className="estoque__tabela-wrapper">
+          <CRMTable
+            clientes={clientes}
+            itemSelecionado={itemSelecionado}
+            onSelecionar={setItemSelecionado}
+          />
+        </div>
         <div className="estoque__buttons">
             <div className="estoque__buttons-group">
                 <Botao 
