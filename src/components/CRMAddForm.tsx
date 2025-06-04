@@ -23,8 +23,8 @@ export default function CRMAddForm({ onSubmit, formRef }: CRMAddFormProps) {
         const formData = new FormData(e.currentTarget)
         const dados = {
           nome: formData.get('nome') as string,
-          email: formData.get('categoria') as string,
-          localizacao: formData.get('categoria') as string,
+          email: formData.get('email') as string,
+          localizacao: formData.get('localizacao') as string,
         }
         if (onSubmit) onSubmit(dados)
       }}

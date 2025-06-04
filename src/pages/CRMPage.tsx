@@ -5,6 +5,10 @@ import Modal from '../components/Modal'
 import CRMForm from '../components/CRMForm'
 import CRMTable from '../components/CRMTable'
 import CRMAddForm from '../components/CRMAddForm'
+import { buscarClientes } from '../services/clientes'
+import { criarCliente } from '../services/clientes'
+import { editarCliente } from '../services/clientes'
+import { removerCliente } from '../services/clientes'
 
 export default function CRMPage() {
   const [modalAberto, setModalAberto] = useState<null | 'adicionar' | 'editar' | 'remover'>(null)
@@ -12,20 +16,20 @@ export default function CRMPage() {
   const [itemSelecionado, setItemSelecionado] = useState<any | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
-  /*
-  async function carregarInsumos() {
+  
+  async function carregarClientes() {
     try {
-      const res = await buscarInsumos()
-      setInsumos(res.data.content)
+      const res = await buscarClientes()
+      setClientes(res.data.content)
     } catch (error) {
-      console.error('Erro ao carregar insumos:', error)
+      console.error('Erro ao carregar clientes:', error)
     }
   }
 
   useEffect(() => {
-    carregarInsumos()
+    buscarClientes()
   }, [])
-  */
+  
 
   return (
     <div className="estoque">
@@ -39,13 +43,17 @@ export default function CRMPage() {
         />
         <div className="estoque__buttons">
             <div className="estoque__buttons-group">
-                <Botao label="Adicionar" tipo="primary" onClick={() => setModalAberto('adicionar')} htmlType='button'/>
+                <Botao 
+                  htmlType='button'
+                  label="Adicionar" 
+                  tipo="primary" 
+                  onClick={() => setModalAberto('adicionar')}/>
                 <Botao 
                   htmlType='button'
                   label="Editar" 
                   tipo="secondary" 
                   onClick={() => {
-                    if (!itemSelecionado) return alert("Selecione um item para editar!")
+                    if (!itemSelecionado) return alert("Selecione um cliente para editar!")
                     setModalAberto('editar')
                   }}/>
             </div>
@@ -56,7 +64,7 @@ export default function CRMPage() {
                 label="Remover" 
                 tipo="danger" 
                 onClick={() => {
-                  if (!itemSelecionado) return alert("Selecione um item para remover!")
+                  if (!itemSelecionado) return alert("Selecione um cliente para remover!")
                   setModalAberto('remover')
                 }}/>
             </div>
@@ -66,19 +74,16 @@ export default function CRMPage() {
       {modalAberto === 'adicionar' && (
         <Modal titulo="Adicionar item" onClose={() => setModalAberto(null)}>
           <CRMAddForm 
-            /*
             onSubmit={async (dados) => {
               try {
-                await criarInsumo(dados)
-                await carregarInsumos()
+                await criarCliente(dados)
+                await carregarClientes()
               } catch (error) {
                 console.log(`ERRO: ${error}`)
               }
               setModalAberto(null) 
             }}
             formRef={formRef}
-            */
-           onSubmit={async (dados) => {setModalAberto(null)}}
           />
           <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
             <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} htmlType='button'/>
@@ -91,19 +96,17 @@ export default function CRMPage() {
       {modalAberto === 'editar' && itemSelecionado && (
       <Modal titulo="Editar item" onClose={() => setModalAberto(null)}>
         <CRMAddForm 
-            /*
             onSubmit={async (dados) => {
                 try {
-                await criarInsumo(dados)
-                await carregarInsumos()
+                  await editarCliente(itemSelecionado.id, dados)
+                  await carregarClientes()
                 } catch (error) {
-                console.log(`ERRO: ${error}`)
+                  console.log(`ERRO: ${error}`)
                 }
-                setModalAberto(null) 
+                  setModalAberto(null) 
+                  setItemSelecionado(null)
             }}
             formRef={formRef}
-            */
-           onSubmit={async (dados) => {setModalAberto(null)}}
         />
         <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
           <Botao label="Cancelar" tipo="secondary" onClick={() => {setModalAberto(null); setItemSelecionado(null)}} htmlType='button'/>
@@ -122,7 +125,16 @@ export default function CRMPage() {
                 htmlType='button'
                 label="Remover"
                 tipo="danger"
-                onClick={async () => {setModalAberto(null)}}
+                onClick={async () => {
+                  try {
+                    await removerCliente(itemSelecionado.id)
+                    await carregarClientes()
+                  } catch (error) {
+                    console.error('Erro ao remover cliente:', error)
+                  }
+                  setModalAberto(null)
+                  setItemSelecionado(null)
+                }}
               />
             </div>
           </Modal>
