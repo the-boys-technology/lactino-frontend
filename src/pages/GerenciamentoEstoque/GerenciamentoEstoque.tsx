@@ -30,16 +30,36 @@ export default function EstoquePage() {
     carregarInsumos()
   }, [])
 
+  const [filtros, setFiltros] = useState({
+    codigo: '',
+    nome: '',
+    fornecedor: '',
+    categoria: '',
+    dataValidade: ''
+  })
+
+const insumosFiltrados = insumos.filter((item) => {
+  return (
+    (!filtros.codigo || item.id?.toString().includes(filtros.codigo)) &&
+    (!filtros.nome || item.nome?.toLowerCase().includes(filtros.nome.toLowerCase())) &&
+    (!filtros.fornecedor || item.fornecedor?.toLowerCase().includes(filtros.fornecedor.toLowerCase())) &&
+    (!filtros.categoria || item.categoria === filtros.categoria) &&
+    (!filtros.dataValidade || item.validade?.startsWith(filtros.dataValidade))
+  )
+})
+
   return (
     <div className="estoque">
       <div className="estoque__card">
         <h2 className="estoque__title">Estoque</h2>
-        <EstoqueForm />
-        <EstoqueTable
-          insumos={insumos}
-          itemSelecionado={itemSelecionado}
-          onSelecionar={setItemSelecionado}
-        />
+        <EstoqueForm filtros={filtros} onFiltrosChange={setFiltros}/>
+        <div className="estoque__tabela-wrapper">
+          <EstoqueTable
+            insumos={insumosFiltrados}
+            itemSelecionado={itemSelecionado}
+            onSelecionar={setItemSelecionado}
+          />
+        </div>
         <div className="estoque__buttons">
             <div className="estoque__buttons-group">
                 <Botao label="Adicionar" tipo="primary" onClick={() => setModalAberto('adicionar')} htmlType='button'/>

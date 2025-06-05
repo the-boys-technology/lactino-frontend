@@ -29,3 +29,11 @@
   display: flex;
   gap: 1rem;
 }
+
+.estoque__tabela-wrapper {
+  max-height: 400px;
+  overflow-y: scroll;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
