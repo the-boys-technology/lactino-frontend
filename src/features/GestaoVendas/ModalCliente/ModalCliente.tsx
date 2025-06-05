@@ -39,7 +39,7 @@ export default function ModalCliente({ onClose, onSave }: Props) {
       <div className="modal-cliente">
         <div className="modal-cliente__container">
           <h2 className="modal-cliente__titulo">Cliente Cadastrado!</h2>
-          <Botao tipo="primary" label="Fechar" onClick={onClose} />
+          <Botao tipo="primary" label="Fechar" onClick={onClose} htmlType={"button"} />
         </div>
       </div>
     );
@@ -54,30 +54,30 @@ export default function ModalCliente({ onClose, onSave }: Props) {
         <h2 className="modal-cliente__titulo">Cadastrar Cliente</h2>
         <div className="modal-cliente__form">
           <Campo 
-            label="Nome" 
+            label="Nome do Cliente" 
             placeHolder="Insira o nome do cliente" 
             type="text" 
             value={form.nome} 
             inputFunction={handleChange} 
             />
           <Campo 
-            label="Email" 
-            placeHolder="Insiraa o email do cliente" 
+            label="Email (Opcional)" 
+            placeHolder="Insira o email do cliente" 
             type="text" 
             value={form.email} 
             inputFunction={handleChange} 
             />
           <Campo 
-            label="localizacao" 
-            placeHolder="Localização" 
+            label="Localizaçõo (Opcional)" 
+            placeHolder="Insiro o endereço do cliente" 
             type="text" 
             value={form.localizacao} 
             inputFunction={handleChange} 
             />
         </div>
         <div className="modal-cliente__botoes">
-          <Botao tipo="secondary" label="Cancelar" onClick={onClose} />
-          <Botao tipo="primary" label="Salvar" onClick={handleSubmit} />
+          <Botao tipo="secondary" label="Cancelar" onClick={onClose} htmlType={"button"} />
+          <Botao tipo="primary" label="Salvar" onClick={handleSubmit} htmlType={"submit"} />
         </div>
       </div>
     </div>

@@ -1,16 +1,16 @@
 import "../css/gestao_produto.css";
-import Campo   from "./Campo";
-import Select  from "./Select";
+import { Campo } from "./Campo";
+import Select from "./Select";
 import { useState } from "react";
 import { CampoConfig } from "../types/campos";
 import Botao from "./Botao";
 import { useNavigate } from "react-router-dom";
 
 interface GestaoFormProps {
-  title:      string;
-  fields:     CampoConfig[];
-  onSubmit:   (data: Record<string, any>) => Promise<void>;   
-  submitText?: string;                                       
+  title: string;
+  fields: CampoConfig[];
+  onSubmit: (data: Record<string, any>) => Promise<void>;
+  submitText?: string;
 }
 
 export default function GestaoForm({
@@ -22,11 +22,11 @@ export default function GestaoForm({
   const navigate = useNavigate();
 
   const handleChange = (name: string, value: string) =>
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
   const handleSubmit: React.FormEventHandler = async (e) => {
     e.preventDefault();
-    await onSubmit(formData);          
+    await onSubmit(formData);
   };
 
   return (
@@ -47,9 +47,9 @@ export default function GestaoForm({
             <Campo
               key={idx}
               type={field.type}
-              placeholder={field.placeholder}
+              placeHolder={field.placeholder}
               value={formData[field.name] || ""}
-              onChange={(e) => handleChange(field.name, e.target.value)}
+              inputFunction={(e) => handleChange(field.name, e.target.value)}
             />
           )
         )}
@@ -62,11 +62,7 @@ export default function GestaoForm({
             htmlType="button"
           />
 
-          <Botao
-            label="Salvar"
-            tipo="primary"
-            htmlType="submit"
-          />
+          <Botao label="Salvar" tipo="primary" htmlType="submit" />
         </section>
       </form>
     </section>

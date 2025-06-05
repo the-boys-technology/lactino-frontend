@@ -76,8 +76,8 @@ export default function ModalFornecedor({ onClose, onSave }: Props) {
         {mensagem && <p className="modal-fornecedor__mensagem">{mensagem}</p>}
 
         <div className="modal-fornecedor__botoes">
-          <Botao tipo="secondary" label="Cancelar" onClick={onClose} />
-          <Botao tipo="primary" label="Salvar" onClick={handleSubmit} />
+          <Botao tipo="secondary" label="Cancelar" onClick={onClose} htmlType={"submit"} />
+          <Botao tipo="primary" label="Salvar" onClick={handleSubmit} htmlType={"button"} />
         </div>
       </div>
     </div>

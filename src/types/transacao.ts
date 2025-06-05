@@ -17,6 +17,8 @@ export enum CategoriaItem {
 }
 
 export interface ItemTransacao {
+  unidadeMedida: string | number | undefined;
+  validade: string | number | undefined;
   id: number;
   transacaoId: number;
   produtoId: number;

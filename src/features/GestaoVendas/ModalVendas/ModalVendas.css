@@ -10,41 +10,145 @@
 
 .modal-vendas__container {
   background-color: #ffffff;
-  padding: 2rem 3rem;
+  padding: 2rem;
   border-radius: 16px;
-  max-width: 900px;
-  width: 95%;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-  font-family: 'Open Sans', sans-serif;
+  width: 1057px;
+  max-height: 95vh;
+  overflow-y: auto;
   position: relative;
+  font-family: 'Open Sans', sans-serif;
 }
 
 .modal-vendas__titulo {
-  font-size: 2rem;
-  font-weight: 700;
+  font-size: 2.5rem;
+  font-weight: 600;
   margin-bottom: 1.5rem;
   color: #1F2937;
 }
 
-.modal-vendas__form {
+.modal-vendas__form-geral,
+.modal-vendas__form-produto {
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  gap: 2rem;
   flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
 }
 
-.modal-vendas__coluna {
-  flex: 1;
-  min-width: 300px;
+.modal-vendas__form-geral .campo-container,
+.modal-vendas__form-produto .campo-container {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  min-width: 300px;
+  flex: 1;
+}
+
+.modal-vendas__label {
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: #1F2937;
+  margin-bottom: 0.5rem;
+}
+
+.modal-vendas__input {
+  padding: 0.5rem 1rem;
+  border: 1px solid #464433;
+  border-radius: 20px;
+  font-size: 1rem;
+}
+
+.modal-vendas__select {
+  padding: 0.5rem;
+  border: 1px solid #464433;
+  border-radius: 5px;
+  font-size: 1rem;
 }
 
 .modal-vendas__botoes {
-  margin-top: 2rem;
   display: flex;
-  justify-content: flex-end;
-  gap: 1rem;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.modal-vendas__botoes button {
+  width: 240px;
+  height: 66px;
+  border-radius: 20px;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.modal-vendas__tabela {
+  margin-top: 2rem;
+  border: 1px solid #000;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.modal-vendas__tabela-head,
+.modal-vendas__tabela-row {
+  display: grid;
+  grid-template-columns: 80px 140px 120px 120px 120px 120px 120px auto;
+  align-items: center;
+  padding: 1rem;
+}
+
+.modal-vendas__tabela-head {
+  background-color: #D9D9D9;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.modal-vendas__tabela-row {
+  border-bottom: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.modal-vendas__valor-total {
+  text-align: right;
+  margin-top: 1.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.modal-vendas__botao-adicionar {
+  background-color: #10B981;
+  color: white;
+  font-weight: bold;
+  border-radius: 20px;
+  padding: 0.8rem 1rem;
+  font-size: 1rem;
+  margin-top: 1rem;
+  margin-left: auto;
+  display: block;
+}
+
+.modal-vendas__botao-confirmar {
+  background-color: #2563EB;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+.modal-vendas__botao-editar {
+  background-color: #F59E0B;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+}
+
+.modal-vendas__botao-remover {
+  background-color: #EF4444;
+  color: white;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
 }

@@ -2,6 +2,7 @@ import React from "react";
 import "../css/campo.css";
 
 interface CampoProps {
+  name?: string;
   label?: string;
   type?: "text" | "number" | "date" | "select" | "textarea";
   value?: string | number;
@@ -21,6 +22,7 @@ interface CampoProps {
 }
 
 export const Campo: React.FC<CampoProps> = ({
+  name,
   label,
   type = "text",
   value,
