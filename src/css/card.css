@@ -30,6 +30,7 @@
   .card__title {
     margin: 0 0 0.5rem;
     font-size: 1.2rem;
+    white-space: pre-wrap;
   }
   
   .card__value--inflow {
@@ -47,3 +48,19 @@
   .card__content {
     margin-top: 0.5rem;
   }
+
+  .card--center {
+  text-align: center;
+}
+
+.card--center .card__content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.card--center .card__title {
+  width: 100%;
+  text-align: center;
+}

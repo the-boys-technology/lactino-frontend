@@ -42,7 +42,7 @@ export default function PopupVigilancia({ onClose }: Props) {
 
         <button
           className="popup-vigilancia__botao"
-          onClick={() => window.open("https://wikisda.agricultura.gov.br/pt-br/Inspe%C3%A7%C3%A3o-Animal/Produto-Origem-Animal/manual_leite", "_blank")}
+          onClick={() => window.open("https://www.gov.br/anvisa/pt-br/setorregulado/regularizacao/alimentos/dispensa-de-registro", "_blank")}
         >
           Acessar Sistema da Vigilância Sanitária
           <img src={arrowIcon} alt="Acessar" />

@@ -7,14 +7,15 @@ interface CardProps {
   size?: 'small' | 'medium' | 'large'
   type?: 'inflow' | 'outflow'
   children?: React.ReactNode
+  className?: string
 }
 
-const Card = ({ title, value, size, type, children }: CardProps) => {
+const Card = ({ title, value, size, type, children, className }: CardProps) => {
     const valueClass = type
     ? `card__value card__value--${type}`
     : 'card__value'
 
-    const cardClass = `card card--${size}`
+    const cardClass = `card card--${size} ${className || ''}`
 
     return (
         <div className={cardClass}>

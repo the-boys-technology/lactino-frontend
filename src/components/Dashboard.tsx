@@ -50,7 +50,9 @@ export default function Dashboard() {
         </Card>
 
         <Card 
-          title="Mantenha-se em dia com a Vigilância Sanitária">
+          size='medium'
+          className="card--center"
+          title={"Mantenha-se em dia com \na Vigilância Sanitária"}>
           <Botao
             tipo="primary" 
             label="Saiba Mais"
