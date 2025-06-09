@@ -19,6 +19,7 @@ interface CampoProps {
   infoText?: string;
   status?: "" | "warning" | "error";
   list?: string;
+  styleInput?: React.CSSProperties;
 }
 
 export const Campo: React.FC<CampoProps> = ({
@@ -37,15 +38,17 @@ export const Campo: React.FC<CampoProps> = ({
   selectFunction,
   textAreaFuction,
   list,
+  styleInput,
 }) => {
   const renderInput = () => {
     if (type === "select" && options) {
       return (
         <select
-          className="campo-container__input"
+          className="campo-container__select"
           value={value}
           disabled={disabled}
           onChange={selectFunction}
+          style={styleInput}
         >
           <option value="">Selecione...</option>
           {options.map((opt) => (
@@ -65,6 +68,7 @@ export const Campo: React.FC<CampoProps> = ({
           placeholder={placeHolder}
           disabled={disabled}
           onChange={textAreaFuction}
+          style={styleInput}
         />
       );
     }
@@ -78,6 +82,7 @@ export const Campo: React.FC<CampoProps> = ({
         disabled={disabled}
         onChange={inputFunction}
         list={list}
+        style={styleInput}
       />
     );
   };
