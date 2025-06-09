@@ -22,7 +22,7 @@ export interface ItemTransacao {
   id: number;
   transacaoId: number;
   produtoId: number;
-  produtoNome?: string; // Nome do produto
+  produtoNome?: string;
   quantidade: number;
   precoUnitario: number;
   categoria: CategoriaItem;
@@ -31,13 +31,13 @@ export interface ItemTransacao {
 export interface Transacao {
   id: number;
   tipo: TipoTransacao;
-  data: string; // ISO Date string
+  data: string;
   valorTotal: number;
   formaPagamento: FormaPagamento;
   clienteId?: number;
-  clienteNome?: string; // Nome do cliente
+  clienteNome?: string;
   fornecedorId?: number;
-  fornecedorNome?: string; // Nome do fornecedor
+  fornecedorNome?: string;
   leiteId?: number;
   laticinioId?: number;
   descricao: string;
