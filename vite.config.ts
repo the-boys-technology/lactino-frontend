@@ -3,10 +3,6 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  clearScreen: false,
-  optimizeDeps: {
-    force: true,
-  },
   server: {
     proxy: {
       '/api': {
@@ -17,4 +13,3 @@ export default defineConfig({
     }
   }
 })
-

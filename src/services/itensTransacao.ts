@@ -4,30 +4,30 @@ import { ItemTransacao } from "../types/transacao";
 
 export const buscarItens = async () => {
   try {
-    const res = await api.get<ItemTransacao[]>("/itens-transacao");
-    return res;
+    const res = await api.get<ItemTransacao[]>("/itens-transacoes");
+    return res.data;
   } catch (error) {
-    if (error instanceof AxiosError) return error.response;
+    if (error instanceof AxiosError) return error.response?.data;
     throw error;
   }
 };
 
 export const buscarItensPorTransacao = async (transacaoId: number) => {
   try {
-    const res = await api.get<ItemTransacao[]>(`/itens-transacao?transacao_id=${transacaoId}`);
-    return res;
+    const res = await api.get<ItemTransacao[]>(`/itens-transacoes?transacao_id=${transacaoId}`);
+    return res.data;
   } catch (error) {
-    if (error instanceof AxiosError) return error.response;
+    if (error instanceof AxiosError) return error.response?.data;
     throw error;
   }
 };
 
 export const removerItem = async (id: number) => {
   try {
-    const res = await api.delete(`/itens-transacao/${id}`);
-    return res;
+    const res = await api.delete(`/itens-transacoes/${id}`);
+    return res.data;
   } catch (error) {
-    if (error instanceof AxiosError) return error.response;
+    if (error instanceof AxiosError) return error.response?.data;
     throw error;
   }
 };
