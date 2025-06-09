@@ -27,6 +27,12 @@
   gap: 0.5rem;
 }
 
+.campo-container__wrapper--no-border {
+  border: none;
+  padding: 0;
+  background-color: transparent;
+}
+
 .campo-container__input,
 .campo-container__input:focus,
 .campo-container__input:active {

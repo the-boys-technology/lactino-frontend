@@ -90,7 +90,7 @@ export const Campo: React.FC<CampoProps> = ({
   return (
     <section className={`campo-container ${errorShow ? "erro" : ""}`}>
       {label && <h4 className="campo-container__nome">{label}:</h4>}
-      <div className="campo-container__wrapper">
+      <div className={`campo-container__wrapper ${type === 'select' ? 'campo-container__wrapper--no-border' : ''}`}>
         {leftAdd && <span className="campo-container__addon">{leftAdd}</span>}
         {renderInput()}
         {rightAdd && <span className="campo-container__addon">{rightAdd}</span>}
