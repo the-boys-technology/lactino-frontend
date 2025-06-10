@@ -1,0 +1,36 @@
+.tabela-transacoes {
+  background-color: #ffffff;
+  border: 1px solid #000;
+  border-radius: 10px;
+  padding: 1rem;
+  overflow-x: auto;
+}
+
+.tabela-transacoes__cabecalho {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  padding: 1rem;
+  background-color: #D9D9D9;
+  border-bottom: 1px solid #000;
+  font-weight: var(--bold);
+  color: var(--secondary-text-color);
+}
+
+.tabela-transacoes__linha {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  padding: 0.75rem 1rem;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  background-color: #f9fafb;
+  font-size: 0.95rem;
+}
+
+.tabela-transacoes__ver-relatorio {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #0F306E;
+  cursor: pointer;
+  text-decoration: underline;
+}
