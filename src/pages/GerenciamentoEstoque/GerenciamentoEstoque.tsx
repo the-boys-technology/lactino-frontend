@@ -38,15 +38,15 @@ export default function EstoquePage() {
     dataValidade: ''
   })
 
-const insumosFiltrados = insumos.filter((item) => {
-  return (
-    (!filtros.codigo || item.id?.toString().includes(filtros.codigo)) &&
-    (!filtros.nome || item.nome?.toLowerCase().includes(filtros.nome.toLowerCase())) &&
-    (!filtros.fornecedor || item.fornecedor?.toLowerCase().includes(filtros.fornecedor.toLowerCase())) &&
-    (!filtros.categoria || item.categoria === filtros.categoria) &&
-    (!filtros.dataValidade || item.validade?.startsWith(filtros.dataValidade))
-  )
-})
+  const insumosFiltrados = insumos.filter((item) => {
+    return (
+      (!filtros.codigo || item.id?.toString().includes(filtros.codigo)) &&
+      (!filtros.nome || item.nome?.toLowerCase().includes(filtros.nome.toLowerCase())) &&
+      (!filtros.fornecedor || item.fornecedor?.toLowerCase().includes(filtros.fornecedor.toLowerCase())) &&
+      (!filtros.categoria || item.categoria === filtros.categoria) &&
+      (!filtros.dataValidade || item.validade?.startsWith(filtros.dataValidade))
+    )
+  })
 
   return (
     <div className="estoque">
