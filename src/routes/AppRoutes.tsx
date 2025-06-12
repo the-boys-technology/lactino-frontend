@@ -14,6 +14,7 @@ import CadastroPage from '../pages/Auth/CadastroPage';
 
 import Header from '../components/Header';
 import CRMPage from '../pages/CRMPage';
+import { NotificacoesProvider } from '../context/NotificacoesContext';
 
 function LayoutWithHeader(): React.ReactElement {
   return (
@@ -26,23 +27,25 @@ function LayoutWithHeader(): React.ReactElement {
 
 export default function AppRoutes(): React.ReactElement {
   return (
-    <BrowserRouter>
-      <Routes>
-      <Route element={<LayoutWithHeader />}>
-        <Route path="/" element={<Home />} />
-        <Route path="/gestao-vendas" element={<GestaoVendas />} />
-        <Route path="/gestao-compras" element={<GestaoCompras />} />
-        <Route path="/estoque" element={<GerenciamentoEstoque />} />
-        <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
-        <Route path="/gerenciar-leite" element={<GestaoLeitePage />} />
-        <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
-        <Route path="/crm" element={<CRMPage />}/>
-        <Route path="/historico" element={<HistoricoPage />} />
-        <Route path="*" element={<NotFound />} />
-        </Route>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/cadastro" element={<CadastroPage />} />
-      </Routes>
-    </BrowserRouter>
+    <NotificacoesProvider>
+      <BrowserRouter>
+        <Routes>
+        <Route element={<LayoutWithHeader />}>
+          <Route path="/" element={<Home />} />
+          <Route path="/gestao-vendas" element={<GestaoVendas />} />
+          <Route path="/gestao-compras" element={<GestaoCompras />} />
+          <Route path="/estoque" element={<GerenciamentoEstoque />} />
+          <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
+          <Route path="/gerenciar-leite" element={<GestaoLeitePage />} />
+          <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
+          <Route path="/crm" element={<CRMPage />}/>
+          <Route path="/historico" element={<HistoricoPage />} />
+          <Route path="*" element={<NotFound />} />
+          </Route>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/cadastro" element={<CadastroPage />} />
+        </Routes>
+      </BrowserRouter>
+    </NotificacoesProvider>
   );
 }
