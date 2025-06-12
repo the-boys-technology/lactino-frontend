@@ -11,7 +11,7 @@
   font-size: 1rem;
   font-weight: var(--semibold);
   color: var(--secondary-text-color);
-  margin-right: 0.75rem;
+  margin-right: 0.5rem;
   white-space: nowrap;
   display: flex; 
   align-items: center;
@@ -61,7 +61,7 @@
   border-radius: 5px;
   font-size: 1rem;
   padding: 0.3rem;
-  background-color: transparent;
+  background-color: var(--primary-font-color);
   font-family: inherit;
   text-align: center;
   text-align-last: center;
@@ -79,7 +79,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #6B7280; /* gray-500 */
+  color: #6b7280;
+  padding-right: 0.3rem;
 }
 
 .campo-container__erro {
