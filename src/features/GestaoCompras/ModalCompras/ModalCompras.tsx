@@ -48,7 +48,9 @@ export default function ModalCompra({ onClose, onSave }: Props) {
       quantidade,
       precoUnitario,
       categoria,
-      produtoNome: `Produto #${produtoId}`
+      produtoNome: `Produto #${produtoId}`,
+      unidadeMedida: undefined,
+      validade: undefined
     };
 
     const novaTransacao: Transacao = {
@@ -92,7 +94,7 @@ export default function ModalCompra({ onClose, onSave }: Props) {
               <h4 className="campo-container__nome">Forma de Pagamento:</h4>
               <select
                 name="formaPagamento"
-                className="campo-container__input"
+                className="campo-container__select"
                 onChange={handleChange}
                 value={form.formaPagamento}
               >
@@ -112,7 +114,7 @@ export default function ModalCompra({ onClose, onSave }: Props) {
               inputFunction={handleChange} 
               />
             
-            <Campo 
+            <Campo
               label="precoUnitario" 
               placeHolder="Preço Unitário" 
               type="number" 
@@ -123,7 +125,7 @@ export default function ModalCompra({ onClose, onSave }: Props) {
               <h4 className="campo-container__nome">Categoria:</h4>
               <select
                 name="categoria"
-                className="campo-container__input"
+                className="campo-container__select"
                 onChange={(e) => setCategoria(e.target.value as CategoriaItem)}
                 value={categoria}
               >
@@ -136,8 +138,8 @@ export default function ModalCompra({ onClose, onSave }: Props) {
         </div>
 
         <div className="modal__botoes">
-          <Botao tipo="secondary" label="Cancelar" onClick={onClose} />
-          <Botao tipo="primary" label="Salvar" onClick={handleSubmit} />
+          <Botao tipo="secondary" label="Cancelar" onClick={onClose} htmlType={"button"} />
+          <Botao tipo="primary" label="Salvar" onClick={handleSubmit} htmlType={"submit"} />
         </div>
       </div>
     </div>

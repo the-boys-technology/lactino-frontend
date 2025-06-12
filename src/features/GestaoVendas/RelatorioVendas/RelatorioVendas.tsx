@@ -61,9 +61,9 @@ export default function RelatorioVendas({
         </p>
 
         <div className="modal-relatorio__botoes">
-          <Botao label="Cancelar" tipo="secondary" onClick={onClose} />
-          <Botao label="Exportar PDF" tipo="primary" onClick={() => window.print()} />
-          <Botao label="Imprimir" tipo="primary" onClick={imprimir} />
+          <Botao label="Cancelar" tipo="secondary" onClick={onClose} htmlType={"button"} />
+          <Botao label="Exportar PDF" tipo="primary" onClick={() => window.print()} htmlType={"button"} />
+          <Botao label="Imprimir" tipo="primary" onClick={imprimir} htmlType={"button"} />
         </div>
       </div>
 
@@ -84,12 +84,12 @@ export default function RelatorioVendas({
             <h3>Confirmar edição</h3>
             <p>Deseja salvar as alterações feitas nesta venda?</p>
             <div className="modal-confirmacao__botoes">
-              <Botao label="Cancelar" tipo="secondary" onClick={() => setConfirmarSalvar(null)} />
+              <Botao label="Cancelar" tipo="secondary" onClick={() => setConfirmarSalvar(null)} htmlType={"button"} />
               <Botao label="Salvar" tipo="primary" onClick={() => {
                 onEdit(confirmarSalvar);
                 setConfirmarSalvar(null);
                 setSucessoEdicao(true);
-              }} />
+              } } htmlType={"button"} />
             </div>
           </div>
         </div>
@@ -101,7 +101,7 @@ export default function RelatorioVendas({
             <h3>Edição Concluída</h3>
             <p>A venda foi atualizada com sucesso!</p>
             <div className="modal-confirmacao__botoes">
-              <Botao label="Fechar" tipo="primary" onClick={() => setSucessoEdicao(false)} />
+              <Botao label="Fechar" tipo="primary" onClick={() => setSucessoEdicao(false)} htmlType={"button"} />
             </div>
           </div>
         </div>
@@ -113,8 +113,8 @@ export default function RelatorioVendas({
             <h3>Confirmar exclusão</h3>
             <p>Tem certeza que deseja excluir esta venda?</p>
             <div className="modal-confirmacao__botoes">
-              <Botao label="Cancelar" tipo="secondary" onClick={() => setConfirmarExclusao(false)} />
-              <Botao label="Remover" tipo="danger" onClick={() => onDelete(transacao.id)} />
+              <Botao label="Cancelar" tipo="secondary" onClick={() => setConfirmarExclusao(false)} htmlType={"button"} />
+              <Botao label="Remover" tipo="danger" onClick={() => onDelete(transacao.id)} htmlType={"button"} />
             </div>
           </div>
         </div>
