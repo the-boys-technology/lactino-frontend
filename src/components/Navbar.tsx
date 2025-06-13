@@ -15,7 +15,7 @@ function Navbar(): React.ReactElement {
                     <MockNotificacoes />
                 </li>
                 <li className="navbar__lista__item">
-                    <Link to="/selecionar-produto">Gerenciamento do Produto</Link>
+                    <Link to="/historico">Gerenciamento do Produto</Link>
                 </li>
                 <li className="navbar__lista__item">
                     <Link to="/estoque">Estoque</Link>

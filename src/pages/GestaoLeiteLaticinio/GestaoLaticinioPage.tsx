@@ -1,7 +1,4 @@
-// pages/GestaoLaticinioPage.tsx
 import GestaoForm   from "../../components/GestaoForm";
-import Botao        from "../../components/Botao";
-import axios        from "axios";
 import { useNavigate } from "react-router-dom";
 import { CampoConfig } from "../../types/campos";
 import { registrarLaticinio } from "../../services/gestao_leite_laticinio";

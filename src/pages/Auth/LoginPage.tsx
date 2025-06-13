@@ -21,7 +21,7 @@ function LoginPage(): React.ReactElement {
                 console.log(data);
                 const res = await fazerLogin(data);
                 console.log(res);
-                sessionStorage.setItem('token', res.data.token);
+                sessionStorage.setItem('access_token', res.data.token);
                 navigate("/");
             } catch (error) {
                 console.log(data);

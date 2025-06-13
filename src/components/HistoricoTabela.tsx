@@ -5,6 +5,8 @@ import { type RowData } from "../data/ROW_DATA";
 import { useNavigate } from "react-router-dom";
 import { buscarLaticinios, buscarLeites } from "../services/gestao_leite_laticinio";
 import "../css/historico_tabela.css";
+import loadingGif from "../assets/carregando.gif";
+import { ClipLoader } from "react-spinners";
 
 export default function HistoricoTabela() {
   const navigate = useNavigate();
@@ -30,7 +32,11 @@ export default function HistoricoTabela() {
   }
 
   function handleAddItem() {
-    navigate('/gerenciar-leite');
+    navigate('/selecionar-produto');
+  }
+
+  function handleReturn() {
+    navigate('/');
   }
 
   useEffect(() => {
@@ -85,7 +91,13 @@ export default function HistoricoTabela() {
     [rows, search, turnoFilter, statusFilter]
   );
 
-  if (loading) return <p>Carregando…</p>;
+  if (loading) {
+    return (
+      <div className="loading-container">
+        <ClipLoader size={50} color="#123abc" loading={loading} />
+      </div>
+    );
+  }
   if (error)   return <p style={{color:"red"}}>{error}</p>;
 
   return (
@@ -93,7 +105,7 @@ export default function HistoricoTabela() {
       <section className="historico-container__header">
         <h2 className="historico-container__title">Histórico</h2>
         <section>
-          <button className='historico-container__botao-retornar' onClick={handleAddItem}>
+          <button className='historico-container__botao-retornar' onClick={handleReturn}>
             <img
               className='historico-container__img-retornar'
               src='../img/arrow-left-circle.svg'

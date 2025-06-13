@@ -229,3 +229,15 @@
   background-color: var(--danger-button-color);
   color: var(--primary-font-color);
 }
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 200px; 
+}
+
+.loading-gif {
+  width: 64px;
+  height: 64px;
+}

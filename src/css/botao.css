@@ -32,11 +32,6 @@
   transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.botao:hover {
-  cursor: pointer;
-  transform: scale(1.02);
-}
-
 .botao.disabled,
 .botao:disabled {
   background-color: #cbd5e1;
@@ -66,9 +61,19 @@
   color: var(--primary-font-color);
 }
 
+.primary:hover {
+    cursor: pointer;
+    background-color: #0d47a1;
+}
+
 .secondary {
   background-color: var(--secondary-button-color);
   color: var(--secondary-font-color);
+}
+
+.secondary:hover {
+    cursor: pointer;
+    background-color: #9ca1aa;
 }
 
 .danger {
@@ -76,7 +81,17 @@
   color: var(--primary-font-color);
 }
 
+.danger:hover {
+    cursor: pointer;
+    background-color: #9a2c2c;
+}
+
 .success {
-  background-color: var(--success-button-color);
-  color: var(--primary-font-color);
+    background-color: var(--success-button-color);
+    color: var(--primary-font-color);
+}
+
+.success:hover {
+    cursor: pointer;
+    background-color: #0b7350;
 }
