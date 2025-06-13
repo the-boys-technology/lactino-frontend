@@ -13,33 +13,48 @@ import { removerCliente } from '../services/clientes'
 export default function CRMPage() {
   const [modalAberto, setModalAberto] = useState<null | 'adicionar' | 'editar' | 'remover'>(null)
   const [clientes, setClientes] = useState<any[]>([])
-  const [itemSelecionado, setItemSelecionado] = useState<any | null>(null)
+  const [clienteSelecionado, setItemSelecionado] = useState<any | null>(null)
   const formRef = useRef<HTMLFormElement>(null)
 
   
   async function carregarClientes() {
     try {
       const res = await buscarClientes()
-      setClientes(res.data.content)
+      setClientes(res)
     } catch (error) {
       console.error('Erro ao carregar clientes:', error)
     }
   }
 
   useEffect(() => {
-    buscarClientes()
+    carregarClientes()
   }, [])
   
+  const [filtros, setFiltros] = useState({
+    codigo: '',
+    nome: '',
+    email: '',
+    localizacao: ''
+  })
+
+    const clientesFiltrados = clientes.filter((cliente) => {
+    return (
+      (!filtros.codigo || cliente.id?.toString().includes(filtros.codigo)) &&
+      (!filtros.nome || cliente.nome?.toLowerCase().includes(filtros.nome.toLowerCase())) &&
+      (!filtros.email || cliente.email?.toLowerCase().includes(filtros.email)) &&
+      (!filtros.localizacao || cliente.localizacao?.toLowerCase().includes(filtros.localizacao.toLowerCase()))
+    )
+  })
 
   return (
     <div className="estoque">
       <div className="estoque__card">
         <h2 className="estoque__title">CRM</h2>
-        <CRMForm />
+        <CRMForm filtros={filtros} onFiltrosChange={setFiltros} />
         <div className="estoque__tabela-wrapper">
           <CRMTable
-            clientes={clientes}
-            itemSelecionado={itemSelecionado}
+            clientes={clientesFiltrados}
+            itemSelecionado={clienteSelecionado}
             onSelecionar={setItemSelecionado}
           />
         </div>
@@ -55,26 +70,27 @@ export default function CRMPage() {
                   label="Editar" 
                   tipo="secondary" 
                   onClick={() => {
-                    if (!itemSelecionado) return alert("Selecione um cliente para editar!")
+                    if (!clienteSelecionado) return alert("Selecione um cliente para editar!")
                     setModalAberto('editar')
                   }}/>
             </div>
-
+            {/*
             <div className="estoque__buttons-group">
                 <Botao 
                 htmlType='button'
                 label="Remover" 
                 tipo="danger" 
                 onClick={() => {
-                  if (!itemSelecionado) return alert("Selecione um cliente para remover!")
+                  if (!clienteSelecionado) return alert("Selecione um cliente para remover!")
                   setModalAberto('remover')
                 }}/>
             </div>
+            */}
         </div>
       </div>
 
       {modalAberto === 'adicionar' && (
-        <Modal titulo="Adicionar item" onClose={() => setModalAberto(null)}>
+        <Modal titulo="Adicionar cliente" onClose={() => setModalAberto(null)}>
           <CRMAddForm 
             onSubmit={async (dados) => {
               try {
@@ -95,12 +111,13 @@ export default function CRMPage() {
           </div>
         </Modal>
       )}
-      {modalAberto === 'editar' && itemSelecionado && (
-      <Modal titulo="Editar item" onClose={() => setModalAberto(null)}>
+      {modalAberto === 'editar' && clienteSelecionado && (
+      <Modal titulo="Editar cliente" onClose={() => setModalAberto(null)}>
         <CRMAddForm 
+            dadosIniciais = {clienteSelecionado}
             onSubmit={async (dados) => {
                 try {
-                  await editarCliente(itemSelecionado.id, dados)
+                  await editarCliente(clienteSelecionado.id, dados)
                   await carregarClientes()
                 } catch (error) {
                   console.log(`ERRO: ${error}`)
@@ -118,7 +135,8 @@ export default function CRMPage() {
         </div>
       </Modal>
     )}
-          {modalAberto === 'remover' && itemSelecionado && (
+    {/*
+          {modalAberto === 'remover' && clienteSelecionado && (
           <Modal titulo="Confirmar remoção" onClose={() => setModalAberto(null)}>
             <p>Tem certeza que deseja remover este item?</p>
             <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
@@ -129,7 +147,7 @@ export default function CRMPage() {
                 tipo="danger"
                 onClick={async () => {
                   try {
-                    await removerCliente(itemSelecionado.id)
+                    await removerCliente(clienteSelecionado.id)
                     await carregarClientes()
                   } catch (error) {
                     console.error('Erro ao remover cliente:', error)
@@ -141,8 +159,7 @@ export default function CRMPage() {
             </div>
           </Modal>
         )}
-
-
+      */}
     </div>
   )
 }
