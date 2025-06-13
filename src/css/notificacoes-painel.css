@@ -1,84 +1,124 @@
 .notificacoes-painel {
-  position: absolute;
-  top: 40px;
-  right: 0;
-  width: 400px;
-  max-height: 600px;
-  background: #F9FAFB;
-  border-radius: 20px;
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  z-index: 999;
-  overflow-y: auto;
-  border: 1px solid #E5E7EB;
+    position: absolute;
+    top: 40px;
+    right: 0;
+    width: 400px;
+    max-height: 600px;
+    background: #F9FAFB;
+    border-radius: 20px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 999;
+    overflow-y: auto;
+    border: 1px solid #E5E7EB;
+    transition: all 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .notificacoes-painel__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
 }
 
 .notificacoes-painel__header h2 {
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1.5rem;
-  color: #1F2937; /* Texto primário */
+    font-size: 1.5rem;
+    color: #1F2937;
 }
 
 .notificacoes-painel__limpar {
-  background: none;
-  border: none;
-  color: #2563EB; /* Cor de realce */
-  font-family: 'Montserrat', sans-serif;
-  font-weight: bold;
-  font-size: 1rem;
-  cursor: pointer;
+    background: #2563EB;
+    border: none;
+    color: #F9FAFB;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.notificacoes-painel__limpar:hover,
+.notificacoes-painel__limpar:focus {
+    background-color: #1D4ED8;
+    outline: none;
 }
 
 .notificacoes-painel__lista {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
 }
 
 .notificacoes-painel__card {
-  background: #F9FAFB;
-  border: 1px solid #E5E7EB;
-  border-radius: 20px;
-  padding: 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  color: #1F2937;
-  position: relative;
+    background: #F3F4F6; /* levemente diferente do #F9FAFB do painel */
+    border: 1px solid #E5E7EB;
+    border-radius: 20px;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: #1F2937;
+    position: relative;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: fadeInCard 0.3s ease-out;
+}
+
+@keyframes fadeInCard {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.notificacoes-painel__card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.notificacoes-painel__card > div {
+    flex: 1; /* garante que o texto ocupa o lado esquerdo todo */
 }
 
 .notificacoes-painel__card h3 {
-  margin: 0;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #1F2937;
+    margin: 0;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #1F2937;
 }
 
 .notificacoes-painel__card p {
-  margin: 0.25rem 0 0;
-  font-family: 'Montserrat', sans-serif;
-  font-weight: 500;
-  font-size: 0.875rem;
-  color: #4B5563;
+    margin: 0.25rem 0 0;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #4B5563;
 }
 
 .notificacoes-painel__icone-remover {
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #EF4444; /* Feedback de erro → comum para botão de fechar/remover */
+    flex-shrink: 0; /* ícone não encolhe nunca */
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #EF4444;
+    transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.notificacoes-painel__icone-remover:hover,
+.notificacoes-painel__icone-remover:focus {
+    transform: scale(1.2);
+    color: #DC2626;
+    outline: none;
 }
 
 .notificacoes-painel__vazio {
-  text-align: center;
-  font-family: 'Montserrat', sans-serif;
-  font-size: 1rem;
-  color: #1F2937;
+    text-align: center;
+    font-size: 1rem;
+    color: #1F2937;
+    opacity: 0.7;
+    margin-top: 2rem;
 }

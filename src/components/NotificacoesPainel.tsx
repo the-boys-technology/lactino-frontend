@@ -1,14 +1,14 @@
-// components/NotificacoesPainel.tsx
-import React from "react";
 import "../css/notificacoes-painel.css";
 import { FaRegTimesCircle } from "react-icons/fa";
 import { formatarData } from "../utils/formatter_utils";
 
 interface Notificacao {
   id: string;
-  nome: string;
-  validade: string;
-  diasParaVencer: number;
+  titulo: string;
+  mensagem: string;
+  tipo: string;
+  data_criacao: string;
+  lida: boolean;
 }
 
 interface NotificacoesPainelProps {
@@ -37,14 +37,10 @@ export default function NotificacoesPainel({
           notificacoes.map((n) => (
             <div key={n.id} className="notificacoes-painel__card">
               <div>
-                <h3>{n.nome}</h3>
-                <p>Validade: {formatarData(n.validade)}</p>
-                <p>
-                  {n.diasParaVencer === 0
-                    ? "VENCE HOJE!"
-                    : n.diasParaVencer === 1
-                    ? "Vence em 1 dia"
-                    : `Vence em ${n.diasParaVencer} dias`}
+                <h3>{n.titulo}</h3>
+                <p>{n.mensagem}</p>
+                <p style={{ fontSize: "0.75rem", color: "#9CA3AF" }}>
+                  Criada em: {new Date(n.data_criacao).toLocaleDateString()}
                 </p>
               </div>
               <FaRegTimesCircle

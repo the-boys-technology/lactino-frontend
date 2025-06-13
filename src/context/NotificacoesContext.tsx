@@ -1,23 +1,24 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { Notificacao } from "../types/notificacao";
+import { mockNotificacoes } from "../mocks/mockNotificacoes";
 
-interface Produto {
-  id: string;
-  nome: string;
-  validade: string;
+interface NotificacoesContextType {
+  notificacoes: Notificacao[];
+  setNotificacoes: React.Dispatch<React.SetStateAction<Notificacao[]>>;
 }
 
-interface NotificacoesContextProps {
-  produtosAVencer: Produto[];
-  setProdutosAVencer: React.Dispatch<React.SetStateAction<Produto[]>>;
-}
-
-const NotificacoesContext = createContext<NotificacoesContextProps | undefined>(undefined);
+const NotificacoesContext = createContext<NotificacoesContextType | undefined>(undefined);
 
 export const NotificacoesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [produtosAVencer, setProdutosAVencer] = useState<Produto[]>([]);
+  const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
+
+  // Para apresentação com o mock (Mudar depois)
+  useEffect(() => {
+    setNotificacoes(mockNotificacoes);
+  }, []);
 
   return (
-    <NotificacoesContext.Provider value={{ produtosAVencer, setProdutosAVencer }}>
+    <NotificacoesContext.Provider value={{ notificacoes, setNotificacoes }}>
       {children}
     </NotificacoesContext.Provider>
   );
