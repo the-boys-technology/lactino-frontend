@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import Botao from "../../components/Botao";
 import RelatorioVendas from "../../features/GestaoVendas/RelatorioVendas/RelatorioVendas";
-import { CategoriaItem, Cliente, Transacao } from "../../types/transacao";
+import { Transacao } from "../../types/transacao";
 import "../GestaoVendas/GestaoVendas.css";
 import { api } from "../../services/api";
 import { Campo } from "../../components/Campo";
 import { formatarData, formatarDinheiro } from "../../utils/formatter_utils";
 import ModalVendas from "../../features/GestaoVendas/ModalVendas/ModalVendas";
+import { Cliente } from "../../types/cliente";
+import { CategoriaItem } from "../../types/item-transacao";
 
 
 export default function GestaoVendas() {
@@ -34,11 +36,11 @@ const buscarTransacoes = () => {
     const cliente = clientes.find(c => c.id === t.clienteId);
     const clienteMatch = !filtroCliente || cliente?.nome.toLowerCase().includes(filtroCliente.toLowerCase());
 
-    const produtoMatch = !filtroProduto || t.itens.some(item =>
-      (item.produtoNome || "").toLowerCase().includes(filtroProduto.toLowerCase())
-    );
+    // const produtoMatch = !filtroProduto || t.itens.some(item =>
+    //   (item.produtoNome || "").toLowerCase().includes(filtroProduto.toLowerCase())
+    // );
 
-    return t.tipo === "VENDA" && dentroData && dentroValor && clienteMatch && produtoMatch;
+    return t.tipo === "VENDA" && dentroData && dentroValor && clienteMatch; //Adicionar  && produtoMatch na linha quando implementado no back
   });
 
   setResultadoFiltro(filtrado);

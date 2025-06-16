@@ -50,7 +50,7 @@ export const Campo: React.FC<CampoProps> = ({
           onChange={selectFunction}
           style={styleInput}
         >
-          <option value="">Selecione...</option>
+          <option value="">Selecione uma opção</option>
           {options.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}

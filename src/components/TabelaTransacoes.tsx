@@ -1,5 +1,7 @@
 import "../css/tabela-trasacoes.css";
-import { Cliente, Fornecedor, Transacao } from "../types/transacao";
+import { Cliente } from "../types/cliente";
+import { Fornecedor } from "../types/fornecedor";
+import { Transacao } from "../types/transacao";
 import { formatarData, formatarDinheiro } from "../utils/formatter_utils";
 
 interface TabelaTransacoesProps {
