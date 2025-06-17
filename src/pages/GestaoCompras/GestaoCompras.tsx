@@ -1,17 +1,17 @@
+// src/pages/GestaoCompras.tsx
 import { useEffect, useState } from "react";
 import Botao from "../../components/Botao";
-import ModalCompra from "../../features/GestaoCompras/ModalCompras/ModalCompras";
-import ModalRelatorio from "../../features/GestaoCompras/ModalRelatorio/ModalRelatorio";
-import ModalFornecedor from "../../features/GestaoCompras/ModalFornecedor/ModalFornecedor";
-import { Transacao, Fornecedor } from "../../types/transacao";
+import ModalTransacoes from "../../components/ModalTransacoes";
+import RelatorioPedido from "../../components/RelatorioPedido";
+import { TipoTransacao, Transacao } from "../../types/transacao";
+import { Fornecedor } from "../../types/fornecedor";
 import "../GestaoCompras/GestaoCompras.css";
 import { Campo } from "../../components/Campo";
 import { api } from "../../services/api";
-import TabelaTransacoes from "../../components/TabelaTransacoes";
+import { formatarData, formatarDinheiro } from "../../utils/formatter_utils";
 
 export default function GestaoCompras() {
   const [modalAberto, setModalAberto] = useState(false);
-  const [modalFornecedor, setModalFornecedor] = useState(false);
   const [modalRelatorio, setModalRelatorio] = useState<Transacao | null>(null);
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
@@ -22,10 +22,6 @@ export default function GestaoCompras() {
   const [valorMin, setValorMin] = useState("");
   const [valorMax, setValorMax] = useState("");
   const [resultadoFiltro, setResultadoFiltro] = useState<Transacao[]>([]);
-
-  const handleNovaTransacao = (nova: Transacao) => {
-    setTransacoes((prev) => [nova, ...prev]);
-  };
 
   const buscarTransacoes = () => {
     const filtrado = transacoes.filter((t) => {
@@ -100,20 +96,19 @@ export default function GestaoCompras() {
         <div className="compras__linha">
           <Campo
             type="date"
-            placeHolder="Data Inicial"
+            label="Data Inicial"
             value={dataInicial}
             inputFunction={(e) => setDataInicial(e.target.value)}
           />
           <Campo
             type="date"
-            placeHolder="Data Final"
+            label="Data Final"
             value={dataFinal}
             inputFunction={(e) => setDataFinal(e.target.value)}
           />
           <Campo
             label="Valor Mínimo"
             type="text"
-            placeHolder="R$ 0,00"
             value={valorMin}
             inputFunction={(e) => {
               const raw = e.target.value.replace(/[^\d]/g, "");
@@ -130,7 +125,6 @@ export default function GestaoCompras() {
           <Campo
             label="Valor Máximo"
             type="text"
-            placeHolder="R$ 0,00"
             value={valorMax}
             inputFunction={(e) => {
               const raw = e.target.value.replace(/[^\d]/g, "");
@@ -150,20 +144,34 @@ export default function GestaoCompras() {
         </div>
       </section>
 
-      <TabelaTransacoes
-        transacoes={transacoesParaMostrar}
-        fornecedores={fornecedores}
-        onVerRelatorio={setModalRelatorio}
-        tipoTransacao="COMPRA"
-      />
+      <section className="compras__tabela">
+        <div className="compras__tabela-cabecalho">
+          <span>Fornecedor</span>
+          <span>Produtos</span>
+          <span>Data da compra</span>
+          <span>Preço Total</span>
+          <span>Pagamento</span>
+          <span>Ações</span>
+        </div>
+
+        {transacoesParaMostrar.map((item) => {
+          const fornecedor = fornecedores.find(f => f.id === item.fornecedorId);
+          return (
+            <div key={item.id} className="compras__tabela-linha">
+              <span>{fornecedor?.nome || "—"}</span>
+              <span>{item.itens.length}</span>
+              <span>{formatarData(item.data)}</span>
+              <span>{formatarDinheiro(item.valorTotal)}</span>
+              <span>{item.formaPagamento}</span>
+              <button className="compras__ver-relatorio" onClick={() => setModalRelatorio(item)}>
+                🔍 Ver Relatório
+              </button>
+            </div>
+          );
+        })}
+      </section>
 
       <footer className="compras__footer">
-        <Botao
-          htmlType="button"
-          tipo="primary"
-          label="Cadastrar Fornecedor"
-          onClick={() => setModalFornecedor(true)}
-        />
         <Botao
           htmlType="button"
           tipo="primary"
@@ -173,30 +181,22 @@ export default function GestaoCompras() {
       </footer>
 
       {modalAberto && (
-        <ModalCompra onClose={() => setModalAberto(false)} onSave={handleNovaTransacao} />
-      )}
-
-      {modalFornecedor && (
-        <ModalFornecedor
-          onClose={() => setModalFornecedor(false)}
-          onSave={(novo: Fornecedor) => {
-            setFornecedores((prev) => [...prev, novo]);
+        <ModalTransacoes
+          tipoTransacao={TipoTransacao.COMPRA}
+          clientes={[]}
+          fornecedores={fornecedores}
+          onSalvar={(nova) => {
+            setTransacoes((prev) => [nova, ...prev]);
+            setModalAberto(false);
           }}
+          onCancelar={() => setModalAberto(false)}
         />
       )}
 
       {modalRelatorio && (
-        <ModalRelatorio
-          transacao={modalRelatorio}
+        <RelatorioPedido
+          transacaoId={String(modalRelatorio.id)}
           onClose={() => setModalRelatorio(null)}
-          onEdit={(editada) => {
-            setTransacoes((prev) => prev.map((t) => (t.id === editada.id ? editada : t)));
-            setModalRelatorio(null);
-          }}
-          onDelete={(id) => {
-            setTransacoes((prev) => prev.filter((t) => t.id !== id));
-            setModalRelatorio(null);
-          }}
         />
       )}
     </div>
