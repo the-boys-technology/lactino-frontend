@@ -10,13 +10,14 @@
     --danger-button-color: #EF4444;
     --success-button-color: #10B981;
     --primary-font-color: #F9FAFB;
-    --secondary-font-color: #1F2937;
     --border-color: #E5E7EB;
     --primary-background-color: #0F306E;
     --primary-text-color: #1F2937;
     --secondary-text-color: #4B5563;
     --header-cell-color: #D9D9D9;
     --border-color-dark: #464433;
+    --header-height: 80px;
+    --transparent: rgba(0, 0, 0, 0);
     --border-radius-value: 25px;
     --regular: 400;
     --semibold: 600;
@@ -25,9 +26,10 @@
 
 .sidebar {
   position: fixed;
-  top: 0; left: 0;
+  top: var(--header-height);                      
+  left: 0;
   width: 330px;
-  height: 100vh;
+  height: calc(100vh - var(--header-height));     
   background: var(--border-color);
   transform: translateX(-100%);
   transition: transform 0.3s ease;
@@ -36,53 +38,200 @@
   border: solid 1px var(--border-color-dark);
 }
 
+
 .sidebar.open {
   transform: translateX(0);
 }
 
 .sidebar__profile {
   text-align: center;
-  margin-bottom: 1rem;
 }
 
 .sidebar__profile img {
-  width: 120px; height: 120px;
+  margin: 1rem;
+  width: 100px; height: 100px;
   border-radius: 50%;
   object-fit: cover;
-}
-.sidebar__profile h2 {
-  margin: .5rem 0 0;
-  font-size: 1.2rem;
+  border: 1px solid var(--border-color-dark);
 }
 
-.sidebar__info {
-  list-style: none;
-  margin: 1rem 0;
-  width: 100%;
+.sidebar__form {
+  padding: 0 0 2rem;
+  font-size: 0.9rem;
 }
-.sidebar__info li {
+
+label {
+  color: var(--primary-text-color);
+  font-weight: var(--bold);
+}
+
+input::placeholder {
+  color: var(--secondary-text-color);
+
+}
+
+.field {
+  position: relative;
+  display: flex;
+  flex-direction: column;
   background-color: var(--primary-font-color);
-  width: 100%;
-  padding: 20px 10px;
-  border: solid 1px var(--border-color-dark);
+  border-top:    1px solid var(--border-color-dark);
+  border-bottom: 1px solid var(--border-color-dark);
 }
 
-.sidebar__danger {
-  display: block;
-  width: 60%;
-  padding: .75rem;
-  margin: auto;
-  background: var(--danger-button-color);
+.field label {
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0.2rem 0px 0.25rem 0.75rem;
+  color: #333;
+}
+
+.field.currentPassword{
+  margin-bottom: 2rem;
+}
+
+.field input {
+  padding: 0.75rem 2.75rem 0.75rem 0.75rem; 
+  font-size: 0.95rem;
+  background-color: var(--transparent);
+  border: none;
+}
+
+.field select {
+  padding: 0 0.75rem;
+  height: 36px;
+  line-height: 36px;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+  background-color: white;
+  border: 1px solid var(--border-color-dark);
+  border-radius: var(--border-radius-value);
+  width: 70%;
+  margin: 0.2rem 0 0.25rem 0.75rem;
+}
+
+
+/* modo somente leitura */
+.field input[readonly] {
+  background: var(--transparent);
+  cursor: default;
+}
+
+input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* botão do lápis */
+.edit-btn {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #495057;
+}
+.edit-btn:hover { color: #000; }
+
+/* linha dupla (estado + cidade) */
+.row {
+  display: flex;
+  gap: 0.75rem;
+}
+.row .field { flex: 1; }
+
+/* botões principais */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+.btn {
+  flex: 1;
+  padding: 0.9rem;
   border: none;
   border-radius: var(--border-radius-value);
   color: var(--primary-font-color);
+  font-weight: var(--bold);
+  font-size: 0.9rem;
+  height: 66px;
   cursor: pointer;
-  font-size: 1rem;
+}
+.btn.danger  { background: var(--danger-button-color); }
+.btn.primary { background: var(--success-button-color); }
+
+.btn.primary:hover {
+    cursor: pointer;
+    background-color: #0b7350;
 }
 
-.sidebar__backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.2);
-  z-index: 900;
+.btn.danger:hover {
+    cursor: pointer;
+    background-color: #9a2c2c;
 }
+
+.btn.retornar:hover {
+    cursor: pointer;
+    background-color: #9ca1aa;
+}
+
+.logout {
+  display: block;
+  margin: auto;
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--border-color-dark);
+  font-weight: var(--bold);
+  cursor: pointer;
+
+}
+.logout:hover { text-decoration: underline; }
+
+
+.field .toggle-password-button {
+  position: absolute;
+  top: 50%;
+  right: 0.75rem;               
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-size: 1.2rem;            
+  color: var(--secondary-text-color);
+}
+
+.field .toggle-password-button:focus {
+  outline: none;
+}
+
+/* Inputs e selects que não podem ser editados ganham aparência esmaecida */
+.field select[disabled].readonly-field {
+  color: #6c6c6c;          
+  background: #f5f5f5;     
+  cursor: not-allowed;
+}
+
+/* Opcional: remover borda de foco */
+.field select[disabled].readonly-field:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.profile-img-clickable {
+  cursor: pointer;
+  border-radius: 50%;
+  transition: transform 0.2s;
+}
+
+.profile-img-clickable:hover {
+  transform: scale(1.05);
+}
+

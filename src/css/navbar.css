@@ -40,5 +40,11 @@
     padding: 10px;
 }
 
-
+button.logout {
+    margin-left: auto;
+    color: var(--primary-font-color);   
+    font-weight: var(--regular);
+    font-size: 15px;
+    cursor: pointer;  
+}
 
