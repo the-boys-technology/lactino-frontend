@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "../css/produtos-form.css";
 import { ItemTransacao, CategoriaItem } from "../types/item-transacao";
 import { Campo } from "./Campo";
@@ -15,24 +15,35 @@ export default function ProdutosForm({
   onCancelar,
   itemEdicao,
 }: ProdutosFormProps) {
-  const [produto, setProduto] = useState<Partial<ItemTransacao>>(
-    itemEdicao ?? {
-      produtoId: 0,
-      categoria: CategoriaItem.LEITE,
-      quantidade: 0,
-      precoUnitario: 0,
+  const [produto, setProduto] = useState<Partial<ItemTransacao>>({
+    produtoId: undefined,
+    categoria: undefined,
+    quantidade: undefined,
+    precoUnitario: undefined,
+  });
+
+  useEffect(() => {
+    if (itemEdicao) {
+      setProduto(itemEdicao);
+    } else {
+      setProduto({
+        produtoId: undefined,
+        categoria: undefined,
+        quantidade: undefined,
+        precoUnitario: undefined,
+      });
     }
-  );
+  }, [itemEdicao]);
 
   const handleSalvar = () => {
     if (
-      produto.produtoId &&
+      produto.produtoId != null &&
       produto.categoria &&
-      produto.quantidade &&
-      produto.precoUnitario
+      produto.quantidade != null &&
+      produto.precoUnitario != null
     ) {
       onSalvar({
-        id: itemEdicao?.id ?? Date.now(), // usa o ID existente ou cria um novo
+        id: itemEdicao?.id ?? Date.now(),
         transacaoId: 0,
         produtoId: produto.produtoId,
         categoria: produto.categoria,
@@ -44,7 +55,9 @@ export default function ProdutosForm({
 
   return (
     <div className="formulario-produto">
-      <h3 className="formulario-produto__titulo">Adicionar Produto</h3>
+      <h3 className="formulario-produto__titulo">
+        {itemEdicao ? "Editar Produto" : "Adicionar Produto"}
+      </h3>
 
       <div className="formulario-produto__campos">
         <Campo
@@ -54,6 +67,7 @@ export default function ProdutosForm({
             label: cat,
             value: cat,
           }))}
+          value={produto.categoria || ""}
           selectFunction={(e) =>
             setProduto((prev) => ({
               ...prev,
@@ -65,6 +79,7 @@ export default function ProdutosForm({
         <Campo
           label="Produto ID"
           type="number"
+          value={produto.produtoId || ""}
           inputFunction={(e) =>
             setProduto((prev) => ({
               ...prev,
@@ -76,6 +91,7 @@ export default function ProdutosForm({
         <Campo
           label="Quantidade"
           type="number"
+          value={produto.quantidade || ""}
           inputFunction={(e) =>
             setProduto((prev) => ({
               ...prev,
@@ -87,6 +103,7 @@ export default function ProdutosForm({
         <Campo
           label="Preço Unitário"
           type="number"
+          value={produto.precoUnitario || ""}
           inputFunction={(e) =>
             setProduto((prev) => ({
               ...prev,
@@ -94,12 +111,21 @@ export default function ProdutosForm({
             }))
           }
         />
-        
       </div>
 
       <div className="formulario-produto__botoes">
-        <Botao label="Cancelar" tipo="secondary" htmlType="button" onClick={onCancelar} />
-        <Botao label="Confirmar Produto" tipo="primary" htmlType="button" onClick={handleSalvar} />
+        <Botao
+          label="Cancelar"
+          tipo="secondary"
+          htmlType="button"
+          onClick={onCancelar}
+        />
+        <Botao
+          label={itemEdicao ? "Confirmar Edição" : "Confirmar Produto"}
+          tipo={itemEdicao ? "success" : "primary"}
+          htmlType="button"
+          onClick={handleSalvar}
+        />
       </div>
     </div>
   );
