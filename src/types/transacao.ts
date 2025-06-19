@@ -17,7 +17,7 @@ export interface Transacao {
   tipo: TipoTransacao;
   data: string;
   valorTotal: number;
-  formaPagamento: FormaPagamento;
+  formaPagamento?: FormaPagamento;
   clienteId?: number;
   fornecedorId?: number;
   leiteId?: number;

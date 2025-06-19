@@ -15,7 +15,7 @@ interface CampoProps {
   errorShow?: boolean;
   inputFunction?: React.ChangeEventHandler<HTMLInputElement>;
   selectFunction?: React.ChangeEventHandler<HTMLSelectElement>;
-  textAreaFuction?: React.ChangeEventHandler<HTMLTextAreaElement>;
+  textAreaFunction?: React.ChangeEventHandler<HTMLTextAreaElement>;
   infoText?: string;
   status?: "" | "warning" | "error";
   list?: string;
@@ -36,7 +36,7 @@ export const Campo: React.FC<CampoProps> = ({
   errorShow,
   inputFunction,
   selectFunction,
-  textAreaFuction,
+  textAreaFunction,
   list,
   styleInput,
 }) => {
@@ -67,7 +67,7 @@ export const Campo: React.FC<CampoProps> = ({
           value={value as string}
           placeholder={placeHolder}
           disabled={disabled}
-          onChange={textAreaFuction}
+          onChange={textAreaFunction}
           style={styleInput}
         />
       );
