@@ -1,76 +1,69 @@
-// src/pages/GestaoCompras.tsx
 import { useEffect, useState } from "react";
 import Botao from "../../components/Botao";
 import ModalTransacoes from "../../components/ModalTransacoes";
 import RelatorioPedido from "../../components/RelatorioPedido";
 import { TipoTransacao, Transacao } from "../../types/transacao";
 import { Fornecedor } from "../../types/fornecedor";
-import "../GestaoCompras/GestaoCompras.css";
 import { Campo } from "../../components/Campo";
 import { api } from "../../services/api";
-import { formatarData, formatarDinheiro } from "../../utils/formatter_utils";
+import "../GestaoCompras/GestaoCompras.css";
 
 export default function GestaoCompras() {
-  const [modalAberto, setModalAberto] = useState(false);
-  const [modalRelatorio, setModalRelatorio] = useState<Transacao | null>(null);
+  const [modalAberto, setModalAberto] = useState<false | "compra">(false);
+  const [relatorioId, setRelatorioId] = useState<string | null>(null);
+  const [transacaoEditando, setTransacaoEditando] = useState<Transacao | null>(null);
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
 
+  // filtros
   const [filtroFornecedor, setFiltroFornecedor] = useState("");
-  const [dataInicial, setDataInicial] = useState("2025-05-14");
-  const [dataFinal, setDataFinal] = useState("2025-05-21");
+  const [dataInicial, setDataInicial] = useState("");
+  const [dataFinal, setDataFinal] = useState("");
   const [valorMin, setValorMin] = useState("");
   const [valorMax, setValorMax] = useState("");
   const [resultadoFiltro, setResultadoFiltro] = useState<Transacao[]>([]);
 
-  const buscarTransacoes = () => {
-    const filtrado = transacoes.filter((t) => {
+  // Busca e filtros
+  const filtrar = () => {
+    const filtrado = transacoes.filter(t => {
       const data = new Date(t.data);
-      const dentroData = data >= new Date(dataInicial) && data <= new Date(dataFinal);
-
-      const dentroValorMin = !valorMin || t.valorTotal >= parseFloat(valorMin);
-      const dentroValorMax = !valorMax || t.valorTotal <= parseFloat(valorMax);
-      const dentroValor = dentroValorMin && dentroValorMax;
-
-      const fornecedor = fornecedores.find((f) => f.id === t.fornecedorId);
-      const fornecedorMatch =
-        !filtroFornecedor || fornecedor?.nome.toLowerCase().includes(filtroFornecedor.toLowerCase());
-
-      return t.tipo === "COMPRA" && dentroData && dentroValor && fornecedorMatch;
+      const dentroData =
+        (!dataInicial || data >= new Date(dataInicial)) &&
+        (!dataFinal   || data <= new Date(dataFinal));
+      const dentroValor =
+        (!valorMin || t.valorTotal >= parseFloat(valorMin)) &&
+        (!valorMax || t.valorTotal <= parseFloat(valorMax));
+      const forn = fornecedores.find(f => f.id === t.fornecedorId)?.nome.toLowerCase() || "";
+      const matchForn = !filtroFornecedor || forn.includes(filtroFornecedor.toLowerCase());
+      return t.tipo === TipoTransacao.COMPRA && dentroData && dentroValor && matchForn;
     });
-
     setResultadoFiltro(filtrado);
   };
 
-  const transacoesParaMostrar = resultadoFiltro.length ? resultadoFiltro : transacoes;
+  const mostrar = resultadoFiltro.length ? resultadoFiltro : transacoes;
 
+  // carregar dados iniciais
   useEffect(() => {
-    async function carregarFornecedores() {
-      try {
-        const res = await api.get("/fornecedores");
-        setFornecedores(res.data);
-      } catch (e) {
-        console.error("Erro ao buscar fornecedores", e);
-      }
-    }
+    api.get<Fornecedor[]>("/fornecedores")
+      .then(r => setFornecedores(r.data))
+      .catch(() => alert("Erro ao carregar fornecedores"));
 
-    async function carregarCompras() {
-      try {
-        const res = await api.get("/transacoes?tipo=COMPRA");
-        setTransacoes(res.data);
-      } catch (e) {
-        console.error("Erro ao buscar compras", e);
-      }
-    }
-
-    carregarFornecedores();
-    carregarCompras();
+    api.get<Transacao[]>("/transacoes?tipo=COMPRA")
+      .then(r => setTransacoes(r.data))
+      .catch(() => alert("Erro ao carregar compras"));
   }, []);
+
+  // após criar/editar, recarrega a lista
+  const recarregar = async () => {
+    const r = await api.get<Transacao[]>("/transacoes?tipo=COMPRA");
+    setTransacoes(r.data);
+    setResultadoFiltro([]);
+  };
 
   return (
     <div className="compras">
       <header className="compras__header">
-        <h1 className="compras__header-title">Compras</h1>
+        <h1>Gestão de Compras</h1>
       </header>
 
       <section className="compras__filtros">
@@ -78,127 +71,126 @@ export default function GestaoCompras() {
           <Campo
             type="text"
             label="Fornecedor"
-            placeHolder="Fornecedor"
-            list="lista-fornecedores"
+            placeHolder="Digite parte do nome"
+            list="lista-forn"
             value={filtroFornecedor}
-            inputFunction={(e) => setFiltroFornecedor(e.target.value)}
+            inputFunction={e => setFiltroFornecedor(e.target.value)}
           />
-          <datalist id="lista-fornecedores">
-            {fornecedores.map((f) => (
-              <option key={f.id} value={f.nome} />
-            ))}
+          <datalist id="lista-forn">
+            {fornecedores.map(f => <option key={f.id} value={f.nome} />)}
           </datalist>
-          {!fornecedores.some((f) => f.nome === filtroFornecedor) && filtroFornecedor && (
-            <span className="campo-aviso">Fornecedor não cadastrado. Cadastre primeiro.</span>
-          )}
-        </div>
 
-        <div className="compras__linha">
           <Campo
             type="date"
-            label="Data Inicial"
+            label="De"
             value={dataInicial}
-            inputFunction={(e) => setDataInicial(e.target.value)}
+            inputFunction={e => setDataInicial(e.target.value)}
           />
           <Campo
             type="date"
-            label="Data Final"
+            label="Até"
             value={dataFinal}
-            inputFunction={(e) => setDataFinal(e.target.value)}
-          />
-          <Campo
-            label="Valor Mínimo"
-            type="text"
-            value={valorMin}
-            inputFunction={(e) => {
-              const raw = e.target.value.replace(/[^\d]/g, "");
-              const formatted = (Number(raw) / 100).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              });
-              setValorMin(formatted.replace("R$", "").trim());
-            }}
-            styleInput={{ width: "7rem" }}
-            leftAdd="R$"
+            inputFunction={e => setDataFinal(e.target.value)}
           />
 
           <Campo
-            label="Valor Máximo"
             type="text"
-            value={valorMax}
-            inputFunction={(e) => {
-              const raw = e.target.value.replace(/[^\d]/g, "");
-              const formatted = (Number(raw) / 100).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              });
-              setValorMax(formatted.replace("R$", "").trim());
-            }}
-            styleInput={{ width: "7rem" }}
+            label="Valor Mín."
             leftAdd="R$"
+            styleInput={{ width: "7rem" }}
+            value={valorMin}
+            inputFunction={e => {
+              const raw = e.target.value.replace(/[^\d]/g, "");
+              setValorMin((Number(raw) / 100).toFixed(2));
+            }}
+          />
+          <Campo
+            type="text"
+            label="Valor Máx."
+            leftAdd="R$"
+            styleInput={{ width: "7rem" }}
+            value={valorMax}
+            inputFunction={e => {
+              const raw = e.target.value.replace(/[^\d]/g, "");
+              setValorMax((Number(raw) / 100).toFixed(2));
+            }}
           />
         </div>
 
         <div className="compras__buscar">
-          <Botao tipo="primary" label="🔍 Buscar" onClick={buscarTransacoes} htmlType="button" />
+          <Botao tipo="primary" label="🔍 Filtrar" onClick={filtrar} htmlType="button" />
         </div>
       </section>
 
-      <section className="compras__tabela">
-        <div className="compras__tabela-cabecalho">
-          <span>Fornecedor</span>
-          <span>Produtos</span>
-          <span>Data da compra</span>
-          <span>Preço Total</span>
-          <span>Pagamento</span>
-          <span>Ações</span>
-        </div>
-
-        {transacoesParaMostrar.map((item) => {
-          const fornecedor = fornecedores.find(f => f.id === item.fornecedorId);
-          return (
-            <div key={item.id} className="compras__tabela-linha">
-              <span>{fornecedor?.nome || "—"}</span>
-              <span>{item.itens.length}</span>
-              <span>{formatarData(item.data)}</span>
-              <span>{formatarDinheiro(item.valorTotal)}</span>
-              <span>{item.formaPagamento}</span>
-              <button className="compras__ver-relatorio" onClick={() => setModalRelatorio(item)}>
-                🔍 Ver Relatório
-              </button>
-            </div>
-          );
-        })}
+      <section className="compras__lista">
+        {mostrar.length === 0
+          ? <p className="compras__vazio">Nenhuma compra encontrada.</p>
+          : mostrar.map(t => {
+              const forn = fornecedores.find(f => f.id === t.fornecedorId)?.nome || "—";
+              return (
+                <div key={t.id} className="compras__linha-tabela">
+                  <span>{forn}</span>
+                  <span>{t.itens.length}</span>
+                  <span>{new Date(t.data).toLocaleDateString()}</span>
+                  <span>R$ {t.valorTotal.toFixed(2)}</span>
+                  <span>{t.formaPagamento}</span>
+                  <div className="compras__acoes">
+                    <Botao
+                      tipo="secondary"
+                      label="✏️"
+                      htmlType="button"
+                      onClick={() => {
+                        setTransacaoEditando(t);
+                        setModalAberto("compra");
+                      }}
+                    />
+                    <Botao
+                      tipo="primary"
+                      label="📄"
+                      htmlType="button"
+                      onClick={() => setRelatorioId(String(t.id))}
+                    />
+                  </div>
+                </div>
+              );
+            })
+        }
       </section>
 
       <footer className="compras__footer">
         <Botao
+          tipo="success"
+          label="+ Nova Compra"
           htmlType="button"
-          tipo="primary"
-          label="Registrar Compra"
-          onClick={() => setModalAberto(true)}
+          onClick={() => {
+            setTransacaoEditando(null);
+            setModalAberto("compra");
+          }}
         />
       </footer>
 
-      {modalAberto && (
+      {/* Modal de cadastro/edição */}
+      {modalAberto === "compra" && (
         <ModalTransacoes
           tipoTransacao={TipoTransacao.COMPRA}
-          clientes={[]}
+          clientes={[]}          // não usado em compra
           fornecedores={fornecedores}
-          onSalvar={(nova) => {
-            setTransacoes((prev) => [nova, ...prev]);
+          transacaoEditando={transacaoEditando}
+          onSalvar={async () => {
+            await recarregar();
             setModalAberto(false);
           }}
           onCancelar={() => setModalAberto(false)}
         />
       )}
 
-      {modalRelatorio && (
+      {/* Modal de relatório */}
+      {relatorioId && (
         <RelatorioPedido
-          transacaoId={String(modalRelatorio.id)}
-          onClose={() => setModalRelatorio(null)}
+          transacaoId={relatorioId}
+          onClose={() => setRelatorioId(null)}
         />
       )}
     </div>
-  );
+);
 }

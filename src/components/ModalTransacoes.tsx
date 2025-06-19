@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "../css/modal-transacoes.css";
 import { TipoTransacao, FormaPagamento, Transacao } from "../types/transacao";
 import { CategoriaItem, ItemTransacao } from "../types/item-transacao";
@@ -8,13 +8,16 @@ import { Campo } from "./Campo";
 import Botao from "./Botao";
 import ProdutosTable from "./ProdutosTable";
 import ProdutosForm from "./ProdutosForm";
+import { criarTransacao, editarTransacao, removerTransacao } from "../services/transacoes";
+import { toast } from "react-toastify";
 
 interface ModalTransacoesProps {
   tipoTransacao: TipoTransacao;
   clientes: Cliente[];
   fornecedores: Fornecedor[];
-  onSalvar: (transacao: Transacao) => void;
+  onSalvar: (novaTransacao: Transacao) => void;
   onCancelar: () => void;
+  transacaoEditando?: Transacao | null;
 }
 
 export default function ModalTransacoes({
@@ -23,6 +26,7 @@ export default function ModalTransacoes({
   fornecedores,
   onSalvar,
   onCancelar,
+  transacaoEditando,
 }: ModalTransacoesProps) {
   const [formulario, setFormulario] = useState<Omit<Transacao, "id" | "itens">>({
     tipo: tipoTransacao,
@@ -40,6 +44,21 @@ export default function ModalTransacoes({
   const [modoEdicao, setModoEdicao] = useState(false);
   const [itemEditando, setItemEditando] = useState<ItemTransacao | null>(null);
   const [exibirFormularioProduto, setExibirFormularioProduto] = useState(false);
+
+  useEffect(() => {
+    if (transacaoEditando) {
+      const { itens, ...dados } = transacaoEditando;
+      setFormulario(dados);
+      setItens(itens);
+    }
+  }, [transacaoEditando]);
+
+  const handleChange = (campo: string, valor: any) => {
+    setFormulario((prev) => ({
+      ...prev,
+      [campo]: valor,
+    }));
+  };
 
   const adicionarOuAtualizarItem = (novoItem: ItemTransacao) => {
     if (modoEdicao && itemEditando) {
@@ -66,44 +85,84 @@ export default function ModalTransacoes({
     setItens(itens.filter((i) => i.id !== id));
   };
 
-  const handleChange = (campo: string, valor: any) => {
-    setFormulario((prev) => ({
-      ...prev,
-      [campo]: valor,
-    }));
+const handleSalvar = async () => {
+  const total = itens.reduce((soma, item) => soma + item.precoUnitario * item.quantidade, 0);
+  const novaTransacao: Transacao = {
+    ...formulario,
+    itens,
+    valorTotal: total,
+    id: transacaoEditando?.id || Date.now().toString(),
   };
 
-  const handleSalvar = () => {
-    const total = itens.reduce((soma, item) => soma + item.precoUnitario * item.quantidade, 0);
-    onSalvar({
-        ...formulario,
-        valorTotal: total,
-        itens,
-        id: 0
-    });
+  try {
+    if (transacaoEditando) {
+      await editarTransacao(transacaoEditando.id, novaTransacao);
+    } else {
+      await criarTransacao(novaTransacao);
+    }
+    toast.success("Transação salva com sucesso ✅");
+    onSalvar(novaTransacao);
+  } catch (e) {
+    console.error("Erro ao salvar:", e);
+    toast.error("Erro ao salvar transação. Tente novamente.");
+  }
+};
+
+
+
+  const handleExcluir = async () => {
+    if (transacaoEditando) {
+      const confirmar = confirm("Tem certeza que deseja excluir esta transação?");
+      if (confirmar) {
+        await removerTransacao(transacaoEditando.id);
+        onCancelar();
+      }
+    }
   };
 
   return (
     <div className="modal-transacoes">
-      <h2>{tipoTransacao === "COMPRA" ? "Registrar Compra" : "Registrar Venda"}</h2>
+      <h2>{transacaoEditando ? "Editar Transação" : tipoTransacao === "COMPRA" ? "Registrar Compra" : "Registrar Venda"}</h2>
 
       <div className="modal-transacoes__grupo-campos">
         {tipoTransacao === "COMPRA" ? (
-          <Campo
-            label="Fornecedor"
-            type="select"
-            options={fornecedores.map((f) => ({ label: f.nome, value: String(f.id) }))}
-            value={formulario.fornecedorId || ""}
-            selectFunction={(e) => handleChange("fornecedorId", Number(e.target.value))}
-          />
+          <>
+            <Campo
+              label="Fornecedor"
+              type="text"
+              value={fornecedores.find(f => f.id === formulario.fornecedorId)?.nome || ""}
+              placeHolder="Digite para buscar fornecedor"
+              list="lista-fornecedores"
+              inputFunction={(e) => {
+                const selecionado = fornecedores.find(f => f.nome === e.target.value);
+                handleChange("fornecedorId", selecionado?.id || undefined);
+              }}
+            />
+            <datalist id="lista-fornecedores">
+              {fornecedores.map(f => (
+                <option key={f.id} value={f.nome} />
+              ))}
+            </datalist>
+          </>
         ) : (
-          <Campo
-            label="Cliente"
-            type="select"
-            options={clientes.map((c) => ({ label: c.nome, value: String(c.id) }))}
-            value={formulario.clienteId || ""}
-            selectFunction={(e) => handleChange("clienteId", Number(e.target.value))}
-          />
+          <>
+            <Campo
+              label="Cliente"
+              type="text"
+              value={clientes.find(c => c.id === formulario.clienteId)?.nome || ""}
+              placeHolder="Digite para buscar cliente"
+              list="lista-clientes"
+              inputFunction={(e) => {
+                const selecionado = clientes.find(c => c.nome === e.target.value);
+                handleChange("clienteId", selecionado?.id || undefined);
+              }}
+            />
+            <datalist id="lista-clientes">
+              {clientes.map(c => (
+                <option key={c.id} value={c.nome} />
+              ))}
+            </datalist>
+          </>
         )}
 
         <Campo
@@ -127,10 +186,6 @@ export default function ModalTransacoes({
           value={formulario.descricao}
           inputFunction={(e) => handleChange("descricao", e.target.value)}
         />
-
-        {/* Campos desabilitados aguardando backend */}
-        <Campo label="ID do Leite" type="number" value={formulario.leiteId || ""} disabled />
-        <Campo label="ID do Laticínio" type="number" value={formulario.laticinioId || ""} disabled />
       </div>
 
       <div className="modal-transacoes__produtos">
@@ -148,15 +203,15 @@ export default function ModalTransacoes({
         </div>
 
         {exibirFormularioProduto && (
-            <ProdutosForm
+          <ProdutosForm
             onSalvar={adicionarOuAtualizarItem}
             onCancelar={() => {
-                setModoEdicao(false);
-                setItemEditando(null);
-                setExibirFormularioProduto(false);
+              setModoEdicao(false);
+              setItemEditando(null);
+              setExibirFormularioProduto(false);
             }}
             itemEdicao={itemEditando}
-            />
+          />
         )}
 
         <ProdutosTable produtos={itens} onEditar={editarItem} onRemover={removerItem} />
@@ -169,6 +224,9 @@ export default function ModalTransacoes({
 
         <div className="modal-transacoes__botoes">
           <Botao label="Cancelar" tipo="secondary" htmlType="button" onClick={onCancelar} />
+          {transacaoEditando && (
+            <Botao label="🗑 Excluir" tipo="danger" htmlType="button" onClick={handleExcluir} />
+          )}
           <Botao label="Salvar" tipo="primary" htmlType="button" onClick={handleSalvar} />
         </div>
       </div>

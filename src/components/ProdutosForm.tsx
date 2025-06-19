@@ -94,20 +94,7 @@ export default function ProdutosForm({
             }))
           }
         />
-
-        <Campo
-          label="Validade"
-          type="date"
-          disabled
-          placeHolder="(Campo não implementado)"
-        />
-
-        <Campo
-          label="Unidade de Medida"
-          type="text"
-          disabled
-          placeHolder="(Campo não implementado)"
-        />
+        
       </div>
 
       <div className="formulario-produto__botoes">

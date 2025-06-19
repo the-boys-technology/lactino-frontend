@@ -18,6 +18,7 @@ import LoginPage from '../pages/Auth/LoginPage';
 import CadastroPage from '../pages/Auth/CadastroPage';
 import CRMPage from '../pages/CRMPage';
 import { NotificacoesProvider } from '../context/NotificacoesContext';
+import { ToastContainer } from 'react-toastify';
 
 function LayoutWithHeader(): React.ReactElement {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -50,6 +51,7 @@ export default function AppRoutes(): React.ReactElement {
   return (
     <NotificacoesProvider>
       <BrowserRouter>
+        <ToastContainer position="top-right" />
         <Routes>
         <Route element={<LayoutWithHeader />}>
           <Route path="/" element={<Home />} />

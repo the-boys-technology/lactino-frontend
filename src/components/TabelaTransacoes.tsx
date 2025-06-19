@@ -1,4 +1,4 @@
-import "../css/tabela-trasacoes.css";
+import "../css/tabela-trasacoes.css"
 import { Cliente } from "../types/cliente";
 import { Fornecedor } from "../types/fornecedor";
 import { Transacao } from "../types/transacao";
@@ -6,8 +6,8 @@ import { formatarData, formatarDinheiro } from "../utils/formatter_utils";
 
 interface TabelaTransacoesProps {
   transacoes: Transacao[];
-  clientes?: Cliente[]; // se for VENDA
-  fornecedores?: Fornecedor[]; // se for COMPRA
+  clientes?: Cliente[];
+  fornecedores?: Fornecedor[];
   onVerRelatorio: (transacao: Transacao) => void;
   tipoTransacao: "VENDA" | "COMPRA";
 }
@@ -19,39 +19,41 @@ export default function TabelaTransacoes({
   onVerRelatorio,
   tipoTransacao
 }: TabelaTransacoesProps) {
+  const getPessoaNome = (t: Transacao) => {
+    if (tipoTransacao === "VENDA") {
+      return clientes.find(c => c.id === t.clienteId)?.nome || "—";
+    } else {
+      return fornecedores.find(f => f.id === t.fornecedorId)?.nome || "—";
+    }
+  };
+
   return (
-    <section className="tabela-transacoes">
+    <section className="tabela-transacoes" aria-label={`Tabela de ${tipoTransacao.toLowerCase()}s`}>
       <div className="tabela-transacoes__cabecalho">
         <span>{tipoTransacao === "VENDA" ? "Cliente" : "Fornecedor"}</span>
         <span>Produtos</span>
-        <span>Data da compra</span>
-        <span>Preço Total</span>
+        <span>Data</span>
+        <span>Total</span>
         <span>Pagamento</span>
         <span>Ações</span>
       </div>
 
-      {transacoes.map((item) => {
-        const nomePessoa =
-          tipoTransacao === "VENDA"
-            ? clientes.find((c) => c.id === item.clienteId)?.nome
-            : fornecedores.find((f) => f.id === item.fornecedorId)?.nome;
-
-        return (
-          <div key={item.id} className="tabela-transacoes__linha">
-            <span>{nomePessoa || "—"}</span>
-            <span>{item.itens.length}</span>
-            <span>{formatarData(item.data)}</span>
-            <span>{formatarDinheiro(item.valorTotal)}</span>
-            <span>{item.formaPagamento}</span>
-            <button
-              className="tabela-transacoes__ver-relatorio"
-              onClick={() => onVerRelatorio(item)}
-            >
-              🔍 Ver Relatório
-            </button>
-          </div>
-        );
-      })}
+      {transacoes.map((t) => (
+        <div key={t.id} className="tabela-transacoes__linha">
+          <span>{getPessoaNome(t)}</span>
+          <span>{t.itens.length}</span>
+          <span>{formatarData(t.data)}</span>
+          <span>{formatarDinheiro(t.valorTotal)}</span>
+          <span>{t.formaPagamento}</span>
+          <button
+            className="tabela-transacoes__ver-relatorio"
+            onClick={() => onVerRelatorio(t)}
+            aria-label={`Ver relatório da ${tipoTransacao.toLowerCase()} de ${getPessoaNome(t)}`}
+          >
+            📝Ver Relatório
+          </button>
+        </div>
+      ))}
     </section>
   );
 }
