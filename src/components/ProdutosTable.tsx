@@ -31,7 +31,7 @@ export default function ProdutosTable({
         <tbody>
           {produtos.length === 0 ? (
             <tr>
-              <td colSpan={6} className="tabela-produtos__vazio">
+              <td colSpan={6} className="tabela-produtos__vazio" style={{textAlign: "center"}}>
                 Nenhum produto adicionado.
               </td>
             </tr>
@@ -45,13 +45,13 @@ export default function ProdutosTable({
                 <td>R$ {(item.quantidade * item.precoUnitario).toFixed(2)}</td>
                 <td>
                   <button
-                    className="tabela-produtos__botao editar"
+                    className="tabela-produtos__editar"
                     onClick={() => onEditar(item)}
                   >
                     Editar
                   </button>
                   <button
-                    className="tabela-produtos__botao remover"
+                    className="tabela-produtos__remover"
                     onClick={() => onRemover(item.id)}
                   >
                     Remover
