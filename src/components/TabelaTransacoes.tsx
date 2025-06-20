@@ -1,4 +1,4 @@
-import "../css/tabela-trasacoes.css"
+import "../css/tabela-trasacoes.css";
 import { Cliente } from "../types/cliente";
 import { Fornecedor } from "../types/fornecedor";
 import { Transacao } from "../types/transacao";
@@ -17,18 +17,21 @@ export default function TabelaTransacoes({
   clientes = [],
   fornecedores = [],
   onVerRelatorio,
-  tipoTransacao
+  tipoTransacao,
 }: TabelaTransacoesProps) {
   const getPessoaNome = (t: Transacao) => {
     if (tipoTransacao === "VENDA") {
-      return clientes.find(c => c.id === t.clienteId)?.nome || "—";
+      return clientes.find((c) => c.id === t.clienteId)?.nome || "—";
     } else {
-      return fornecedores.find(f => f.id === t.fornecedorId)?.nome || "—";
+      return fornecedores.find((f) => f.id === t.fornecedorId)?.nome || "—";
     }
   };
 
   return (
-    <section className="tabela-transacoes" aria-label={`Tabela de ${tipoTransacao.toLowerCase()}s`}>
+    <section
+      className="tabela-transacoes"
+      aria-label={`Tabela de ${tipoTransacao.toLowerCase()}s`}
+    >
       <div className="tabela-transacoes__cabecalho">
         <span>{tipoTransacao === "VENDA" ? "Cliente" : "Fornecedor"}</span>
         <span>Produtos</span>
@@ -38,22 +41,30 @@ export default function TabelaTransacoes({
         <span>Ações</span>
       </div>
 
-      {transacoes.map((t) => (
-        <div key={t.id} className="tabela-transacoes__linha">
-          <span>{getPessoaNome(t)}</span>
-          <span>{t.itens.length}</span>
-          <span>{formatarData(t.data)}</span>
-          <span>{formatarDinheiro(t.valorTotal)}</span>
-          <span>{t.formaPagamento}</span>
-          <button
-            className="tabela-transacoes__ver-relatorio"
-            onClick={() => onVerRelatorio(t)}
-            aria-label={`Ver relatório da ${tipoTransacao.toLowerCase()} de ${getPessoaNome(t)}`}
-          >
-            📝Ver Relatório
-          </button>
+      {transacoes.length === 0 ? (
+        <div className="tabela-transacoes__vazio">
+          Nenhuma transação encontrada.
         </div>
-      ))}
+      ) : (
+        transacoes.map((t) => (
+          <div key={t.id} className="tabela-transacoes__linha">
+            <span>{getPessoaNome(t)}</span>
+            <span>{t.itens.length}</span>
+            <span>{formatarData(t.data)}</span>
+            <span>{formatarDinheiro(t.valorTotal)}</span>
+            <span>{t.formaPagamento}</span>
+            <button
+              className="tabela-transacoes__ver-relatorio"
+              onClick={() => onVerRelatorio(t)}
+              aria-label={`Ver relatório da ${tipoTransacao.toLowerCase()} de ${getPessoaNome(
+                t
+              )}`}
+            >
+              📝Ver Relatório
+            </button>
+          </div>
+        ))
+      )}
     </section>
   );
 }

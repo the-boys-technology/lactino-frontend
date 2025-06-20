@@ -18,7 +18,7 @@
 .tabela-produtos__tabela td {
   padding: 0.75rem 1rem;
   border: 1px solid #e5e7eb;
-  text-align: left;
+  text-align: center;
   font-size: 0.95rem;
 }
 
@@ -33,7 +33,10 @@
 }
 
 .tabela-produtos__botoes {
-  justify-content: space-between;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  align-items: center; 
 }
 
 .tabela-produtos__editar {
@@ -59,4 +62,11 @@
 .tabela-produtos__vazio {
   padding: 1rem;
   color: #6b7280;
+}
+
+.tabela-produtos__total-row td {
+  text-align: right;
+  font-weight: bold;
+  font-size: 1.1rem;
+  padding-right: 1.1rem;
 }

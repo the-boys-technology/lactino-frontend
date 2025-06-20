@@ -24,9 +24,13 @@ interface ModalTransacoesProps {
   transacaoEditando?: Transacao | null;
 }
 
-// Formulário com formaPagamento como string para facilitar "Selecione uma opção"
-type FormularioTransacao = Omit<Transacao, "id" | "itens" | "formaPagamento"> & {
+type FormularioTransacao = Omit<
+  Transacao,
+  "id" | "itens" | "formaPagamento"
+> & {
   formaPagamento: string;
+  clienteId?: number;
+  fornecedorId?: number;
 };
 
 export default function ModalTransacoes({
@@ -53,6 +57,7 @@ export default function ModalTransacoes({
   const [modoEdicao, setModoEdicao] = useState(false);
   const [itemEditando, setItemEditando] = useState<ItemTransacao | null>(null);
   const [exibirFormularioProduto, setExibirFormularioProduto] = useState(false);
+  const [salvando, setSalvando] = useState(false);
   const [clienteNomeTemp, setClienteNomeTemp] = useState("");
 
   useEffect(() => {
@@ -63,11 +68,8 @@ export default function ModalTransacoes({
         formaPagamento: formaPagamento || "",
       });
       setItens(itens);
-
-      const nome = clientes.find((c) => c.id === dados.clienteId)?.nome || "";
-      setClienteNomeTemp(nome);
     }
-  }, [transacaoEditando, clientes]);
+  }, [transacaoEditando]);
 
   const handleChange = (campo: string, valor: any) => {
     setFormulario((prev) => ({
@@ -85,7 +87,6 @@ export default function ModalTransacoes({
     } else {
       setItens([...itens, { ...novoItem, id: Date.now() }]);
     }
-
     setModoEdicao(false);
     setItemEditando(null);
     setExibirFormularioProduto(false);
@@ -107,16 +108,18 @@ export default function ModalTransacoes({
       return;
     }
 
-    const total = itens.reduce(
-      (soma, item) => soma + item.precoUnitario * item.quantidade,
+    setSalvando(true);
+
+    const valorTotalCalculado = itens.reduce(
+      (t, i) => t + i.precoUnitario * i.quantidade,
       0
     );
 
     const novaTransacao: Transacao = {
       ...formulario,
+      id: transacaoEditando?.id || "",
       itens,
-      valorTotal: total,
-      id: transacaoEditando?.id || Date.now().toString(),
+      valorTotal: valorTotalCalculado,
       formaPagamento: formulario.formaPagamento as FormaPagamento,
     };
 
@@ -126,23 +129,33 @@ export default function ModalTransacoes({
       } else {
         await criarTransacao(novaTransacao);
       }
+
       toast.success("Transação salva com sucesso ✅");
       onSalvar(novaTransacao);
     } catch (e) {
       console.error("Erro ao salvar:", e);
       toast.error("Erro ao salvar transação. Tente novamente.");
+    } finally {
+      setSalvando(false);
     }
   };
 
   const handleExcluir = async () => {
     if (transacaoEditando) {
-      const confirmar = confirm("Tem certeza que deseja excluir esta transação?");
+      const confirmar = confirm(
+        "Tem certeza que deseja excluir esta transação?"
+      );
       if (confirmar) {
-        await removerTransacao(transacaoEditando.id);
+        await removerTransacao(Number(transacaoEditando.id));
         onCancelar();
       }
     }
   };
+
+  const valorTotalCalculado = itens.reduce(
+    (t, i) => t + i.precoUnitario * i.quantidade,
+    0
+  );
 
   return (
     <div className="modal-transacoes">
@@ -209,6 +222,7 @@ export default function ModalTransacoes({
             label="Forma de Pagamento"
             type="select"
             options={[
+              { label: "Selecione uma opção", value: "" },
               ...Object.values(FormaPagamento).map((f) => ({
                 label: f,
                 value: f,
@@ -229,7 +243,6 @@ export default function ModalTransacoes({
             value={formulario.data}
             inputFunction={(e) => handleChange("data", e.target.value)}
           />
-
           <Campo
             label="Descrição (Opcional)"
             placeHolder="Descreva sua venda ou alguma observação"
@@ -270,17 +283,11 @@ export default function ModalTransacoes({
             produtos={itens}
             onEditar={editarItem}
             onRemover={removerItem}
+            valorTotal={valorTotalCalculado}
           />
         </div>
 
         <div className="modal-transacoes__rodape">
-          <span className="modal-transacoes__total">
-            Total: R${" "}
-            {itens
-              .reduce((t, i) => t + i.precoUnitario * i.quantidade, 0)
-              .toFixed(2)}
-          </span>
-
           <div className="modal-transacoes__botoes">
             <Botao
               label="Cancelar"
@@ -297,10 +304,11 @@ export default function ModalTransacoes({
               />
             )}
             <Botao
-              label="Salvar Venda"
+              label={salvando ? "Salvando..." : "Salvar Venda"}
               tipo="primary"
               htmlType="button"
               onClick={handleSalvar}
+              disabled={salvando}
             />
           </div>
         </div>

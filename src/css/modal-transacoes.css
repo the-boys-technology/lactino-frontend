@@ -8,6 +8,9 @@
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding-top: 7rem;
+  padding-bottom: 32px; 
+  box-sizing: border-box;
 }
 
 .modal-transacoes-container {
@@ -55,20 +58,41 @@
   margin-bottom: 1rem;
 }
 
-.modal-transacoes__rodape {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 1.5rem;
+.modal-transacoes__cabecalho-produtos h3 {
+  flex: 1;
+  margin: 0;
+  font-weight: 630;
 }
 
-.modal-transacoes__total {
-  font-size: 1.25rem;
-  font-weight: bold;
-  color: #1f2937;
+.modal-transacoes__cabecalho-produtos .botao {
+  width: 13rem;
+}
+
+.modal-transacoes__rodape {
+  display: flex;
+  padding-top: 1.5rem;
 }
 
 .modal-transacoes__botoes {
   display: flex;
-  gap: 1rem;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.botao--loading::after {
+  content: "";
+  margin-left: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
 }

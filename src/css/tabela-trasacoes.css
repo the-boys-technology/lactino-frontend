@@ -13,17 +13,17 @@
   gap: 0.5rem;
   padding: 1rem;
   align-items: center;
+  border: 1px solid #e5e7eb;
 }
 
 .tabela-transacoes__cabecalho {
-  background-color: #D9D9D9;
+  background-color: #f3f4f6;
   font-weight: var(--bold);
   color: #1F2937;
-  border-bottom: 2px solid #000;
 }
 
 .tabela-transacoes__linha {
-  background-color: #f9fafb;
+  background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
   font-size: 0.95rem;
 }
@@ -35,6 +35,12 @@
   cursor: pointer;
   text-decoration: underline;
   font-weight: bold;
+}
+
+.tabela-transacoes__vazio {
+  padding: 1rem;
+  color: #6b7280;
+  text-align: center;
 }
 
 @media (max-width: 768px) {

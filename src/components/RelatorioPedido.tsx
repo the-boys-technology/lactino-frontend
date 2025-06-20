@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import {
-  buscarRelatorioPedido,
-  baixarRelatorioPDF
-} from "../services/relatorios";
 import "../css/relatorio-pedido.css";
 import Botao from "./Botao";
 import { RelatorioPedidoTipo } from "../types/relatorios";
+import {
+  baixarRelatorioPDF,
+  buscarRelatorioPedido,
+} from "../services/relatorio";
 
 interface Props {
   transacaoId: string;
@@ -18,11 +18,14 @@ export default function RelatorioPedido({ transacaoId, onClose }: Props) {
   const [spinner, setSpinner] = useState(true);
   const [toast, setToast] = useState("");
 
-  useEffect(() => {
-    buscarRelatorioPedido(transacaoId)
-      .then(r => setRelatorio(r))
-      .finally(() => setSpinner(false));
-  }, [transacaoId]);
+useEffect(() => {
+  if (!transacaoId) return;
+
+  buscarRelatorioPedido(transacaoId)
+    .then((r) => setRelatorio(r))
+    .catch(() => setToast("❌ Erro ao carregar relatório."))
+    .finally(() => setSpinner(false));
+}, [transacaoId]);
 
   const imprimir = () => window.print();
 
@@ -54,7 +57,12 @@ export default function RelatorioPedido({ transacaoId, onClose }: Props) {
       <div className="relatorio-pedido__fundo" onClick={onClose}>
         <div className="relatorio-pedido__container">
           <p>Relatório indisponível.</p>
-          <Botao tipo="primary" label="Fechar" htmlType="button" onClick={onClose} />
+          <Botao
+            tipo="primary"
+            label="Fechar"
+            htmlType="button"
+            onClick={onClose}
+          />
         </div>
       </div>
     );
@@ -67,16 +75,31 @@ export default function RelatorioPedido({ transacaoId, onClose }: Props) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="relatorio-title"
-        onClick={e => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
       >
         <h2 id="relatorio-title">Relatório de Pedido</h2>
 
         <section className="relatorio-pedido__dados">
-          <p><strong>Data:</strong> {new Date(relatorio.data).toLocaleDateString()}</p>
-          {relatorio.clienteNome && <p><strong>Cliente:</strong> {relatorio.clienteNome}</p>}
-          {relatorio.fornecedorNome && <p><strong>Fornecedor:</strong> {relatorio.fornecedorNome}</p>}
-          <p><strong>Pagamento:</strong> {relatorio.formaPagamento}</p>
-          <p><strong>Descrição:</strong> {relatorio.descricao}</p>
+          <p>
+            <strong>Data:</strong>{" "}
+            {new Date(relatorio.data).toLocaleDateString()}
+          </p>
+          {relatorio.clienteNome && (
+            <p>
+              <strong>Cliente:</strong> {relatorio.clienteNome}
+            </p>
+          )}
+          {relatorio.fornecedorNome && (
+            <p>
+              <strong>Fornecedor:</strong> {relatorio.fornecedorNome}
+            </p>
+          )}
+          <p>
+            <strong>Pagamento:</strong> {relatorio.formaPagamento}
+          </p>
+          <p>
+            <strong>Descrição:</strong> {relatorio.descricao}
+          </p>
         </section>
 
         <table className="relatorio-pedido__tabela">
@@ -90,7 +113,7 @@ export default function RelatorioPedido({ transacaoId, onClose }: Props) {
           </thead>
           <tbody>
             {relatorio.itens.map((item, i) => (
-              <tr key={i}>
+              <tr key={item.nome + "-" + i}>
                 <td>{item.nome}</td>
                 <td>{item.quantidade}</td>
                 <td>R$ {item.precoUnitario.toFixed(2)}</td>

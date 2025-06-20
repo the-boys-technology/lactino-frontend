@@ -6,23 +6,23 @@ interface ProdutosTableProps {
   produtos: ItemTransacao[];
   onEditar: (item: ItemTransacao) => void;
   onRemover: (id: number) => void;
+  valorTotal: number;
 }
 
 export default function ProdutosTable({
   produtos,
   onEditar,
   onRemover,
+  valorTotal,
 }: ProdutosTableProps) {
   return (
     <div className="tabela-produtos">
-      <h3 className="tabela-produtos__titulo">Produtos Adicionados</h3>
-
       <table className="tabela-produtos__tabela">
         <thead>
           <tr>
             <th>Categoria</th>
             <th>ID Produto</th>
-            <th>Qtd</th>
+            <th>Quantidade</th>
             <th>Preço Unitário</th>
             <th>Subtotal</th>
             <th>Ações</th>
@@ -43,7 +43,7 @@ export default function ProdutosTable({
                 <td>{item.quantidade}</td>
                 <td>R$ {item.precoUnitario.toFixed(2)}</td>
                 <td>R$ {(item.quantidade * item.precoUnitario).toFixed(2)}</td>
-                <td>
+                <td className="tabela-produtos__botoes">
                   <button
                     className="tabela-produtos__editar"
                     onClick={() => onEditar(item)}
@@ -61,6 +61,13 @@ export default function ProdutosTable({
             ))
           )}
         </tbody>
+        <tfoot>
+        <tr className="tabela-produtos__total-row">
+          <td colSpan={6}>
+            Valor Total: R$ {valorTotal.toFixed(2)}
+          </td>
+        </tr>
+      </tfoot>
       </table>
     </div>
   );

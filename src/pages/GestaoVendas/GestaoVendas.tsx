@@ -8,6 +8,7 @@ import { Cliente } from "../../types/cliente";
 import { Campo } from "../../components/Campo";
 import { api } from "../../services/api";
 import "./GestaoVendas.css";
+import { CategoriaItem } from "../../types/item-transacao";
 
 export default function GestaoVendas() {
   const [loading, setLoading] = useState(true);
@@ -21,6 +22,8 @@ export default function GestaoVendas() {
   const [dataFinal, setDataFinal] = useState("");
   const [valorMin, setValorMin] = useState("");
   const [valorMax, setValorMax] = useState("");
+  const [filtroProduto, setFiltroProduto] = useState("");
+  const [filtroCategoria, setFiltroCategoria] = useState("");
   const [resultadoFiltro, setResultadoFiltro] = useState<Transacao[]>([]);
 
   useEffect(() => {
@@ -56,7 +59,23 @@ export default function GestaoVendas() {
         !filtroCliente ||
         cliente?.nome.toLowerCase().includes(filtroCliente.toLowerCase());
 
-      return matchData && matchValor && matchCliente;
+      const matchProduto =
+        !filtroProduto ||
+        t.itens.some((item) =>
+          item.nome.toLowerCase().includes(filtroProduto.toLowerCase())
+        );
+
+      const matchCategoria =
+        !filtroCategoria ||
+        t.itens.some((item) => item.categoria === filtroCategoria);
+
+      return (
+        matchData &&
+        matchValor &&
+        matchCliente &&
+        matchProduto &&
+        matchCategoria
+      );
     });
 
     setResultadoFiltro(filtrado);
@@ -76,26 +95,45 @@ export default function GestaoVendas() {
         ) : (
           <>
             <div className="vendas__filtros">
-
               <div className="vendas__filtros__linha">
-                
                 <Campo
-                type="text"
-                label="Cliente"
-                list="clientes-lista"
-                styleInput={{ width: "20rem" }}
-                value={filtroCliente}
-                placeHolder="Digite o nome do cliente"
-                inputFunction={(e) => setFiltroCliente(e.target.value)}
+                  type="text"
+                  label="Cliente"
+                  list="clientes-lista"
+                  styleInput={{ flex: 1, minWidth: "18rem" }}
+                  value={filtroCliente}
+                  placeHolder="Digite o nome do cliente"
+                  inputFunction={(e) => setFiltroCliente(e.target.value)}
                 />
-              <datalist id="clientes-lista">
-                {clientes.map((c) => (
-                  <option key={c.id} value={c.nome} />
-                ))}
-              </datalist>
+                <datalist id="clientes-lista">
+                  {clientes.map((c) => (
+                    <option key={c.id} value={c.nome} />
+                  ))}
+                </datalist>
 
+                <Campo
+                  label="Produto"
+                  placeHolder="Insira o nome do produto"
+                  type="text"
+                  styleInput={{ flex: 1, minWidth: "18rem" }}
+                  value={filtroProduto}
+                  inputFunction={(e) => setFiltroProduto(e.target.value)}
+                />
+
+                <Campo
+                  label="Categoria"
+                  type="select"
+                  options={[
+                    { label: "Selecione uma opção", value: "" },
+                    ...Object.values(CategoriaItem).map((cat) => ({
+                      label: cat,
+                      value: cat,
+                    })),
+                  ]}
+                  value={filtroCategoria}
+                  selectFunction={(e) => setFiltroCategoria(e.target.value)}
+                />
               </div>
-              
 
               <div className="vendas__filtros__linha">
                 <Campo
@@ -142,13 +180,13 @@ export default function GestaoVendas() {
                   }}
                 />
               </div>
-              
+
               <div className="vendas__filtros__botao">
                 <Botao
-                tipo="primary"
-                label="🔍Buscar Venda"
-                onClick={aplicarFiltros}
-                htmlType="button"
+                  tipo="primary"
+                  label="🔍Buscar Venda"
+                  onClick={aplicarFiltros}
+                  htmlType="button"
                 />
               </div>
             </div>

@@ -2,7 +2,9 @@ import { AxiosError } from "axios";
 import { api } from "./api";
 import { Transacao } from "../types/transacao";
 
-export const criarTransacao = async (dados: Omit<Transacao, "id">) => {
+type TransacaoSemId = Omit<Transacao, "id">;
+
+export const criarTransacao = async (dados: TransacaoSemId) => {
   try {
     const res = await api.post<Transacao>("/transacoes", dados);
     return res.data;
@@ -32,9 +34,9 @@ export const buscarTransacaoPorId = async (id: number) => {
   }
 };
 
-export const editarTransacao = async (id: number, dados: Transacao) => {
+export const editarTransacao = async (id: string, dados: Transacao) => {
   try {
-    const res = await api.put(`/transacoes/${id}`, dados);
+    const res = await api.put<Transacao>(`/transacoes/${id}`, dados);
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError) return error.response?.data;

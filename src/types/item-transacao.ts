@@ -5,6 +5,7 @@ export enum CategoriaItem {
 }
 
 export interface ItemTransacao {
+  [x: string]: any;
   id: number;
   transacaoId: number;
   produtoId: number;

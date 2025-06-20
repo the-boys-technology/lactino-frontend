@@ -13,11 +13,11 @@ export enum FormaPagamento {
 }
 
 export interface Transacao {
-  id: any;
+  id: string;
   tipo: TipoTransacao;
   data: string;
   valorTotal: number;
-  formaPagamento?: FormaPagamento;
+  formaPagamento: FormaPagamento;
   clienteId?: number;
   fornecedorId?: number;
   leiteId?: number;
