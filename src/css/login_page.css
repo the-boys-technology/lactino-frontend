@@ -90,6 +90,45 @@
     font-size: .875rem;
     color: var(--secondary-text-color);
 }
+
+.login-main__forms__campos--senha-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+.login-main__forms__campos--senha-wrapper .login-main__forms__campos--senha {
+  padding-right: 2.5rem;
+}
+
+.toggle-password-button {
+  position: absolute;
+  top: 50%;
+  right: 1rem;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--secondary-text-color);
+}
+
+.toggle-password-button:focus {
+  outline: none;
+}
+
+.has-error {
+  border-color: red !important;
+}
+
+.login-error-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  text-align: left;
+}
+
+
+
 /*
 .login-main__linha-divisoria {
   width: 100%;

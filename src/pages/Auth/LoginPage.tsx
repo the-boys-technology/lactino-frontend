@@ -2,12 +2,14 @@ import Botao from "../../components/Botao";
 import { Link, useNavigate } from "react-router-dom";   
 import '../../css/login_page.css';
 import { useState } from "react";
-import { fazerLogin } from "../../services/auth";
+import { fazerLogin, verDados } from "../../services/auth";
+import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 
 function LoginPage(): React.ReactElement {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState<Record<string, any>>({})
+    const [showPassword, setShowPassword] = useState(false);
 
     function handleSignUp() {
     navigate('/cadastro');
@@ -20,8 +22,19 @@ function LoginPage(): React.ReactElement {
             try {
                 console.log(data);
                 const res = await fazerLogin(data);
-                console.log(res);
-                sessionStorage.setItem('access_token', res.data.token);
+                const token = res.data.token;
+                sessionStorage.setItem('access_token', token);
+        
+                const userRes = await verDados();
+                const { nome, email, cep, estado, cidade, fotoPerfil } = userRes.data;
+        
+                sessionStorage.setItem('nome', nome);
+                sessionStorage.setItem('email', email);
+                sessionStorage.setItem('cep', cep);
+                sessionStorage.setItem('estado', estado);
+                sessionStorage.setItem('cidade', cidade);
+                sessionStorage.setItem('fotoPerfil', fotoPerfil);
+        
                 navigate("/");
             } catch (error) {
                 console.log(data);
@@ -42,7 +55,26 @@ function LoginPage(): React.ReactElement {
                 <h2 className="login-main__forms__descricao">Faça login ou crie uma conta</h2>
                 <section className="login-main__forms__campos">
                     <input type="text" placeholder="E-mail" className="login-main__forms__campos--email" value={formData['email'] || ""} onChange={(e) => handleChange('email', e.target.value)}></input>
-                    <input type="password" placeholder="Senha" className="login-main__forms__campos--senha" value={formData['senha'] || ""}onChange={(e) => handleChange('senha', e.target.value)}></input>
+                    <div className="login-main__forms__campos--senha-wrapper">
+                        <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Senha"
+                        className="login-main__forms__campos--senha"
+                        value={formData.senha || ""}
+                        onChange={e => handleChange('senha', e.target.value)}
+                        />
+                        <button
+                        type="button"
+                        className="toggle-password-button"
+                        onClick={() => setShowPassword(v => !v)}
+                        aria-label={showPassword ? "Esconder senha" : "Mostrar senha"}
+                        >
+                        {showPassword
+                            ? <AiFillEye size={20} />
+                            : <AiFillEyeInvisible size={20} />
+                        }
+                        </button>
+                    </div>
                 </section>
                 <section className="login-main__forms__botoes">
                     <Botao tipo="secondary" label="Cadastre-se" onClick={handleSignUp} htmlType="button"></Botao>
