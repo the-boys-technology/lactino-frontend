@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
-import "../css/produtos-form.css";
-import { ItemTransacao, CategoriaItem } from "../types/item-transacao";
 import { Campo } from "./Campo";
 import Botao from "./Botao";
+import { ItemTransacao, CategoriaItem } from "../types/item-transacao";
+import { buscarLaticinios, buscarLeites } from "../services/gestao_leite_laticinio";
+import { buscarInsumos } from "../services/estoque";
+import { ClipLoader } from "react-spinners";
 
 interface ProdutosFormProps {
   onSalvar: (item: ItemTransacao) => void;
@@ -20,28 +22,115 @@ export default function ProdutosForm({
     categoria: undefined,
     quantidade: undefined,
     precoUnitario: undefined,
+    unidadeDeMedida: undefined,
   });
 
+  const [produtos, setProdutos] = useState<any[]>([]); // Lista de produtos filtrados
+  const [produtosOriginais, setProdutosOriginais] = useState<any[]>([]); // Lista de todos os produtos
+  const [nomeProdutoBusca, setNomeProdutoBusca] = useState(""); 
+  const [categoriaSelecionada, setCategoriaSelecionada] = useState<CategoriaItem | undefined>(undefined);
+  const [loading, setLoading] = useState(false); // Estado para carregar produtos
+  const [error, setError] = useState(""); // Para mensagens de erro
+  const [quantidadeError, setQuantidadeError] = useState(""); // Mensagem de erro de quantidade
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false); // Para desabilitar o botão
+
   useEffect(() => {
-    if (itemEdicao) {
-      setProduto(itemEdicao);
-    } else {
+    async function carregarProdutos() {
+      setLoading(true);
+      try {
+        let response;
+        if (categoriaSelecionada === CategoriaItem.LEITE) {
+          response = await buscarLeites();
+        } else if (categoriaSelecionada === CategoriaItem.LATICINIO) {
+          response = await buscarLaticinios();
+        } else if (categoriaSelecionada === CategoriaItem.INSUMO) {
+          response = await buscarInsumos();
+        }
+
+        if (response && Array.isArray(response.data)) {
+
+          console.log("DADOS RECEBIDOS DA API:", response.data);
+          setProdutos(response.data);
+          setProdutosOriginais(response.data);
+        } else {
+        console.warn("A resposta da API não continha um array 'data':", response);
+      }
+      } catch (error) {
+        console.error("Erro ao carregar produtos:", error);
+        setError("Erro ao carregar produtos.");
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (categoriaSelecionada) {
+      carregarProdutos();
+    }
+  }, [categoriaSelecionada]);
+
+  const handleProdutoChange = (produtoId: string) => {
+    const selectedProduct = produtos.find(
+      (produto) => produto.id === produtoId
+    );
+    if (selectedProduct) {
       setProduto({
-        produtoId: undefined,
-        categoria: undefined,
-        quantidade: undefined,
-        precoUnitario: undefined,
+        ...produto,
+        produtoId: selectedProduct.id,
+        categoria: selectedProduct.categoria,
+        precoUnitario: selectedProduct.precoUnitario,
+        unidadeDeMedida: selectedProduct.unidadeDeMedida,
       });
     }
-  }, [itemEdicao]);
+  };
+
+const handleBuscaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const textoBusca = e.target.value;
+  // 1. Atualiza o estado do campo de texto, permitindo a digitação
+  setNomeProdutoBusca(textoBusca);
+
+  // 2. Tenta encontrar um produto que corresponda exatamente ao texto digitado (caso o usuário selecione na lista)
+  const produtoSelecionado = produtosOriginais.find(
+    (p) => p.nome.toLowerCase() === textoBusca.toLowerCase()
+  );
+
+  if (produtoSelecionado) {
+    // Se encontrou, atualiza o formulário principal com os dados do produto
+    setProduto((prev) => ({
+      ...prev,
+      produtoId: produtoSelecionado.id,
+      precoUnitario: produtoSelecionado.precoUnitario,
+      unidadeDeMedida: produtoSelecionado.unidadeDeMedida,
+    }));
+  }
+
+  // 3. Filtra a lista de sugestões para o datalist
+  const filteredForDatalist = produtosOriginais.filter((p) =>
+    p.nome.toLowerCase().includes(textoBusca.toLowerCase())
+  );
+  setProdutos(filteredForDatalist);
+};
+
+  // Validação da quantidade
+  const validateQuantidade = (quantidade: number) => {
+    const selectedProduct = produtos.find((produto) => produto.id === produto.produtoId);
+    if (selectedProduct && selectedProduct.quantidadeTotal < quantidade) {
+      setQuantidadeError(`Quantidade excede o disponível em estoque: ${selectedProduct.quantidadeTotal}`);
+      return false;
+    }
+    setQuantidadeError("");
+    return true;
+  };
 
   const handleSalvar = () => {
     if (
       produto.produtoId != null &&
       produto.categoria &&
       produto.quantidade != null &&
-      produto.precoUnitario != null
+      produto.precoUnitario != null &&
+      produto.unidadeDeMedida &&
+      validateQuantidade(produto.quantidade)
     ) {
+      setIsButtonDisabled(true); // Desabilita o botão enquanto salva
       onSalvar({
         id: itemEdicao?.id ?? Date.now(),
         transacaoId: 0,
@@ -49,9 +138,35 @@ export default function ProdutosForm({
         categoria: produto.categoria,
         quantidade: produto.quantidade,
         precoUnitario: produto.precoUnitario,
+        unidadeDeMedida: produto.unidadeDeMedida,
       });
     }
   };
+
+  // Limpeza dos campos após o cancelamento
+  const handleCancelar = () => {
+    setProduto({
+      produtoId: undefined,
+      categoria: undefined,
+      quantidade: undefined,
+      precoUnitario: undefined,
+      unidadeDeMedida: undefined,
+    });
+    setError("");
+    setQuantidadeError("");
+    onCancelar();
+  };
+
+  useEffect(() => {
+  // Se estiver em modo de edição e as listas de produtos já foram carregadas
+  if (itemEdicao && produtosOriginais.length > 0) {
+    const produtoExistente = produtosOriginais.find(p => p.id === itemEdicao.produtoId);
+    if (produtoExistente) {
+      setNomeProdutoBusca(produtoExistente.nome); // Preenche o campo de busca com o nome
+      setProduto(itemEdicao); // Preenche o resto do formulário
+    }
+  }
+}, [itemEdicao, produtosOriginais]);
 
   return (
     <div className="formulario-produto">
@@ -63,27 +178,58 @@ export default function ProdutosForm({
         <Campo
           label="Categoria"
           type="select"
-          options={Object.values(CategoriaItem).map((cat) => ({
-            label: cat,
-            value: cat,
+          options={Object.values(CategoriaItem).map((categoria) => ({
+            label: categoria,
+            value: categoria,
           }))}
           value={produto.categoria || ""}
-          selectFunction={(e) =>
+          selectFunction={(e) => {
+            const selectedCategoria = e.target.value as CategoriaItem;
+            setCategoriaSelecionada(selectedCategoria);
+            setProduto({
+              ...produto,
+              categoria: selectedCategoria,
+              produtoId: undefined,
+            });
+          }}
+        />
+
+        <Campo
+          label="Produto"
+          type="text"
+          value={nomeProdutoBusca}
+          inputFunction={handleBuscaChange}
+          placeHolder="Digite para buscar o produto"
+          list="produtos-lista"
+        />
+        <datalist id="produtos-lista">
+          {produtos.map((produto) => (
+            <option key={produto.id} value={produto.nome} />
+          ))}
+        </datalist>
+
+        {quantidadeError && <p className="error-message">{quantidadeError}</p>}
+
+        <Campo
+          label="Preço Unitário"
+          type="number"
+          value={produto.precoUnitario || ""}
+          inputFunction={(e) =>
             setProduto((prev) => ({
               ...prev,
-              categoria: e.target.value as CategoriaItem,
+              precoUnitario: parseFloat(e.target.value),
             }))
           }
         />
 
         <Campo
-          label="Produto ID"
-          type="number"
-          value={produto.produtoId || ""}
+          label="Unidade de Medida"
+          type="text"
+          value={produto.unidadeDeMedida || ""}
           inputFunction={(e) =>
             setProduto((prev) => ({
               ...prev,
-              produtoId: parseInt(e.target.value),
+              unidadeDeMedida: e.target.value,
             }))
           }
         />
@@ -99,32 +245,29 @@ export default function ProdutosForm({
             }))
           }
         />
-
-        <Campo
-          label="Preço Unitário"
-          type="number"
-          value={produto.precoUnitario || ""}
-          inputFunction={(e) =>
-            setProduto((prev) => ({
-              ...prev,
-              precoUnitario: parseFloat(e.target.value),
-            }))
-          }
-        />
       </div>
+
+      {loading && (
+        <div className="loading-container">
+          <ClipLoader size={50} color="#123abc" loading={loading} />
+        </div>
+      )}
+
+      {error && <p className="error-message">{error}</p>}
 
       <div className="formulario-produto__botoes">
         <Botao
           label="Cancelar"
           tipo="secondary"
           htmlType="button"
-          onClick={onCancelar}
+          onClick={handleCancelar}
         />
         <Botao
           label={itemEdicao ? "Confirmar Edição" : "Confirmar Produto"}
           tipo={itemEdicao ? "success" : "primary"}
           htmlType="button"
           onClick={handleSalvar}
+          disabled={isButtonDisabled || loading} // Desabilita o botão durante o carregamento ou salvamento
         />
       </div>
     </div>

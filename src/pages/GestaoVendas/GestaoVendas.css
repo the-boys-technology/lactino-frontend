@@ -1,5 +1,6 @@
 .vendas {
   padding: 1.5rem 3rem;
+  padding-top: 100px;
   background: #f0f0f0;
   min-height: 100vh;
   font-family: 'Open Sans', sans-serif;
@@ -49,7 +50,6 @@
 
 .vendas__filtros__linha {
   display: flex;
-  background-color: aqua;
   justify-content: space-between;
   gap: 1rem;
   margin-bottom: 1.5rem;

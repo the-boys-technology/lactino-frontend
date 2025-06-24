@@ -24,7 +24,7 @@ export const buscarTransacoes = async (tipo?: string) => {
   }
 };
 
-export const buscarTransacaoPorId = async (id: number) => {
+export const buscarTransacaoPorId = async (id: string) => {
   try {
     const res = await api.get<Transacao>(`/transacoes/${id}`);
     return res.data;
@@ -44,7 +44,7 @@ export const editarTransacao = async (id: string, dados: Transacao) => {
   }
 };
 
-export const removerTransacao = async (id: number) => {
+export const removerTransacao = async (id: string) => {
   try {
     const res = await api.delete(`/transacoes/${id}`);
     return res.data;

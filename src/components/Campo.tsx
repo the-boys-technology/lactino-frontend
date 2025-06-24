@@ -20,6 +20,7 @@ interface CampoProps {
   status?: "" | "warning" | "error";
   list?: string;
   styleInput?: React.CSSProperties;
+  readOnly?: boolean;
 }
 
 export const Campo: React.FC<CampoProps> = ({
@@ -39,6 +40,7 @@ export const Campo: React.FC<CampoProps> = ({
   textAreaFunction,
   list,
   styleInput,
+  readOnly,
 }) => {
   const renderInput = () => {
     if (type === "select" && options) {
@@ -65,6 +67,7 @@ export const Campo: React.FC<CampoProps> = ({
         <textarea
           className="campo-container__input"
           value={value as string}
+          readOnly={readOnly}
           placeholder={placeHolder}
           disabled={disabled}
           onChange={textAreaFunction}
@@ -78,6 +81,7 @@ export const Campo: React.FC<CampoProps> = ({
         type={type}
         className="campo-container__input"
         value={value}
+        readOnly={readOnly}
         placeholder={placeHolder}
         disabled={disabled}
         onChange={inputFunction}

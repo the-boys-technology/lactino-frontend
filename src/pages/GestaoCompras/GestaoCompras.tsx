@@ -169,7 +169,6 @@ export default function GestaoCompras() {
         />
       </footer>
 
-      {/* Modal de cadastro/edição */}
       {modalAberto === "compra" && (
         <ModalTransacoes
           tipoTransacao={TipoTransacao.COMPRA}

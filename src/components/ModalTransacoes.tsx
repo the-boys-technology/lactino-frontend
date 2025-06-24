@@ -146,7 +146,7 @@ export default function ModalTransacoes({
         "Tem certeza que deseja excluir esta transação?"
       );
       if (confirmar) {
-        await removerTransacao(Number(transacaoEditando.id));
+        await removerTransacao((transacaoEditando.id));
         onCancelar();
       }
     }
@@ -222,7 +222,6 @@ export default function ModalTransacoes({
             label="Forma de Pagamento"
             type="select"
             options={[
-              { label: "Selecione uma opção", value: "" },
               ...Object.values(FormaPagamento).map((f) => ({
                 label: f,
                 value: f,
