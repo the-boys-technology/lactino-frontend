@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Botao from "../../../components/Botao";
 import { criarFornecedor } from "../../../services/fornecedores";
-import "../../../features/GestaoCompras/ModalFornecedor/ModalFornecedor.css";
-import { Fornecedor } from "../../../types/transacao";
 import { Campo } from "../../../components/Campo";
+import { Fornecedor } from "../../../types/fornecedor";
+import { toast } from "react-toastify";  // Importe o toast
+import "../ModalFornecedor/ModalFornecedor.css";
 
 interface Props {
   onClose: () => void;
@@ -18,13 +19,13 @@ export default function ModalFornecedor({ onClose, onSave }: Props) {
 
   const handleSubmit = async () => {
     if (!nome.trim()) {
-      setMensagem("O nome do fornecedor é obrigatório.");
+      toast.error("O nome do fornecedor é obrigatório."); 
       return;
     }
 
     try {
       await criarFornecedor({ nome, email, localizacao });
-      setMensagem("Fornecedor cadastrado com sucesso!");
+      toast.success("Fornecedor cadastrado com sucesso!"); 
       const novoFornecedor: Fornecedor = {
         id: Date.now(),
         nome,
@@ -37,7 +38,7 @@ export default function ModalFornecedor({ onClose, onSave }: Props) {
       }, 1500);
     } catch (error) {
       console.error("Erro ao cadastrar fornecedor", error);
-      setMensagem("Erro ao cadastrar fornecedor. Tente novamente.");
+      toast.error("Erro ao cadastrar fornecedor. Tente novamente.");
     }
   };
 
@@ -54,20 +55,23 @@ export default function ModalFornecedor({ onClose, onSave }: Props) {
             label="Nome do Fornecedor"
             placeHolder="Insira o nome do fornecedor"
             type="text"
+            styleInput={{ width: "15rem" }}
             value={nome}
             inputFunction={(e) => setNome(e.target.value)}
           />
           <Campo
-            label="E-mail (opcional)"
-            placeHolder="Insira o email do fornecerdor"
+            label="E-mail"
+            placeHolder="Insira o email do fornecedor"
             type="text"
+            styleInput={{ width: "15rem" }}
             value={email}
             inputFunction={(e) => setEmail(e.target.value)}
           />
           <Campo
-            label="Localização (opcional)"
+            label="Localização"
             placeHolder="Insira o endereço do fornecedor"
             type="text"
+            styleInput={{ width: "15rem" }}
             value={localizacao}
             inputFunction={(e) => setLocalizacao(e.target.value)}
           />
@@ -76,8 +80,18 @@ export default function ModalFornecedor({ onClose, onSave }: Props) {
         {mensagem && <p className="modal-fornecedor__mensagem">{mensagem}</p>}
 
         <div className="modal-fornecedor__botoes">
-          <Botao tipo="secondary" label="Cancelar" onClick={onClose} htmlType={"submit"} />
-          <Botao tipo="primary" label="Salvar" onClick={handleSubmit} htmlType={"button"} />
+          <Botao
+            tipo="secondary"
+            label="Cancelar"
+            onClick={onClose}
+            htmlType={"submit"}
+          />
+          <Botao
+            tipo="primary"
+            label="Salvar"
+            onClick={handleSubmit}
+            htmlType={"button"}
+          />
         </div>
       </div>
     </div>

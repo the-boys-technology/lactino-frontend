@@ -5,11 +5,19 @@ import '../css/dashboard.css'
 import Botao from '../components/Botao'
 import PopupVigilancia from '../features/Home/PopUpVigilancia/PopupVigilancia'
 import { useNavigate } from 'react-router-dom';
+import { Fornecedor } from '../types/fornecedor'
+import ModalFornecedor from '../features/Home/ModalFornecedor/ModalFornecedor'
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const [showPopup, setShowPopup] = useState(false)
+  const [showPopup, setShowPopup] = useState(false);
+  const [showModalFornecedor, setShowModalFornecedor] = useState(false);
   
+  const handleSaveFornecedor = (fornecedor: Fornecedor) => {
+    console.log("Fornecedor salvo", fornecedor);
+    setShowModalFornecedor(false);
+  };
+
   return (
     <div className="dashboard">
         <h1 className='dashboard__welcome'>Bem-vindo(a), Fulano!</h1>
@@ -41,7 +49,9 @@ export default function Dashboard() {
           </p>
         </Card>
 
-        <Card title="Gerencie seus clientes">
+        <Card 
+          className="card--center"
+          title={"Gerencie seus clientes"}>
           <Botao 
           label='Acessar CRM'
           tipo='primary' 
@@ -50,7 +60,16 @@ export default function Dashboard() {
         </Card>
 
         <Card 
-          size='medium'
+          className="card--center"
+          title={"Cadastro simples \n de Fornecedor"}>
+          <Botao
+            tipo="primary" 
+            label="Clique aqui"
+            htmlType='button'
+            onClick={() => setShowModalFornecedor(true)} />
+        </Card>
+
+        <Card 
           className="card--center"
           title={"Mantenha-se em dia com \na Vigilância Sanitária"}>
           <Botao
@@ -61,6 +80,13 @@ export default function Dashboard() {
         </Card>
 
       </div>
+        {showModalFornecedor && (
+        <ModalFornecedor
+          onClose={() => setShowModalFornecedor(false)}
+          onSave={handleSaveFornecedor}
+        />
+      )}
+
       {showPopup && <PopupVigilancia onClose={() => setShowPopup(false)} />}
     </div>
   )
