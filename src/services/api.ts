@@ -1,11 +1,7 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
-const isProduction = import.meta.env.PROD;
-
 export const api = axios.create({
-  baseURL: isProduction
-    ? 'https://lactino-backend-render.onrender.com/api'
-    : '/api', 
+  baseURL: '/api', 
 });
 
 export const api_ibge = axios.create({

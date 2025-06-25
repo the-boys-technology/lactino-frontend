@@ -1,12 +1,19 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { DataTable } from "./Tabela";
 import { COLUNAS } from "../data/COLUNAS";
 import { type RowData } from "../data/ROW_DATA";   
 import { useNavigate } from "react-router-dom";
-import { buscarLaticinios, buscarLeites } from "../services/gestao_leite_laticinio";
+import { buscarLaticinios, buscarLeites, editarLeite, registrarLeite, removerLeite } from "../services/gestao_leite_laticinio";
 import "../css/historico_tabela.css";
 import loadingGif from "../assets/carregando.gif";
 import { ClipLoader } from "react-spinners";
+import retornarIcon from '../assets/retornar.png';
+import Botao from "./Botao";
+import { MOCK_DATA } from '../data/MOCK_DATA';
+import Modal from "./Modal";
+import LeiteAddForm from "./LeiteAddForm";
+import LeiteEditForm from "./LeiteEditForm";
+
 
 export default function HistoricoTabela() {
   const navigate = useNavigate();
@@ -18,6 +25,10 @@ export default function HistoricoTabela() {
   const [search, setSearch] = useState("");
   const [turnoFilter, setTurnoFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
+
+  const [modalAberto, setModalAberto] = useState<null | 'adicionar' | 'editar' | 'remover'>(null);
+  const [itemSelecionado, setItemSelecionado] = useState<any | null>(null);
+  const formRef = useRef<HTMLFormElement>(null)
 
 
   const toggle = (arr: string[], val: string) =>
@@ -39,6 +50,31 @@ export default function HistoricoTabela() {
     navigate('/');
   }
 
+  const filteredData = useMemo<RowData[]>(() =>
+    MOCK_DATA.filter((r) => {
+      // if any product filters are active, only keep matching rows
+      if (turnoFilter.length > 0 && !turnoFilter.includes(r.turno)) 
+        return false;
+      // if any status filters are active, only keep matching rows
+      if (statusFilter.length > 0 && !statusFilter.includes(r.status)) 
+        return false;
+      // apply your text search
+      if (search) {
+        const term = search.toLowerCase();
+        const hay = [
+          r.id.toString(),
+          r.nome,
+          r.descricao,
+          r.fornecedorId,
+        ].map(f => f.toLowerCase());
+	      if (!hay.some(f => f.includes(term))) return false;}
+          return true;
+    }),
+
+
+  [search, turnoFilter, statusFilter]);
+
+  /*
   useEffect(() => {
   let isMounted = true;               
 
@@ -99,6 +135,7 @@ export default function HistoricoTabela() {
     );
   }
   if (error)   return <p style={{color:"red"}}>{error}</p>;
+  */
 
   return (
     <section className="historico-container">
@@ -108,7 +145,7 @@ export default function HistoricoTabela() {
           <button className='historico-container__botao-retornar' onClick={handleReturn}>
             <img
               className='historico-container__img-retornar'
-              src='../img/arrow-left-circle.svg'
+              src={retornarIcon}
               alt='retornar'
             />
           </button>
@@ -163,7 +200,7 @@ export default function HistoricoTabela() {
           <label>
             <input
               type="checkbox"
-              value="Disponível"
+              value="Disponivel"
               checked={statusFilter.includes('Disponivel')}
               onChange={handleStatusFilterChange}
             /> Disponível
@@ -204,11 +241,110 @@ export default function HistoricoTabela() {
 
       <section className="historico-container__footer">
         <div className="historico-container__footer--botoes-criacao">
-          <button className="btn btn-add" onClick={handleAddItem}>Adicionar item</button>
-          <button className="btn btn-edit">Editar item</button>
+          <Botao 
+          className="btn btn-add" 
+          onClick={() => setModalAberto('adicionar')} 
+          htmlType="button" 
+          label="Adicionar" 
+          tipo="primary">
+          </Botao>
+
+          {/*<button className="btn btn-add" onClick={handleAddItem}>Adicionar item</button>*/}
+          <Botao 
+          className="btn btn-edit" 
+          onClick={() => {
+            if (!itemSelecionado) return alert("Selecione um item para editar!")
+            setModalAberto('editar')
+          }}
+          htmlType="button" 
+          label="Editar" 
+          tipo="secondary">
+          </Botao>
+          {/*<button className="btn btn-edit">Editar item</button>*/}
+          {/*<button className="btn btn-delete">Remover item</button>*/}
         </div>
-        <button className="btn btn-delete">Remover item</button>
+        <Botao 
+        className="btn btn-delete" 
+        onClick={() => {
+          if (!itemSelecionado) return alert("Selecione um item para remover!")
+          setModalAberto('remover')
+        }} 
+        htmlType="button" 
+        label="Remover" 
+        tipo="danger">
+        </Botao>
       </section>
+      {modalAberto === 'adicionar' && (
+        <Modal titulo="Adicionar item" onClose={() => setModalAberto(null)}>
+          <LeiteAddForm 
+            onSubmit={async (dados) => {
+              try {
+                await registrarLeite(dados)
+                //await carregarInsumos()
+              } catch (error) {
+                console.log(`ERRO: ${error}`)
+              }
+              setModalAberto(null) 
+            }}
+            formRef={formRef}
+          />
+          <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+            <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} htmlType='button'/>
+            <Botao htmlType='button' label="Adicionar" tipo="primary" onClick={() => {
+              formRef.current?.requestSubmit()
+            }} />
+          </div>
+        </Modal>
+      )}
+      {modalAberto === 'editar' && itemSelecionado && (
+      <Modal titulo="Editar item" onClose={() => setModalAberto(null)}>
+        <LeiteEditForm
+          dadosIniciais={itemSelecionado}
+          onSubmit={ async (dadosEditados) => {
+            try {
+              console.log('ID para editar:', itemSelecionado.id);
+              console.log('Dados enviados:', dadosEditados);
+              await editarLeite(itemSelecionado.id, dadosEditados)
+              //await carregarInsumos()
+            } catch (error) {
+              console.log(`ERRO: ${error}`)
+            }
+            setModalAberto(null) 
+            setItemSelecionado(null)
+          }}
+          formRef={formRef}
+        />
+        <div style={{ marginTop: '2rem', display: 'flex', justifyContent: 'space-between', gap: '1rem' }}>
+          <Botao label="Cancelar" tipo="secondary" onClick={() => {setModalAberto(null); setItemSelecionado(null)}} htmlType='button'/>
+          <Botao label="Salvar" tipo="primary" onClick={() => {
+            formRef.current?.requestSubmit()
+          }} htmlType='submit'/>
+        </div>
+      </Modal>
+    )}
+          {modalAberto === 'remover' && itemSelecionado && (
+          <Modal titulo="Confirmar remoção" onClose={() => setModalAberto(null)}>
+            <p>Tem certeza que deseja remover este item?</p>
+            <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
+              <Botao label="Cancelar" tipo="secondary" onClick={() => setModalAberto(null)} htmlType='button'/>
+              <Botao
+                htmlType='button'
+                label="Remover"
+                tipo="danger"
+                onClick={async () => {
+                  try {
+                    await removerLeite(itemSelecionado.id)
+                    //await carregarInsumos()
+                  } catch (error) {
+                    console.error('Erro ao remover insumo:', error)
+                  }
+                  setModalAberto(null)
+                  setItemSelecionado(null)
+                }}
+              />
+            </div>
+          </Modal>
+        )}
     </section>
   );
 }

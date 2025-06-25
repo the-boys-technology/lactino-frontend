@@ -101,8 +101,8 @@ export default function ModalVendas({ onClose, onSave, transacaoParaEditar }: Pr
         </div>
 
         <div className="modal__botoes">
-          <Botao tipo="secondary" label="Cancelar" onClick={onClose} />
-          <Botao tipo="primary" label="Salvar" onClick={handleSubmit} />
+          <Botao tipo="secondary" label="Cancelar" onClick={onClose} htmlType="button"/>
+          <Botao tipo="primary" label="Salvar" onClick={handleSubmit} htmlType="submit"/>
         </div>
       </div>
     </div>

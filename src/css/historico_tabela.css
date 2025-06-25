@@ -65,6 +65,9 @@
 
 .historico-container__botao-retornar {
   cursor: pointer;
+  background-color: transparent;
+  border: none;
+  border-radius: var(--border-radius-value);
 }
 
 .historico-container__filter-group {
@@ -153,7 +156,7 @@
 }
 
 /* ─────────── Status Badges ─────────── */
-.historico-container__tabela__status--disponível {
+.historico-container__tabela__status--disponivel {
   background-color: var(--success-button-color);
   color: var(--primary-font-color);
 }
@@ -171,7 +174,7 @@
 }
 
 /* common badge styles */
-.historico-container__tabela__status--disponível,
+.historico-container__tabela__status--disponivel,
 .historico-container__tabela__status--utilizado,
 .historico-container__tabela__status--vencido,
 .historico-container__tabela__status--descartado {
