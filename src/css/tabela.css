@@ -44,3 +44,7 @@
   background-color: var(--primary-font-color);
   vertical-align: middle;
 }
+
+.tabela-container__row--selecionada td {
+  background-color: #e0f0ff;
+}

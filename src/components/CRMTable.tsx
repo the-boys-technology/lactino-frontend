@@ -37,7 +37,14 @@ export default function CRMTable({ clientes, itemSelecionado, onSelecionar }: CR
                 <td>{cliente.nome}</td>
                 <td>{cliente.email}</td>
                 <td>{cliente.localizacao}</td>
-                <td>{cliente.transacoes}</td>
+                <td>
+                  {cliente.transacoes.slice(0, 3).map((t: any, index: number) => (
+                    <div key={index}>
+                      {t.tipo} - R$ {t.valorTotal.toFixed(2)}
+                    </div>
+                  ))}
+                  {cliente.transacoes.length > 3 && <div>...</div>}
+                </td>
               </tr>
             ))
           )}
