@@ -1,0 +1,98 @@
+.modal-transacoes {
+  position: fixed;
+  inset: 0;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding-top: 7rem;
+  padding-bottom: 32px; 
+  box-sizing: border-box;
+}
+
+.modal-transacoes-container {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 2rem;
+  width: 1057px;
+  max-height: 95vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.1);
+  font-family: 'Open Sans', sans-serif;
+}
+
+.modal-transacoes h2 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.modal-transacoes h3 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 1.5rem;
+}
+
+.modal-transacoes__linha {
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.modal-transacoes__produtos {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 1.5rem;
+}
+
+.modal-transacoes__cabecalho-produtos {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.modal-transacoes__cabecalho-produtos h3 {
+  flex: 1;
+  margin: 0;
+  font-weight: 630;
+}
+
+.modal-transacoes__cabecalho-produtos .botao {
+  width: 13rem;
+}
+
+.modal-transacoes__rodape {
+  display: flex;
+  padding-top: 1.5rem;
+}
+
+.modal-transacoes__botoes {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+}
+
+.botao--loading::after {
+  content: "";
+  margin-left: 0.5rem;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  display: inline-block;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

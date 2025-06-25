@@ -1,4 +1,4 @@
-* {
+* { 
     margin: 0;
     padding: 0;
     font-family: "Open Sans", sans-serif;
@@ -19,17 +19,46 @@
 }
 
 .botao {
-    width: 200px;
-    height: 50px;
-    border-radius: var(--border-radius-value);
-    font-size: 20px;
-    font-weight: var(--bold);
-    border: 1px solid var(--border-color);
+  width: 200px;
+  height: 55px;
+  border-radius: var(--border-radius-value);
+  font-size: 20px;
+  font-weight: var(--bold);
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
+.botao.disabled,
+.botao:disabled {
+  background-color: #cbd5e1;
+  color: #64748b;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.botao__icon {
+  display: flex;
+  align-items: center;
+}
+
+.botao__loading {
+  font-size: 1.2rem;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Cores */
 .primary {
-    background-color: var(--primary-button-color);
-    color: var(--primary-font-color);
+  background-color: var(--primary-button-color);
+  color: var(--primary-font-color);
 }
 
 .primary:hover {
@@ -37,9 +66,9 @@
     background-color: #0d47a1;
 }
 
-.secondary{
-    background-color: var(--secondary-button-color);
-    color: var(--secondary-font-color);
+.secondary {
+  background-color: var(--secondary-button-color);
+  color: var(--secondary-font-color);
 }
 
 .secondary:hover {
@@ -48,8 +77,8 @@
 }
 
 .danger {
-    background-color: var(--danger-button-color);
-    color: var(--primary-font-color);
+  background-color: var(--danger-button-color);
+  color: var(--primary-font-color);
 }
 
 .danger:hover {
@@ -57,7 +86,7 @@
     background-color: #9a2c2c;
 }
 
-.success{
+.success {
     background-color: var(--success-button-color);
     color: var(--primary-font-color);
 }

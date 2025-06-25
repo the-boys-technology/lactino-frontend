@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../css/estoque-table.css'
 import { buscarInsumos } from '../services/estoque'
+import { formatarData } from '../utils/formatter_utils'
 
 interface EstoqueTableProps {
   insumos: any[]
@@ -47,7 +48,7 @@ export default function EstoqueTable({ insumos, itemSelecionado, onSelecionar }:
                 <td>{insumo.quantidadeMinima}</td>
                 <td>{insumo.preco}</td>
                 <td>{insumo.fornecedor}</td>
-                <td>{insumo.validade}</td>
+                <td>{formatarData(insumo.validade)}</td>
                 <td>{insumo.status}</td>
               </tr>
             ))

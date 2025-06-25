@@ -1,8 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
 import "../css/navbar.css";
-
+import SinoNotificacoes from "./SinoNotificacoes";
+import { useNotificacoes } from "../context/NotificacoesContext";
+import MockNotificacoes from "./MockNotificacoes";
 
 function Navbar(): React.ReactElement {
+  const { notificacoes } = useNotificacoes();
+
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -13,6 +17,10 @@ function Navbar(): React.ReactElement {
   return (
     <nav className="navbar">
       <ul className="navbar__lista">
+        <li>
+          <SinoNotificacoes notificacoes={notificacoes} />
+          <MockNotificacoes />
+        </li>
         <li className="navbar__lista__item">
           <Link to="/selecionar-produto">Gerenciamento do Produto</Link>
         </li>
@@ -25,11 +33,8 @@ function Navbar(): React.ReactElement {
         <li className="navbar__lista__item">
           <Link to="/gestao-vendas">Venda</Link>
         </li>
-        <li >
-          <button
-            className="logout"
-            onClick={handleLogout}
-          >
+        <li>
+          <button className="logout" onClick={handleLogout}>
             Sair &rarr;
           </button>
         </li>

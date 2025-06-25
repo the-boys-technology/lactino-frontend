@@ -1,7 +1,8 @@
 .estoque {
   max-width: 1100px;
-  margin: 2rem auto;
+  margin: auto;
   padding: 0 1rem;
+  padding-top: 100px;
 }
 
 .estoque__card {
@@ -28,4 +29,12 @@
 .estoque__buttons-group {
   display: flex;
   gap: 1rem;
+}
+
+.estoque__tabela-wrapper {
+  max-height: 400px;
+  overflow-y: scroll;
+  overflow-x: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }

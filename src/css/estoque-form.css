@@ -16,6 +16,7 @@
   display: flex;
   gap: 1rem;
   flex-wrap: wrap;
+  margin-bottom: 1rem;
 }
 
 .estoque-form__input {
@@ -23,6 +24,24 @@
     border: 1px solid #464433;
     border-radius: 20px;
     min-width: 180px;
+}
+
+.estoque-form__input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.estoque-form__input-prefix {
+  position: absolute;
+  left: 10px;
+  font-size: 0.9rem;
+  color: #555;
+  pointer-events: none;
+}
+
+.estoque-form__input--with-prefix {
+  padding-left: 2rem;
 }
 
 .estoque-form__input--large {

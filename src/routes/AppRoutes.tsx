@@ -15,11 +15,13 @@ import GestaoVendas from '../pages/GestaoVendas/GestaoVendas';
 import LoginPage from '../pages/Auth/LoginPage';
 import CadastroPage from '../pages/Auth/CadastroPage';
 import NovaSenhaSidebar from '../components/NovaSenhaSideBar';
+import CRMPage from '../pages/CRMPage';
+import { NotificacoesProvider } from '../context/NotificacoesContext';
+import { ToastContainer } from 'react-toastify';
 import RedefinirSenhaPage from '../pages/Auth/RedefinirSenhaPage';
 import NovaSenhaPage from '../pages/Auth/NovaSenhaPage';
 import HistoricoLeitePage from '../pages/GestaoLeiteLaticinio/HstoricoLeitePage';
 import HistoricoLaticinioPage from '../pages/GestaoLeiteLaticinio/HistoricoLaticinioPage';
-
 
 
 function LayoutWithHeader(): React.ReactElement {
@@ -90,9 +92,11 @@ function LayoutWithHeader(): React.ReactElement {
 
 export default function AppRoutes(): React.ReactElement {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route element={<ProtectedRoute />}> 
+    <NotificacoesProvider>
+      <BrowserRouter>
+        <ToastContainer position="top-right" />
+        <Routes>
+          <Route element={<ProtectedRoute />}> 
           <Route element={<LayoutWithHeader />}>
             <Route path="/" element={<Home />} />
             <Route path="/gestao-vendas" element={<GestaoVendas />} />
@@ -101,6 +105,7 @@ export default function AppRoutes(): React.ReactElement {
             <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
             <Route path="/historico-leite" element={<HistoricoLeitePage />} />
             <Route path="/historico-laticinio" element={<HistoricoLaticinioPage />} />
+            <Route path="/crm" element={<CRMPage />}/>
             <Route path="/*" element={<NotFound />} />
           </Route>
         </Route>
@@ -108,7 +113,8 @@ export default function AppRoutes(): React.ReactElement {
         <Route path="/cadastro" element={<CadastroPage />} />
         <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
         <Route path="/nova-senha" element={<NovaSenhaPage />} />
-      </Routes>
-    </BrowserRouter>
+        </Routes>
+      </BrowserRouter>
+    </NotificacoesProvider>
   );
 }

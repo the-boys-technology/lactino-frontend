@@ -66,7 +66,10 @@ export default function EstoqueAddForm({ onSubmit, formRef }: EstoqueAddFormProp
         </label>
         <label className="estoque-form__label">
           Preço:
-          <input type="number" step="0.01" name="preco" className="estoque-form__input" />
+          <div className="estoque-form__input-group">
+            <span className="estoque-form__input-prefix">R$</span>
+            <input type="number" step="0.01" name="preco" className="estoque-form__input estoque-form__input--with-prefix" />
+          </div>
         </label>
         <label className="estoque-form__label">
           Fornecedor:
