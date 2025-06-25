@@ -23,71 +23,94 @@ export default function LaticinioEditFormProps({ onSubmit, formRef, dadosIniciai
         e.preventDefault()
         const formData = new FormData(e.currentTarget)
         const dados = {
-          nome: formData.get('nome') as string,
-          categoria: formData.get('categoria') as string,
-          unidadeMedida: (formData.get('unidadeMedida') as string).toLowerCase(),
-          quantidadeTotal: parseFloat(formData.get('quantidadeTotal') as string),
-          quantidadeMinima: parseFloat(formData.get('quantidadeMinima') as string),
-          validade: formData.get('validade') as string,
-          preco: parseFloat((formData.get('preco') as string).replace(',', '.')),
-          fornecedor: formData.get('fornecedor') as string,
-          status: formData.get('status') as string
+          tipoProduto: formData.get('tipoProduto') as string,
+          quantidadeProduzida: parseFloat(formData.get('quantidadeProduzida') as string),
+          dataProducao: formData.get('dataProducao') as string,
+          dataValidade: formData.get('dataValidade') as string,
+          status: formData.get('status') as string,
+          leiteUtilizadoId: formData.get('leiteUtilizadoId') as string,
+          descricao: formData.get('descricao') as string,
         }
         if (onSubmit) onSubmit(dados)
       }}
     >
       <div className="estoque-form__row">
         <label className="estoque-form__label">
-          Nome:
-          <input type="text" name="nome" defaultValue={dadosIniciais?.nome} className="estoque-form__input--large" required />
-        </label>
-      </div>
-      <div className="estoque-form__row">
-        <label className="estoque-form__label">
-          Categoria:
-          <select className="estoque-form__input" name="categoria" defaultValue={dadosIniciais?.categoria} required>
+          Tipo:
+          <select name="tipoProduto" className="estoque-form__input" defaultValue={dadosIniciais?.tipoProduto} >
             <option value="">Selecione</option>
-            <option value="racao">Ração</option>
-            <option value="remedio">Remédio</option>
-            <option value="outros">Outros</option>
+            <option value="queijo">Queijo</option>
+            <option value="iogurte">Iogurte</option>
+            <option value="manteiga">Manteiga</option>
           </select>
         </label>
         <label className="estoque-form__label">
-          Unidade de medida:
-          <input type="text" name="unidadeMedida" defaultValue={dadosIniciais?.unidadeMedida} className="estoque-form__input" required />
+          Quantidade Produzida:
+          <input
+            type="number"
+            name="quantidadeProduzida"
+            className="estoque-form__input"
+            placeholder="Quantidade"
+            defaultValue={dadosIniciais?.quantidadeProduzida}
+          />
         </label>
+
         <label className="estoque-form__label">
-          Quantidade:
-          <input type="number" name="quantidadeTotal" defaultValue={dadosIniciais?.quantidadeTotal} className="estoque-form__input" required />
+          Leite de Origem:
+          <input
+            type="text"
+            name="leiteUtilizadoId"
+            className="estoque-form__input"
+            placeholder="Leite de origem"
+            defaultValue={dadosIniciais?.leiteOrigem}
+          />
         </label>
       </div>
+
       <div className="estoque-form__row">
         <label className="estoque-form__label">
-          Quantidade mínima:
-          <input type="number" name="quantidadeMinima" defaultValue={dadosIniciais?.quantidadeMinima} className="estoque-form__input" />
+          Data de Produção:
+          <input
+            type="date"
+            name="dataProducao"
+            className="estoque-form__input"
+            placeholder="Data de produção"
+            defaultValue={dadosIniciais?.dataProducao}
+          />
         </label>
+
         <label className="estoque-form__label">
-          Preço:
-          <input type="number" step="0.01" name="preco" defaultValue={dadosIniciais?.preco} className="estoque-form__input" />
+          Data de Validade:
+          <input
+            type="date"
+            name="dataValidade"
+            className="estoque-form__input"
+            placeholder="Data de validade"
+            defaultValue={dadosIniciais?.dataValidade}
+          />
         </label>
-        <label className="estoque-form__label">
-          Fornecedor:
-          <input type="text" name="fornecedor" defaultValue={dadosIniciais?.fornecedor} className="estoque-form__input" />
-        </label>
-      </div>
-      <div className="estoque-form__row">
-        <label className="estoque-form__label">
-          Data Validade:
-          <input type="date" name="validade" defaultValue={dadosIniciais?.validade} className="estoque-form__input" />
-        </label>
+
         <label className="estoque-form__label">
           Status:
-          <select className="estoque-form__input" name="status" defaultValue={dadosIniciais?.status} required>
+          <select name="status" className="estoque-form__input" defaultValue={dadosIniciais?.status}>
             <option value="">Selecione</option>
-            <option value="ativo">Ativo</option>
-            <option value="vencido">Vencido</option>
-            <option value="esgotado">Esgotado</option>
+            <option value="Disponivel">Disponivel</option>
+            <option value="VENDIDO">Vendido</option>
+            <option value="VENCIDO">Vencido</option>
+            <option value="DESCARTADO">Descartado</option>
           </select>
+        </label>
+      </div>
+
+      <div className="estoque-form__row">
+        <label className="estoque-form__label">
+          Descrição:
+          <textarea 
+            name="descricao"
+            className="estoque-form__input--large"
+            placeholder="Descrição"
+            defaultValue={dadosIniciais?.descricao}>
+          </textarea>
         </label>
       </div>
     </form>

@@ -23,60 +23,114 @@ export default function LeiteAddForm({ onSubmit, formRef }: EstoqueAddFormProps)
         const formData = new FormData(e.currentTarget)
         const dados = {
           nome: formData.get('nome') as string,
-          categoria: formData.get('categoria') as string,
-          unidadeMedida: (formData.get('unidadeMedida') as string).toLowerCase(),
-          quantidadeTotal: parseFloat(formData.get('quantidadeTotal') as string),
-          quantidadeMinima: parseFloat(formData.get('quantidadeMinima') as string),
-          validade: formData.get('validade') as string,
-          preco: parseFloat((formData.get('preco') as string).replace(',', '.')),
-          fornecedor: formData.get('fornecedor') as string
+          turno: formData.get('turno') as string,
+          origem: formData.get('origem') as string,
+          finalidade: formData.get('finalidade') as string,
+          dataObtencao: formData.get('dataObtencao') as string,
+          dataValidade: formData.get('dataValidade') as string,
+          status: formData.get('status') as string,
+          fornecedor: formData.get('fornecedorId') as string,
+          descricao: formData.get('descricao') as string,
         }
         if (onSubmit) onSubmit(dados)
       }}
     >
       <div className="estoque-form__row">
         <label className="estoque-form__label">
-          Nome:
-          <input type="text" name="nome" className="estoque-form__input--large" required />
-        </label>
-      </div>
-      <div className="estoque-form__row">
-        <label className="estoque-form__label">
-          Categoria:
-          <select className="estoque-form__input" name="categoria" required>
+          Turno:
+          <select name="turno" className="estoque-form__input">
             <option value="">Selecione</option>
-            <option value="racao">Ração</option>
-            <option value="remedio">Remédio</option>
-            <option value="outros">Outros</option>
+            <option value="MATUTINO">Matutino</option>
+            <option value="VESPERTINO">Vespertino</option>
+            <option value="NOTURNO">Noturno</option>
           </select>
         </label>
+
         <label className="estoque-form__label">
-          Unidade de medida:
-          <input type="text" name="unidadeMedida" className="estoque-form__input" required />
+          Origem:
+          <input
+            type="text"
+            name="origem"
+            className="estoque-form__input"
+            placeholder="Origem"
+          />
         </label>
+
         <label className="estoque-form__label">
-          Quantidade:
-          <input type="number" name="quantidadeTotal" className="estoque-form__input" required />
+          Finalidade:
+          <input
+            type="text"
+            name="finalidade"
+            className="estoque-form__input"
+            placeholder="Finalidade"
+          />
         </label>
       </div>
+
       <div className="estoque-form__row">
         <label className="estoque-form__label">
-          Quantidade mínima:
-          <input type="number" name="quantidadeMinima" className="estoque-form__input" />
+          Data de Obtenção:
+          <input
+            type="date"
+            name="dataObtencao"
+            className="estoque-form__input"
+            placeholder="Data de obtenção"
+          />
         </label>
+
         <label className="estoque-form__label">
-          Preço:
-          <input type="number" step="0.01" name="preco" className="estoque-form__input" />
+          Data de Validade:
+          <input
+            type="date"
+            name="dataValidade"
+            className="estoque-form__input"
+            placeholder="Data de Validade"
+          />
+        </label>
+
+        <label className="estoque-form__label">
+          Status:
+          <select name="status" className="estoque-form__input">
+            <option value="">Selecione</option>
+            <option value="DISPONIVEL">Disponível</option>
+            <option value="UTILIZADO">Utilizado</option>
+            <option value="VENCIDO">Vencido</option>
+            <option value="DESCARTADO">Descartado</option>
+          </select>
+        </label>
+
+        
+      </div>
+
+      <div className="estoque-form__row">
+        <label className="estoque-form__label">
+          Nome:
+          <input
+            type="text"
+            name="nome"
+            className="estoque-form__input"
+            placeholder="Nome"
+          />
         </label>
         <label className="estoque-form__label">
           Fornecedor:
-          <input type="text" name="fornecedor" className="estoque-form__input" />
+          <input
+            type="text"
+            name="fornecedorId"
+            className="estoque-form__input"
+            placeholder="Fornecedor"
+          />
         </label>
       </div>
+
       <div className="estoque-form__row">
         <label className="estoque-form__label">
-          Data Validade:
-          <input type="date" name="validade" className="estoque-form__input" />
+          Descrição:
+          <textarea 
+            name="descricao"
+            className="estoque-form__input--large"
+            placeholder="Descrição">
+          </textarea>
         </label>
       </div>
     </form>

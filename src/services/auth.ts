@@ -29,7 +29,8 @@ export const mudarSenha = (dados: any) => api.post('/auth/mudar-senha', dados);
   "confirmarNovaSenha": ",-$uc~/dPdRj*xAETU= dn/sPg d#Z@},92"
 }
 */
-export const redefinirSenha = (dados: any) => api.post('/auth/redefinir-senha', dados);
+export const solicitarRedefinirSenhaApi = (email: string) => api.post('/auth/solicitar-redefinicao-senha', { email} );
+export const redefinirSenhaApi = (dados: any) => api.post('/auth/redefinir-senha', dados);
 /*
 {
   "email": "string",

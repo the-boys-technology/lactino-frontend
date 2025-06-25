@@ -91,6 +91,9 @@ function LoginPage(): React.ReactElement {
                         </button>
                     </div>
                     {loginError && (<p className="login-error-message">{loginError}</p>)}
+                    <p className="login-main__forms__direcionamento">
+                        <Link to="/redefinir-senha">Esqueceu sua senha?</Link>
+                    </p>
                 </section>
                 <section className="login-main__forms__botoes">
                     <Botao tipo="secondary" label="Cadastre-se" onClick={handleSignUp} htmlType="button"></Botao>

@@ -1,26 +1,24 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { DataTable } from "./Tabela";
-import { COLUNAS } from "../data/COLUNAS";
+import { COLUNAS_LATICINIO } from "../data/COLUNAS";
 import { type RowData } from "../data/ROW_DATA";   
 import { useNavigate } from "react-router-dom";
-import { buscarLaticinios, buscarLeites, editarLeite, registrarLeite, removerLeite } from "../services/gestao_leite_laticinio";
+import { buscarLaticinios, editarLaticinio, registrarLaticinio, removerLaticinio } from "../services/gestao_leite_laticinio";
 import "../css/historico_tabela.css";
-import loadingGif from "../assets/carregando.gif";
-import { ClipLoader } from "react-spinners";
 import retornarIcon from '../assets/retornar.png';
 import Botao from "./Botao";
-import { MOCK_DATA } from '../data/MOCK_DATA';
 import Modal from "./Modal";
-import LeiteAddForm from "./LeiteAddForm";
-import LeiteEditForm from "./LeiteEditForm";
+import LaticinioAddForm from "./LaticinioAddForm";
+import LaticinioEditForm from "./LaticinioEditForm";
 
 
-export default function HistoricoTabela() {
+export default function TabelaLaticinio() {
   const navigate = useNavigate();
 
   const [rows, setRows] = useState<RowData[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pageSize] = useState(10);
 
   const [search, setSearch] = useState("");
   const [turnoFilter, setTurnoFilter] = useState<string[]>([]);
@@ -42,100 +40,27 @@ export default function HistoricoTabela() {
     setStatusFilter(prev => toggle(prev, e.target.value));
   }
 
-  function handleAddItem() {
+  function handleReturn() {
     navigate('/selecionar-produto');
   }
 
-  function handleReturn() {
-    navigate('/');
-  }
-
-  const filteredData = useMemo<RowData[]>(() =>
-    MOCK_DATA.filter((r) => {
-      // if any product filters are active, only keep matching rows
-      if (turnoFilter.length > 0 && !turnoFilter.includes(r.turno)) 
-        return false;
-      // if any status filters are active, only keep matching rows
-      if (statusFilter.length > 0 && !statusFilter.includes(r.status)) 
-        return false;
-      // apply your text search
-      if (search) {
-        const term = search.toLowerCase();
-        const hay = [
-          r.id.toString(),
-          r.nome,
-          r.descricao,
-          r.fornecedorId,
-        ].map(f => f.toLowerCase());
-	      if (!hay.some(f => f.includes(term))) return false;}
-          return true;
-    }),
-
-
-  [search, turnoFilter, statusFilter]);
-
-  /*
-  useEffect(() => {
-  let isMounted = true;               
-
-  async function buscarProdutos() {
+  async function carregarPagina(pagina: number) {
     try {
-      setLoading(true);
-      const [resLeite, resLaticinio] = await Promise.all([
-        buscarLeites(),
-        buscarLaticinios(),
-      ]);
-      if (isMounted) {
-        setRows([...resLeite.data, ...resLaticinio.data]);
-      }
-    } catch (err: any) {
-      if (isMounted) {
-        console.log("Erro ao carregar leites e laticínios:", err)
-        setError(err.message ?? "Erro ao carregar dados");
-      }
+      console.log(`Páginas: ${pagina}`)
+      const res = await buscarLaticinios(pagina, pageSize);
+      console.log(res);
+      setRows(res.data.content);
+      setTotalPages(res.data.totalPages);
+      setPage(pagina);
+    } catch (error: any) {
+      console.error("Erro ao carregar dados:", error);
     } finally {
-      if (isMounted) {
-        setLoading(false);
-      }
     }
   }
-  buscarProdutos();      
-  return () => {
-    isMounted = false;   
-  };
-}, []);
 
-    const filteredData = useMemo<RowData[]>(
-    () =>
-      rows.filter((r) => {
-        if (turnoFilter.length > 0 && !turnoFilter.includes(r.turno))
-          return false;
-        if (statusFilter.length > 0 && !statusFilter.includes(r.status))
-          return false;
-        if (search) {
-          const term = search.toLowerCase();
-          const hay = [
-            r.id.toString(),
-            r.nome,
-            r.descricao,
-            r.fornecedorId,
-          ].map((f) => f.toLowerCase());
-          if (!hay.some((f) => f.includes(term))) return false;
-        }
-        return true;
-      }),
-    [rows, search, turnoFilter, statusFilter]
-  );
-
-  if (loading) {
-    return (
-      <div className="loading-container">
-        <ClipLoader size={50} color="#123abc" loading={loading} />
-      </div>
-    );
-  }
-  if (error)   return <p style={{color:"red"}}>{error}</p>;
-  */
+  useEffect(() => {
+    carregarPagina(page);
+  }, [page]);
 
   return (
     <section className="historico-container">
@@ -216,8 +141,8 @@ export default function HistoricoTabela() {
           <label>
             <input
               type="checkbox"
-              value="Utilizado"
-              checked={statusFilter.includes('Utilizado')}
+              value="Vendido"
+              checked={statusFilter.includes('Vendido')}
               onChange={handleStatusFilterChange}
             /> Utilizado
           </label>
@@ -233,10 +158,28 @@ export default function HistoricoTabela() {
 
         <div className="historico-container__tabela-wrapper">
           <DataTable<RowData>
-            data={filteredData}
-            columns={COLUNAS}
+            data={rows}
+            columns={COLUNAS_LATICINIO}
+            onRowClick={(row) => setItemSelecionado(row)}
+            selectedItem={itemSelecionado}
           />
         </div>
+
+        <div className="paginacao">
+        <button
+          disabled={page === 0}
+          onClick={() => carregarPagina(page - 1)}
+        >
+          Anterior
+        </button>
+        <span>Página {page + 1} de {totalPages}</span>
+        <button
+          disabled={page + 1 >= totalPages}
+          onClick={() => carregarPagina(page + 1)}
+        >
+          Próxima
+        </button>
+      </div>
       </section>
 
       <section className="historico-container__footer">
@@ -276,10 +219,10 @@ export default function HistoricoTabela() {
       </section>
       {modalAberto === 'adicionar' && (
         <Modal titulo="Adicionar item" onClose={() => setModalAberto(null)}>
-          <LeiteAddForm 
+          <LaticinioAddForm 
             onSubmit={async (dados) => {
               try {
-                await registrarLeite(dados)
+                await registrarLaticinio(dados)
                 //await carregarInsumos()
               } catch (error) {
                 console.log(`ERRO: ${error}`)
@@ -298,13 +241,13 @@ export default function HistoricoTabela() {
       )}
       {modalAberto === 'editar' && itemSelecionado && (
       <Modal titulo="Editar item" onClose={() => setModalAberto(null)}>
-        <LeiteEditForm
+        <LaticinioEditForm
           dadosIniciais={itemSelecionado}
           onSubmit={ async (dadosEditados) => {
             try {
               console.log('ID para editar:', itemSelecionado.id);
               console.log('Dados enviados:', dadosEditados);
-              await editarLeite(itemSelecionado.id, dadosEditados)
+              await editarLaticinio(itemSelecionado.id, dadosEditados)
               //await carregarInsumos()
             } catch (error) {
               console.log(`ERRO: ${error}`)
@@ -333,7 +276,7 @@ export default function HistoricoTabela() {
                 tipo="danger"
                 onClick={async () => {
                   try {
-                    await removerLeite(itemSelecionado.id)
+                    await removerLaticinio(itemSelecionado.id)
                     //await carregarInsumos()
                   } catch (error) {
                     console.error('Erro ao remover insumo:', error)

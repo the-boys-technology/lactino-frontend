@@ -172,11 +172,21 @@
   background-color: var(--danger-button-color);
   color: var(--primary-font-color);
 }
+.historico-container__tabela__status--em_estoque {
+  background-color: var(--success-button-color);
+  color: var(--primary-font-color);
+}
+.historico-container__tabela__status--vendido {
+  background-color: var(--primary-button-color);
+  color: var(--primary-font-color);
+}
 
 /* common badge styles */
 .historico-container__tabela__status--disponivel,
 .historico-container__tabela__status--utilizado,
+.historico-container__tabela__status--em_estoque,
 .historico-container__tabela__status--vencido,
+.historico-container__tabela__status--vendido,
 .historico-container__tabela__status--descartado {
   display: inline-block;
   padding: 4px 12px;
