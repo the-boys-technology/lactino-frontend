@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../css/sidebar.css';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { mudarSenha } from '../services/auth'; 
 
 interface NovaSenhaProps {
   open: boolean;
@@ -13,6 +14,7 @@ export default function NovaSenhaSidebar ({
   onClose,
   onBack,
 }: NovaSenhaProps) {
+
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -21,9 +23,76 @@ export default function NovaSenhaSidebar ({
   const [showNew, setShowNew]       = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
-  const handleSave = (e: React.FormEvent) => {
-    e.preventDefault();
+  const [errors, setErrors] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
+  });
+
+
+  const handleSave = async (e: React.FormEvent) => {
+  e.preventDefault();
+
+  const newErrors = {
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: '',
   };
+
+  const passwordRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*(),.?":{}|<>[\]\\\/\-_=+;']).{8,}$/;
+    let isValid = true;
+
+    if (!currentPassword) {
+      newErrors.currentPassword = 'Informe a senha atual.';
+      isValid = false;
+    }
+
+    if (!newPassword) {
+      newErrors.newPassword = 'Informe a nova senha.';
+      isValid = false;
+    } else if (!passwordRegex.test(newPassword)) {
+      newErrors.newPassword = 'A nova senha deve ter no mínimo 8 caracteres, um número e um símbolo.';
+      isValid = false;
+    }
+
+    if (!confirmPassword) {
+      newErrors.confirmPassword = 'Confirme a nova senha.';
+      isValid = false;
+    } else if (newPassword !== confirmPassword) {
+      newErrors.confirmPassword = 'A confirmação não coincide com a nova senha.';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    if (!isValid) return;
+
+    try {
+      await mudarSenha({
+        senhaAtual: currentPassword,
+        novaSenha: newPassword,
+        confirmarNovaSenha: confirmPassword,
+      });
+
+      setErrors({
+        currentPassword: '',
+        newPassword: '',
+        confirmPassword: '',
+      });
+
+      console.log("Senha alterada com sucesso!");
+      onClose();
+      setCurrentPassword('');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (error) {
+      setErrors(prev => ({
+        ...prev,
+        currentPassword: 'Senha atual incorreta.',
+      }));
+    }
+  };
+
+
 
   return (
     <>
@@ -51,7 +120,6 @@ export default function NovaSenhaSidebar ({
               {showCurrent ? <AiFillEye /> : <AiFillEyeInvisible />}
             </button>
           </div>
-
           <div className="field">
             <label htmlFor="newPassword">Nova senha</label>
             <input
@@ -70,6 +138,7 @@ export default function NovaSenhaSidebar ({
               {showNew ? <AiFillEye /> : <AiFillEyeInvisible />}
             </button>
           </div>
+          {errors.newPassword && (<small className="error-text">{errors.newPassword}</small>)}
 
           <div className="field">
             <label htmlFor="confirmPassword">Confirmar senha</label>
@@ -89,6 +158,7 @@ export default function NovaSenhaSidebar ({
               {showConfirm ? <AiFillEye /> : <AiFillEyeInvisible />}
             </button>
           </div>
+          {errors.confirmPassword && (<small className="error-text">{errors.confirmPassword}</small>)}
 
           <div
             className="buttons"

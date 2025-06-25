@@ -28,6 +28,7 @@ export default function Dashboard() {
 
         <Card title="A Pagar" value="R$ 3.276,00" type='outflow' size='medium'>
           <Botao label='Novo Pagamento' tipo='primary' htmlType='button'/>
+
         </Card>
 
         <Card title="A Vencer">
@@ -63,7 +64,7 @@ export default function Dashboard() {
           className="card--center"
           title={"Cadastro simples \n de Fornecedor"}>
           <Botao
-            tipo="primary" 
+            tipo="primary"
             label="Clique aqui"
             htmlType='button'
             onClick={() => setShowModalFornecedor(true)} />

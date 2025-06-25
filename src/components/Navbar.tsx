@@ -20,7 +20,7 @@ function Navbar(): React.ReactElement {
           <SinoNotificacoes notificacoes={notificacoes} />
         </li>
         <li className="navbar__lista__item">
-          <Link to="/historico">Gerenciamento do Produto</Link>
+          <Link to="/selecionar-produto">Gerenciamento do Produto</Link>
         </li>
         <li className="navbar__lista__item">
           <Link to="/estoque">Estoque</Link>

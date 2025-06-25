@@ -8,11 +8,9 @@ import { ProtectedRoute } from './ProtectedRoute';
 import { Home } from '../pages/Home/Home';
 import NotFound from '../pages/NotFound/NotFound';
 import SelecaoProdutoPage from '../pages/GestaoLeiteLaticinio/SelecaoProdutoPage';
-import GestaoLeitePage from '../pages/GestaoLeiteLaticinio/GestaoLeitePage';
-import GestaoLaticinioPage from '../pages/GestaoLeiteLaticinio/GestaoLaticinioPage';
 import GestaoCompras from '../pages/GestaoCompras/GestaoCompras';
 import GerenciamentoEstoque from '../pages/GerenciamentoEstoque/GerenciamentoEstoque';
-import HistoricoPage from '../pages/GestaoLeiteLaticinio/HistoricoPage';
+import HistoricoPage from '../pages/GestaoLeiteLaticinio/HistoricoLaticinioPage';
 import GestaoVendas from '../pages/GestaoVendas/GestaoVendas';
 import LoginPage from '../pages/Auth/LoginPage';
 import CadastroPage from '../pages/Auth/CadastroPage';
@@ -20,6 +18,11 @@ import NovaSenhaSidebar from '../components/NovaSenhaSideBar';
 import CRMPage from '../pages/CRMPage';
 import { NotificacoesProvider } from '../context/NotificacoesContext';
 import { ToastContainer } from 'react-toastify';
+import RedefinirSenhaPage from '../pages/Auth/RedefinirSenhaPage';
+import NovaSenhaPage from '../pages/Auth/NovaSenhaPage';
+import HistoricoLeitePage from '../pages/GestaoLeiteLaticinio/HstoricoLeitePage';
+import HistoricoLaticinioPage from '../pages/GestaoLeiteLaticinio/HistoricoLaticinioPage';
+
 
 function LayoutWithHeader(): React.ReactElement {
   // “sidebarOpen” controla se ao menos UM sidebar está visível.
@@ -93,20 +96,23 @@ export default function AppRoutes(): React.ReactElement {
       <BrowserRouter>
         <ToastContainer position="top-right" />
         <Routes>
-        <Route element={<LayoutWithHeader />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/gestao-vendas" element={<GestaoVendas />} />
-          <Route path="/gestao-compras" element={<GestaoCompras />} />
-          <Route path="/estoque" element={<GerenciamentoEstoque />} />
-          <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
-          <Route path="/gerenciar-leite" element={<GestaoLeitePage />} />
-          <Route path="/gerenciar-laticinio" element={<GestaoLaticinioPage />} />
-          <Route path="/crm" element={<CRMPage />}/>
-          <Route path="/historico" element={<HistoricoPage />} />
-          <Route path="*" element={<NotFound />} />
+          <Route element={<ProtectedRoute />}> 
+          <Route element={<LayoutWithHeader />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/gestao-vendas" element={<GestaoVendas />} />
+            <Route path="/gestao-compras" element={<GestaoCompras />} />
+            <Route path="/estoque" element={<GerenciamentoEstoque />} />
+            <Route path="/selecionar-produto" element={<SelecaoProdutoPage />} />
+            <Route path="/historico-leite" element={<HistoricoLeitePage />} />
+            <Route path="/historico-laticinio" element={<HistoricoLaticinioPage />} />
+            <Route path="/crm" element={<CRMPage />}/>
+            <Route path="/*" element={<NotFound />} />
           </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/cadastro" element={<CadastroPage />} />
+        </Route>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/cadastro" element={<CadastroPage />} />
+        <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
+        <Route path="/nova-senha" element={<NovaSenhaPage />} />
         </Routes>
       </BrowserRouter>
     </NotificacoesProvider>
