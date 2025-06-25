@@ -222,10 +222,10 @@ export default function ModalTransacoes({
             label="Forma de Pagamento"
             type="select"
             options={[
-              ...Object.values(FormaPagamento).map((f) => ({
-                label: f,
-                value: f,
-              })),
+              { label: "Pix", value: "PIX" },
+              { label: "Cartão", value: "CARTAO" },
+              { label: "Dinheiro", value: "DINHEIRO" },
+              { label: "Boleto", value: "BOLETO" },
             ]}
             value={formulario.formaPagamento}
             selectFunction={(e) =>

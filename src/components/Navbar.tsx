@@ -2,7 +2,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "../css/navbar.css";
 import SinoNotificacoes from "./SinoNotificacoes";
 import { useNotificacoes } from "../context/NotificacoesContext";
-import MockNotificacoes from "./MockNotificacoes";
 
 function Navbar(): React.ReactElement {
   const { notificacoes } = useNotificacoes();
@@ -19,7 +18,6 @@ function Navbar(): React.ReactElement {
       <ul className="navbar__lista">
         <li>
           <SinoNotificacoes notificacoes={notificacoes} />
-          <MockNotificacoes />
         </li>
         <li className="navbar__lista__item">
           <Link to="/historico">Gerenciamento do Produto</Link>

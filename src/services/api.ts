@@ -21,13 +21,13 @@ api.interceptors.request.use(
 );
 
 // Interceptor de resposta para lidar com erro 403 (token inválido ou expirado)
-api.interceptors.response.use(
-  response => response,
-  error => {
-    if (error.response?.status === 403) {
-      sessionStorage.removeItem("access_token");
-      window.location.href = "/login"; // ou: window.location.reload();
-    }
-    return Promise.reject(error);
-  }
-);
+// api.interceptors.response.use(
+//   response => response,
+//   error => {
+//     if (error.response?.status === 403) {
+//       sessionStorage.removeItem("access_token");
+//       window.location.href = "/login";
+//     }
+//     return Promise.reject(error);
+//   }
+// );

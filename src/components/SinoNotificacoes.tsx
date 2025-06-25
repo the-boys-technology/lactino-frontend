@@ -21,7 +21,6 @@ export default function SinoNotificacoes({ notificacoes }: SinoNotificacoesProps
   const [notificacoesVisiveis, setNotificacoesVisiveis] = useState<Notificacao[]>([]);
 
   useEffect(() => {
-    // sempre atualiza as notificações visíveis quando o prop mudar
     setNotificacoesVisiveis(notificacoes.filter((n) => !n.lida));
   }, [notificacoes]);
 
