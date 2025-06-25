@@ -1,8 +1,12 @@
 import axios, { AxiosRequestConfig } from 'axios'
 
+const isProduction = import.meta.env.PROD;
+
 export const api = axios.create({
-  baseURL: '/api',
-})
+  baseURL: isProduction
+    ? 'https://lactino-backend-render.onrender.com/api'
+    : '/api', 
+});
 
 export const api_ibge = axios.create({
   baseURL: 'http://servicodados.ibge.gov.br/api/v1/localidades',
