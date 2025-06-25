@@ -14,8 +14,7 @@
 }
 
 .formulario-produto__campos {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  display: flex;
   gap: 1rem;
 }
 

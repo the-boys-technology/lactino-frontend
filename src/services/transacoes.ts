@@ -16,7 +16,9 @@ export const criarTransacao = async (dados: TransacaoSemId) => {
 
 export const buscarTransacoes = async (tipo?: string) => {
   try {
-    const res = await api.get<Transacao[]>(`/transacoes${tipo ? `?tipo=${tipo}` : ""}`);
+    const res = await api.get<Transacao[]>(
+      `/transacoes${tipo ? `?tipo=${tipo}` : ""}`
+    );
     return res.data;
   } catch (error) {
     if (error instanceof AxiosError) return error.response?.data;
