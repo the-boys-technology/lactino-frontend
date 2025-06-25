@@ -1,80 +1,69 @@
 import { useEffect, useState } from "react";
 import Botao from "../../components/Botao";
-import ModalCompra from "../../features/GestaoCompras/ModalCompras/ModalCompras";
-import ModalRelatorio from "../../features/GestaoCompras/ModalRelatorio/ModalRelatorio";
-import ModalFornecedor from "../../features/GestaoCompras/ModalFornecedor/ModalFornecedor";
-import { Transacao, Fornecedor } from "../../types/transacao";
-import "../GestaoCompras/GestaoCompras.css";
+import ModalTransacoes from "../../components/ModalTransacoes";
+import RelatorioPedido from "../../components/RelatorioPedido";
+import { TipoTransacao, Transacao } from "../../types/transacao";
+import { Fornecedor } from "../../types/fornecedor";
 import { Campo } from "../../components/Campo";
 import { api } from "../../services/api";
-import TabelaTransacoes from "../../components/TabelaTransacoes";
+import "../GestaoCompras/GestaoCompras.css";
 
 export default function GestaoCompras() {
-  const [modalAberto, setModalAberto] = useState(false);
-  const [modalFornecedor, setModalFornecedor] = useState(false);
-  const [modalRelatorio, setModalRelatorio] = useState<Transacao | null>(null);
+  const [modalAberto, setModalAberto] = useState<false | "compra">(false);
+  const [relatorioId, setRelatorioId] = useState<string | null>(null);
+  const [transacaoEditando, setTransacaoEditando] = useState<Transacao | null>(null);
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
 
+  // filtros
   const [filtroFornecedor, setFiltroFornecedor] = useState("");
-  const [dataInicial, setDataInicial] = useState("2025-05-14");
-  const [dataFinal, setDataFinal] = useState("2025-05-21");
+  const [dataInicial, setDataInicial] = useState("");
+  const [dataFinal, setDataFinal] = useState("");
   const [valorMin, setValorMin] = useState("");
   const [valorMax, setValorMax] = useState("");
   const [resultadoFiltro, setResultadoFiltro] = useState<Transacao[]>([]);
 
-  const handleNovaTransacao = (nova: Transacao) => {
-    setTransacoes((prev) => [nova, ...prev]);
-  };
-
-  const buscarTransacoes = () => {
-    const filtrado = transacoes.filter((t) => {
+  // Busca e filtros
+  const filtrar = () => {
+    const filtrado = transacoes.filter(t => {
       const data = new Date(t.data);
-      const dentroData = data >= new Date(dataInicial) && data <= new Date(dataFinal);
-
-      const dentroValorMin = !valorMin || t.valorTotal >= parseFloat(valorMin);
-      const dentroValorMax = !valorMax || t.valorTotal <= parseFloat(valorMax);
-      const dentroValor = dentroValorMin && dentroValorMax;
-
-      const fornecedor = fornecedores.find((f) => f.id === t.fornecedorId);
-      const fornecedorMatch =
-        !filtroFornecedor || fornecedor?.nome.toLowerCase().includes(filtroFornecedor.toLowerCase());
-
-      return t.tipo === "COMPRA" && dentroData && dentroValor && fornecedorMatch;
+      const dentroData =
+        (!dataInicial || data >= new Date(dataInicial)) &&
+        (!dataFinal   || data <= new Date(dataFinal));
+      const dentroValor =
+        (!valorMin || t.valorTotal >= parseFloat(valorMin)) &&
+        (!valorMax || t.valorTotal <= parseFloat(valorMax));
+      const forn = fornecedores.find(f => f.id === t.fornecedorId)?.nome.toLowerCase() || "";
+      const matchForn = !filtroFornecedor || forn.includes(filtroFornecedor.toLowerCase());
+      return t.tipo === TipoTransacao.COMPRA && dentroData && dentroValor && matchForn;
     });
-
     setResultadoFiltro(filtrado);
   };
 
-  const transacoesParaMostrar = resultadoFiltro.length ? resultadoFiltro : transacoes;
+  const mostrar = resultadoFiltro.length ? resultadoFiltro : transacoes;
 
+  // carregar dados iniciais
   useEffect(() => {
-    async function carregarFornecedores() {
-      try {
-        const res = await api.get("/fornecedores");
-        setFornecedores(res.data);
-      } catch (e) {
-        console.error("Erro ao buscar fornecedores", e);
-      }
-    }
+    api.get<Fornecedor[]>("/fornecedores")
+      .then(r => setFornecedores(r.data))
+      .catch(() => alert("Erro ao carregar fornecedores"));
 
-    async function carregarCompras() {
-      try {
-        const res = await api.get("/transacoes?tipo=COMPRA");
-        setTransacoes(res.data);
-      } catch (e) {
-        console.error("Erro ao buscar compras", e);
-      }
-    }
-
-    carregarFornecedores();
-    carregarCompras();
+    api.get<Transacao[]>("/transacoes?tipo=COMPRA")
+      .then(r => setTransacoes(r.data))
+      .catch(() => alert("Erro ao carregar compras"));
   }, []);
+
+  // após criar/editar, recarrega a lista
+  const recarregar = async () => {
+    const r = await api.get<Transacao[]>("/transacoes?tipo=COMPRA");
+    setTransacoes(r.data);
+    setResultadoFiltro([]);
+  };
 
   return (
     <div className="compras">
       <header className="compras__header">
-        <h1 className="compras__header-title">Compras</h1>
+        <h1>Gestão de Compras</h1>
       </header>
 
       <section className="compras__filtros">
@@ -82,123 +71,125 @@ export default function GestaoCompras() {
           <Campo
             type="text"
             label="Fornecedor"
-            placeHolder="Fornecedor"
-            list="lista-fornecedores"
+            placeHolder="Digite parte do nome"
+            list="lista-forn"
             value={filtroFornecedor}
-            inputFunction={(e) => setFiltroFornecedor(e.target.value)}
+            inputFunction={e => setFiltroFornecedor(e.target.value)}
           />
-          <datalist id="lista-fornecedores">
-            {fornecedores.map((f) => (
-              <option key={f.id} value={f.nome} />
-            ))}
+          <datalist id="lista-forn">
+            {fornecedores.map(f => <option key={f.id} value={f.nome} />)}
           </datalist>
-          {!fornecedores.some((f) => f.nome === filtroFornecedor) && filtroFornecedor && (
-            <span className="campo-aviso">Fornecedor não cadastrado. Cadastre primeiro.</span>
-          )}
-        </div>
 
-        <div className="compras__linha">
           <Campo
             type="date"
-            placeHolder="Data Inicial"
+            label="De"
             value={dataInicial}
-            inputFunction={(e) => setDataInicial(e.target.value)}
+            inputFunction={e => setDataInicial(e.target.value)}
           />
           <Campo
             type="date"
-            placeHolder="Data Final"
+            label="Até"
             value={dataFinal}
-            inputFunction={(e) => setDataFinal(e.target.value)}
-          />
-          <Campo
-            label="Valor Mínimo"
-            type="text"
-            placeHolder="R$ 0,00"
-            value={valorMin}
-            inputFunction={(e) => {
-              const raw = e.target.value.replace(/[^\d]/g, "");
-              const formatted = (Number(raw) / 100).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              });
-              setValorMin(formatted.replace("R$", "").trim());
-            }}
-            styleInput={{ width: "7rem" }}
-            leftAdd="R$"
+            inputFunction={e => setDataFinal(e.target.value)}
           />
 
           <Campo
-            label="Valor Máximo"
             type="text"
-            placeHolder="R$ 0,00"
-            value={valorMax}
-            inputFunction={(e) => {
-              const raw = e.target.value.replace(/[^\d]/g, "");
-              const formatted = (Number(raw) / 100).toLocaleString("pt-BR", {
-                style: "currency",
-                currency: "BRL",
-              });
-              setValorMax(formatted.replace("R$", "").trim());
-            }}
-            styleInput={{ width: "7rem" }}
+            label="Valor Mín."
             leftAdd="R$"
+            styleInput={{ width: "7rem" }}
+            value={valorMin}
+            inputFunction={e => {
+              const raw = e.target.value.replace(/[^\d]/g, "");
+              setValorMin((Number(raw) / 100).toFixed(2));
+            }}
+          />
+          <Campo
+            type="text"
+            label="Valor Máx."
+            leftAdd="R$"
+            styleInput={{ width: "7rem" }}
+            value={valorMax}
+            inputFunction={e => {
+              const raw = e.target.value.replace(/[^\d]/g, "");
+              setValorMax((Number(raw) / 100).toFixed(2));
+            }}
           />
         </div>
 
         <div className="compras__buscar">
-          <Botao tipo="primary" label="🔍 Buscar" onClick={buscarTransacoes} htmlType="button" />
+          <Botao tipo="primary" label="🔍 Filtrar" onClick={filtrar} htmlType="button" />
         </div>
       </section>
 
-      <TabelaTransacoes
-        transacoes={transacoesParaMostrar}
-        fornecedores={fornecedores}
-        onVerRelatorio={setModalRelatorio}
-        tipoTransacao="COMPRA"
-      />
+      <section className="compras__lista">
+        {mostrar.length === 0
+          ? <p className="compras__vazio">Nenhuma compra encontrada.</p>
+          : mostrar.map(t => {
+              const forn = fornecedores.find(f => f.id === t.fornecedorId)?.nome || "—";
+              return (
+                <div key={t.id} className="compras__linha-tabela">
+                  <span>{forn}</span>
+                  <span>{t.itens.length}</span>
+                  <span>{new Date(t.data).toLocaleDateString()}</span>
+                  <span>R$ {t.valorTotal.toFixed(2)}</span>
+                  <span>{t.formaPagamento}</span>
+                  <div className="compras__acoes">
+                    <Botao
+                      tipo="secondary"
+                      label="✏️"
+                      htmlType="button"
+                      onClick={() => {
+                        setTransacaoEditando(t);
+                        setModalAberto("compra");
+                      }}
+                    />
+                    <Botao
+                      tipo="primary"
+                      label="📄"
+                      htmlType="button"
+                      onClick={() => setRelatorioId(String(t.id))}
+                    />
+                  </div>
+                </div>
+              );
+            })
+        }
+      </section>
 
       <footer className="compras__footer">
         <Botao
+          tipo="success"
+          label="+ Nova Compra"
           htmlType="button"
-          tipo="primary"
-          label="Cadastrar Fornecedor"
-          onClick={() => setModalFornecedor(true)}
-        />
-        <Botao
-          htmlType="button"
-          tipo="primary"
-          label="Registrar Compra"
-          onClick={() => setModalAberto(true)}
+          onClick={() => {
+            setTransacaoEditando(null);
+            setModalAberto("compra");
+          }}
         />
       </footer>
 
-      {modalAberto && (
-        <ModalCompra onClose={() => setModalAberto(false)} onSave={handleNovaTransacao} />
-      )}
-
-      {modalFornecedor && (
-        <ModalFornecedor
-          onClose={() => setModalFornecedor(false)}
-          onSave={(novo: Fornecedor) => {
-            setFornecedores((prev) => [...prev, novo]);
+      {modalAberto === "compra" && (
+        <ModalTransacoes
+          tipoTransacao={TipoTransacao.COMPRA}
+          clientes={[]}          // não usado em compra
+          fornecedores={fornecedores}
+          transacaoEditando={transacaoEditando}
+          onSalvar={async () => {
+            await recarregar();
+            setModalAberto(false);
           }}
+          onCancelar={() => setModalAberto(false)}
         />
       )}
 
-      {modalRelatorio && (
-        <ModalRelatorio
-          transacao={modalRelatorio}
-          onClose={() => setModalRelatorio(null)}
-          onEdit={(editada) => {
-            setTransacoes((prev) => prev.map((t) => (t.id === editada.id ? editada : t)));
-            setModalRelatorio(null);
-          }}
-          onDelete={(id) => {
-            setTransacoes((prev) => prev.filter((t) => t.id !== id));
-            setModalRelatorio(null);
-          }}
+      {/* Modal de relatório */}
+      {relatorioId && (
+        <RelatorioPedido
+          transacaoId={relatorioId}
+          onClose={() => setRelatorioId(null)}
         />
       )}
     </div>
-  );
+);
 }

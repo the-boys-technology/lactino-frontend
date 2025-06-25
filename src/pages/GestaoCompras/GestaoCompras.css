@@ -25,53 +25,14 @@
 
 .compras__linha {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   gap: 1rem;
-  justify-content: flex-start;
   align-items: center;
 }
 
 .compras__buscar {
   display: flex;
-  flex-direction: row;
   justify-content: flex-end;
-}
-
-.compras__tabela {
-  background-color: #ffffff;
-  border: 1px solid #000;
-  border-radius: 10px;
-  padding: 1rem;
-  overflow-x: auto;
-}
-
-.compras__tabela-cabecalho {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  padding: 1rem;
-  background-color: #D9D9D9;
-  border-bottom: 1px solid #000;
-  font-weight: var(--bold);
-  color: var(--secondary-font-color);
-}
-
-.compras__tabela-linha {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  padding: 0.75rem 1rem;
-  align-items: center;
-  border-bottom: 1px solid #ccc;
-  background-color: #f9fafb;
-  font-size: 0.95rem;
-}
-
-.compras__ver-relatorio {
-  background: none;
-  border: none;
-  font-size: 1rem;
-  color: #0F306E;
-  cursor: pointer;
-  text-decoration: underline;
 }
 
 .compras__footer {

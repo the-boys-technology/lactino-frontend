@@ -1,6 +1,6 @@
 import { AxiosError } from "axios";
 import { api } from "./api";
-import { ItemTransacao } from "../types/transacao";
+import { ItemTransacao } from "../types/item-transacao";
 
 export const buscarItens = async () => {
   try {

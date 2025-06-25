@@ -1,36 +1,70 @@
 .tabela-transacoes {
-  background-color: #ffffff;
-  border: 1px solid #000;
+  background-color: #fff;
+  border: 1px solid #ccc;
   border-radius: 10px;
-  padding: 1rem;
   overflow-x: auto;
+  margin-top: 1rem;
+}
+
+.tabela-transacoes__cabecalho,
+.tabela-transacoes__linha {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1.5fr 1.5fr 1fr 1fr;
+  gap: 0.5rem;
+  padding: 1rem;
+  align-items: center;
+  border: 1px solid #e5e7eb;
 }
 
 .tabela-transacoes__cabecalho {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  padding: 1rem;
-  background-color: #D9D9D9;
-  border-bottom: 1px solid #000;
+  background-color: #f3f4f6;
   font-weight: var(--bold);
-  color: var(--secondary-text-color);
+  color: #1F2937;
 }
 
 .tabela-transacoes__linha {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  padding: 0.75rem 1rem;
-  align-items: center;
-  border-bottom: 1px solid #ccc;
-  background-color: #f9fafb;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
   font-size: 0.95rem;
 }
 
 .tabela-transacoes__ver-relatorio {
   background: none;
   border: none;
-  font-size: 1rem;
-  color: #0F306E;
+  color: var(--primary-background-color);
   cursor: pointer;
   text-decoration: underline;
+  font-weight: bold;
+}
+
+.tabela-transacoes__vazio {
+  padding: 1rem;
+  color: #6b7280;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .tabela-transacoes__cabecalho,
+  .tabela-transacoes__linha {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "pessoa data"
+      "itens valor"
+      "pagamento acao";
+    row-gap: 0.5rem;
+  }
+
+  .tabela-transacoes__cabecalho span:nth-child(1) { grid-area: pessoa; }
+  .tabela-transacoes__cabecalho span:nth-child(2) { grid-area: itens; }
+  .tabela-transacoes__cabecalho span:nth-child(3) { grid-area: data; }
+  .tabela-transacoes__cabecalho span:nth-child(4) { grid-area: valor; }
+  .tabela-transacoes__cabecalho span:nth-child(5) { grid-area: pagamento; }
+  .tabela-transacoes__cabecalho span:nth-child(6) { grid-area: acao; }
+
+  .tabela-transacoes__linha span:nth-child(1) { grid-area: pessoa; }
+  .tabela-transacoes__linha span:nth-child(2) { grid-area: itens; }
+  .tabela-transacoes__linha span:nth-child(3) { grid-area: data; }
+  .tabela-transacoes__linha span:nth-child(4) { grid-area: valor; }
+  .tabela-transacoes__linha span:nth-child(5) { grid-area: pagamento; }
+  .tabela-transacoes__linha button { grid-area: acao; }
 }
