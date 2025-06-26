@@ -1,5 +1,11 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import '../css/laticinio_form.css';
+import { buscarLeites } from '../services/gestao_leite_laticinio';
+
+interface Leite {
+  id: string;
+  nome: string;
+}
 
 interface LaticinioAddFormProps {
   onSubmit?: (data: any) => void;
@@ -8,7 +14,24 @@ interface LaticinioAddFormProps {
 
 export default function LaticinioAddForm({ onSubmit, formRef }: LaticinioAddFormProps) {
   const localRef = useRef<HTMLFormElement>(null);
+  const [leites, setLeites] = useState<Leite[]>([]);
+  const [loadingLeites, setLoadingLeites] = useState(true);
 
+  // 1) Buscar leites ao montar
+  useEffect(() => {
+    buscarLeites(0, 10000)
+      .then(res => {
+        setLeites(res.data.content);
+      })
+      .catch(err => {
+        console.error('Erro ao buscar lista de leites:', err);
+      })
+      .finally(() => {
+        setLoadingLeites(false);
+      });
+  }, []);
+
+  // 2) Expor ref para submit imperativo
   useEffect(() => {
     if (formRef && localRef.current) {
       formRef.current = localRef.current;
@@ -54,14 +77,20 @@ export default function LaticinioAddForm({ onSubmit, formRef }: LaticinioAddForm
         </label>
 
         <label className="estoque-form__label">
-          Leite de Origem:
-          <input
-            type="text"
-            name="leiteUtilizadoId"
-            className="estoque-form__input"
-            placeholder="Leite de origem"
-          />
-        </label>
+        Leite de Origem:
+        {loadingLeites ? (
+          <span>Carregando opções…</span>
+        ) : (
+          <select name="leiteUtilizadoId" className="estoque-form__input">
+            <option value="">Selecione o leite</option>
+            {leites.map(leite => (
+              <option key={leite.id} value={leite.id}>
+                {leite.nome}
+              </option>
+            ))}
+          </select>
+        )}
+      </label>
       </div>
 
       <div className="estoque-form__row">

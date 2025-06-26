@@ -113,15 +113,17 @@ export default function LeiteEditFormProps({ onSubmit, formRef, dadosIniciais }:
             name="nome"
             className="estoque-form__input"
             placeholder="Nome"
+            defaultValue={dadosIniciais?.nome}
           />
         </label>
-        <label className="estoque-form__label">
+        <label className="estoque-form__label fornecedor">
           Fornecedor:
           <input
             type="text"
             name="fornecedorId"
-            className="estoque-form__input"
+            className="estoque-form__input fornecedor"
             placeholder="Fornecedor"
+            readOnly
           />
         </label>
       </div>

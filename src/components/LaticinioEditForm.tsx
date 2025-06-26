@@ -60,7 +60,7 @@ export default function LaticinioEditFormProps({ onSubmit, formRef, dadosIniciai
           <input
             type="text"
             name="leiteUtilizadoId"
-            className="estoque-form__input"
+            className="estoque-form__input fornecedor"
             placeholder="Leite de origem"
             defaultValue={dadosIniciais?.leiteOrigem}
           />

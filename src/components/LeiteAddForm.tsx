@@ -3,6 +3,8 @@ import ModalFornecedor from '../features/Home/ModalFornecedor/ModalFornecedor';
 import { Fornecedor } from '../types/fornecedor';
 import '../css/estoque-form.css'
 
+
+
 interface EstoqueAddFormProps {
   onSubmit?: (data: any) => void
   formRef?: React.MutableRefObject<HTMLFormElement | null>
@@ -128,7 +130,7 @@ export default function LeiteAddForm({ onSubmit, formRef }: EstoqueAddFormProps)
                 readOnly
                 value={fornecedor ? `${fornecedor.nome} (${fornecedor.email})` : ''}
                 placeholder="Cadastre um fornecedor"
-                className="estoque-form__input"
+                className="estoque-form__input fornecedor"
               />
               <button
                 type="button"

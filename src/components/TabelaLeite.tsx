@@ -268,7 +268,7 @@ export default function TabelaLeite() {
             onSubmit={async (dados) => {
               try {
                 await registrarLeite(dados)
-                //await carregarInsumos()
+                await carregarPagina(page)
               } catch (error) {
                 console.log(`ERRO: ${error}`)
               }
@@ -293,7 +293,7 @@ export default function TabelaLeite() {
               console.log('ID para editar:', itemSelecionado.id);
               console.log('Dados enviados:', dadosEditados);
               await editarLeite(itemSelecionado.id, dadosEditados)
-              //await carregarInsumos()
+              await carregarPagina(page)
             } catch (error) {
               console.log(`ERRO: ${error}`)
             }
@@ -322,7 +322,7 @@ export default function TabelaLeite() {
                 onClick={async () => {
                   try {
                     await removerLeite(itemSelecionado.id)
-                    //await carregarInsumos()
+                    await carregarPagina(page)
                   } catch (error) {
                     console.error('Erro ao remover insumo:', error)
                   }

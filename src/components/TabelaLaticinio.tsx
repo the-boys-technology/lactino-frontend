@@ -225,7 +225,7 @@ export default function TabelaLaticinio() {
             onSubmit={async (dados) => {
               try {
                 await registrarLaticinio(dados)
-                //await carregarInsumos()
+                await carregarPagina(page)
               } catch (error) {
                 console.log(`ERRO: ${error}`)
               }
@@ -250,7 +250,7 @@ export default function TabelaLaticinio() {
               console.log('ID para editar:', itemSelecionado.id);
               console.log('Dados enviados:', dadosEditados);
               await editarLaticinio(itemSelecionado.id, dadosEditados)
-              //await carregarInsumos()
+              await carregarPagina(page)
             } catch (error) {
               console.log(`ERRO: ${error}`)
             }
@@ -279,7 +279,7 @@ export default function TabelaLaticinio() {
                 onClick={async () => {
                   try {
                     await removerLaticinio(itemSelecionado.id)
-                    //await carregarInsumos()
+                    await carregarPagina(page)
                   } catch (error) {
                     console.error('Erro ao remover insumo:', error)
                   }
