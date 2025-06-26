@@ -22,7 +22,19 @@ export const COLUNAS_LEITE: ColumnDef<RowDataLeite, any>[] = [
   },
   { header: 'Nome',         accessorKey: 'nome' },
   { header: 'Origem',       accessorKey: 'origem' },
-  { header: 'Fornecedor',   accessorKey: 'fornecedorId' },
+  {
+    header: 'Fornecedor',
+    cell: ({ row }) => {
+      const fornecedor = row.original.fornecedor;
+      if (!fornecedor) return '---';
+      return (
+        <>
+          {fornecedor.nome} ({fornecedor.email})<br />
+          {fornecedor.localizacao}
+        </>
+      );
+    },
+  },
   { header: 'Turno',        accessorKey: 'turno' },
   { header: 'Finalidade',   accessorKey: 'finalidade' },
   { header: 'Descrição',    accessorKey: 'descricao' },
@@ -57,7 +69,14 @@ export const COLUNAS_LATICINIO: ColumnDef<RowDataLaticinio, any>[] = [
   },
   { header: 'Tipo',             accessorKey: 'tipoProduto' },
   { header: 'Quantidade',       accessorKey: 'quantidadeProduzida' },
-  { header: 'Matéria-prima',    accessorKey: 'leiteUtilizadoId' },
+  {
+    header: 'Matéria-prima',
+    cell: ({ row }) => {
+      const leite = row.original.leite;
+      if (!leite) return '---';
+      return `${leite.nome} (${leite.origem})`;
+    },
+  },
   { header: 'Descrição',        accessorKey: 'descricao' },
   {
     header: 'Status',

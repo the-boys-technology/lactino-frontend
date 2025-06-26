@@ -3,7 +3,7 @@ import { DataTable } from "./Tabela";
 import { COLUNAS_LATICINIO } from "../data/COLUNAS";
 import { type RowDataLaticinio } from "../data/ROW_DATA";   
 import { useNavigate } from "react-router-dom";
-import { buscarLaticinios, editarLaticinio, registrarLaticinio, removerLaticinio } from "../services/gestao_leite_laticinio";
+import { buscarLaticinios, editarLaticinio, registrarLaticinio, removerLaticinio, buscarLeiteId } from "../services/gestao_leite_laticinio";
 import "../css/historico_tabela.css";
 import retornarIcon from '../assets/retornar.png';
 import Botao from "./Botao";
@@ -58,15 +58,33 @@ export default function TabelaLaticinio() {
 
   async function carregarPagina(pagina: number) {
     try {
-      console.log(`Páginas: ${pagina}`)
       const res = await buscarLaticinios(pagina, pageSize);
-      console.log(res);
-      setRows(res.data.content);
+      const laticinios = res.data.content;
+
+      const laticiniosComLeite = await Promise.all(
+        laticinios.map(async (item: RowDataLaticinio) => {
+          try {
+            const resLeite = await buscarLeiteId(item.leiteUtilizadoId);
+            console.log(resLeite);
+            return {
+              ...item,
+              leite: {
+                nome: resLeite.data.nome,
+                origem: resLeite.data.origem,
+              },
+            };
+          } catch (e) {
+            console.warn(`Erro ao buscar leite ${item.leiteUtilizadoId}`, e);
+            return item;
+          }
+        })
+      );
+
+      setRows(laticiniosComLeite);
       setTotalPages(res.data.totalPages);
       setPage(pagina);
     } catch (error: any) {
       console.error("Erro ao carregar dados:", error);
-    } finally {
     }
   }
 

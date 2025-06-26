@@ -10,7 +10,8 @@ import Botao from "./Botao";
 import Modal from "./Modal";
 import LeiteAddForm from "./LeiteAddForm";
 import LeiteEditForm from "./LeiteEditForm";
-
+import { Fornecedor } from "../types/fornecedor";
+import { buscarFornecedorPorId } from '../services/fornecedores';
 
 export default function TabelaLeite() {
   const navigate = useNavigate();
@@ -26,8 +27,8 @@ export default function TabelaLeite() {
 
   const [modalAberto, setModalAberto] = useState<null | 'adicionar' | 'editar' | 'remover'>(null);
   const [itemSelecionado, setItemSelecionado] = useState<any | null>(null);
+  const [fornecedorSelecionado, setFornecedorSelecionado] = useState<Fornecedor | null>(null);
   const formRef = useRef<HTMLFormElement>(null)
-
 
   const toggle = (arr: string[], val: string) =>
     arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val];
@@ -43,6 +44,7 @@ export default function TabelaLeite() {
   function handleReturn() {
     navigate('/selecionar-produto');
   }
+
 
   const filteredRows = useMemo(() => {
   return rows.filter((row) => {
@@ -70,7 +72,29 @@ export default function TabelaLeite() {
       console.log(`Páginas: ${pagina}`)
       const res = await buscarLeites(pagina, pageSize);
       console.log(res);
-      setRows(res.data.content);
+
+      const leites = res.data.content;
+
+      const leitesComFornecedor = await Promise.all(
+        leites.map(async (leite: RowDataLeite) => {
+          try {
+            const fornecedor = await buscarFornecedorPorId(leite.fornecedorId);
+            return {
+              ...leite,
+              fornecedor: {
+                nome: fornecedor.nome,
+                email: fornecedor.email,
+                localizacao: fornecedor.localizacao,
+              },
+            };
+          } catch {
+            return leite; // fallback: não achou fornecedor
+          }
+        })
+      );
+
+      setRows(leitesComFornecedor);
+
       setTotalPages(res.data.totalPages);
       setPage(pagina);
     } catch (error: any) {

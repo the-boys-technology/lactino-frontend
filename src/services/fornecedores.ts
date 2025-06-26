@@ -5,8 +5,10 @@ import { Fornecedor } from "../types/fornecedor";
 export const criarFornecedor = async (dados: Omit<Fornecedor, "id">) => {
   try {
     const res = await api.post<Fornecedor>("/fornecedores", dados);
+    console.log("FORNECEDOR CRIADO COM SUCESSO");
     return res.data;
   } catch (error) {
+    console.log("FALHA AO CRIAR FORNECEDOR");
     if (error instanceof AxiosError) return error.response?.data;
     throw error;
   }
@@ -22,7 +24,7 @@ export const buscarFornecedores = async () => {
   }
 };
 
-export const buscarFornecedorPorId = async (id: number) => {
+export const buscarFornecedorPorId = async (id: string) => {
   try {
     const res = await api.get<Fornecedor>(`/fornecedores/${id}`);
     return res.data;

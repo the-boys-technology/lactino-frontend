@@ -22,7 +22,7 @@ function RedefinirSenhaPage(): React.ReactElement {
                 console.log(data);
                 const res = await solicitarRedefinirSenhaApi(data.email);
                 console.log(res);
-                navigate("/");
+                navigate('/nova-senha', { state: { email: formData.email } }); 
             } catch (error: any) {
                 const message = error?.response?.data?.message || "E-mail inválido";
                 console.log(data);
@@ -34,7 +34,6 @@ function RedefinirSenhaPage(): React.ReactElement {
         const handleSubmit: React.FormEventHandler = async (e) => {
             e.preventDefault();
             await solicitarRedefinirSenha(formData); 
-            navigate('/nova-senha');         
         };
 
     return(

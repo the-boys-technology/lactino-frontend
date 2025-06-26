@@ -9,6 +9,11 @@ export type RowDataLeite = {
   status: "DISPONIVEL" | "UTILIZADO" | "VENCIDO" | "DESCARTADO";
   finalidade: string;
   fornecedorId: string;
+  fornecedor?: {
+    nome: string;
+    email: string;
+    localizacao: string;
+  };
 };
 
 export type RowDataLaticinio = {
@@ -17,8 +22,8 @@ export type RowDataLaticinio = {
   descricao: string;
   dataProducao: string;         
   dataValidade: string;
-  leiteOrigem: string;
   tipoProduto: string;
   status: "DISPONIVEL" | "VENDIDO" | "VENCIDO" | "DESCARTADO";
+  leite?: Pick<RowDataLeite, 'nome' | 'origem'>;
   leiteUtilizadoId: string;
 };
