@@ -1,4 +1,6 @@
-export type TipoNotificacao = "LEITE" | "LATICINIO" | "INSUMO" | "GERAL";
+// Tipos de notificações
+export type TipoNotificacao = 'LEITE' | 'LATICINIO' | 'INSUMO' | 'GERAL';
+export type PrioridadeNotificacao = 'BAIXA' | 'MEDIA' | 'ALTA' | 'URGENTE';
 
 export interface Notificacao {
   id: string;
@@ -10,4 +12,16 @@ export interface Notificacao {
   usuario_id: number;
   referencia_id?: number;
   referencia_tipo?: TipoNotificacao;
+}
+
+// Interfaces para filtros
+export interface FiltroNotificacoes {
+  tipo?: TipoNotificacao;
+  prioridade?: PrioridadeNotificacao;
+  dataInicio?: string;
+  dataFim?: string;
+  pagina?: number;
+  itensPorPagina?: number;
+  ordenarPor?: 'data_criacao' | 'prioridade';
+  ordem?: 'asc' | 'desc';
 }

@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Notificacao } from "../types/notificacao";
-import { mockNotificacoes } from "../mocks/mockNotificacoes";
 
 interface NotificacoesContextType {
   notificacoes: Notificacao[];
@@ -12,9 +11,8 @@ const NotificacoesContext = createContext<NotificacoesContextType | undefined>(u
 export const NotificacoesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [notificacoes, setNotificacoes] = useState<Notificacao[]>([]);
 
-  // Para apresentação com o mock (Mudar depois)
   useEffect(() => {
-    setNotificacoes(mockNotificacoes);
+    setNotificacoes(notificacoes);
   }, []);
 
   return (

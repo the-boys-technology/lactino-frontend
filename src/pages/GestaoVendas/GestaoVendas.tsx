@@ -124,11 +124,10 @@ export default function GestaoVendas() {
                   label="Categoria"
                   type="select"
                   options={[
-                    { label: "Selecione uma opção", value: "" },
-                    ...Object.values(CategoriaItem).map((cat) => ({
-                      label: cat,
-                      value: cat,
-                    })),
+                    { label: "Pix", value: "PIX" },
+                    { label: "Cartão", value: "CARTAO" },
+                    { label: "Dinheiro", value: "DINHEIRO" },
+                    { label: "Boleto", value: "BOLETO" },
                   ]}
                   value={filtroCategoria}
                   selectFunction={(e) => setFiltroCategoria(e.target.value)}
