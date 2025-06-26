@@ -368,7 +368,6 @@
   table-layout: fixed;       /* colunas se ajustam uniformemente */
 }
 
-/* (opcional) para evitar overflow de texto nas células */
 .tabela-container__table th,
 .tabela-container__table td {
   word-break: break-word;
