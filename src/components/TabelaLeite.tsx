@@ -12,6 +12,7 @@ import LeiteAddForm from "./LeiteAddForm";
 import LeiteEditForm from "./LeiteEditForm";
 import { Fornecedor } from "../types/fornecedor";
 import { buscarFornecedorPorId } from '../services/fornecedores';
+import { toast } from "react-toastify";
 
 export default function TabelaLeite() {
   const navigate = useNavigate();
@@ -98,6 +99,7 @@ export default function TabelaLeite() {
       setTotalPages(res.data.totalPages);
       setPage(pagina);
     } catch (error: any) {
+      toast.error("Erro ao carregar dados.");
       console.error("Erro ao carregar dados:", error);
     } finally {
     }
@@ -269,7 +271,9 @@ export default function TabelaLeite() {
               try {
                 await registrarLeite(dados)
                 await carregarPagina(page)
+                toast.success("Leite adicionado com sucesso!");
               } catch (error) {
+                toast.error("Erro ao adicionar leite.");
                 console.log(`ERRO: ${error}`)
               }
               setModalAberto(null) 
@@ -294,7 +298,9 @@ export default function TabelaLeite() {
               console.log('Dados enviados:', dadosEditados);
               await editarLeite(itemSelecionado.id, dadosEditados)
               await carregarPagina(page)
+              toast.success("Leite atualizado com sucesso!");
             } catch (error) {
+              toast.error("Erro ao atualizar leite.");
               console.log(`ERRO: ${error}`)
             }
             setModalAberto(null) 
@@ -323,7 +329,9 @@ export default function TabelaLeite() {
                   try {
                     await removerLeite(itemSelecionado.id)
                     await carregarPagina(page)
+                    toast.success("Leite removido com sucesso!");
                   } catch (error) {
+                    toast.error("Erro ao remover leite.");
                     console.error('Erro ao remover insumo:', error)
                   }
                   setModalAberto(null)

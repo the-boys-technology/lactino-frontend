@@ -4,6 +4,7 @@ import '../../css/login_page.css';
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { redefinirSenhaApi } from "../../services/auth";
+import { toast } from "react-toastify";
 
 function NovaSenhaPage(): React.ReactElement {
     const navigate = useNavigate();
@@ -31,10 +32,12 @@ function NovaSenhaPage(): React.ReactElement {
                 console.log(data);
                 const res = await redefinirSenhaApi(data);
                 console.log(res);
+                toast.success(`Senha redefinida com sucesso!`);
                 navigate("/login");
             } catch (error: any) {
                 const message = error?.response?.data?.message || "E-mail inválido";
                 console.log(req);
+                toast.error(`Erro ao solicitar redefição de senha.`);
                 console.error('Erro ao solicitar redefição de senha:', error)
             }
         }

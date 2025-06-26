@@ -4,6 +4,7 @@ import '../../css/login_page.css';
 import { useState } from "react";
 import { fazerLogin, verDados } from "../../services/auth";
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
+import { toast } from "react-toastify";
 
 function LoginPage(): React.ReactElement {
     const navigate = useNavigate();
@@ -40,11 +41,12 @@ function LoginPage(): React.ReactElement {
             sessionStorage.setItem('estado', estado);
             sessionStorage.setItem('cidade', cidade);
             sessionStorage.setItem('fotoPerfil', fotoPerfil);
-
+            toast.success("Login feito com sucesso.");
             navigate("/");
         } catch (error: any) {
             const message = error?.response?.data?.message || "Credenciais inválidas";
             console.log(data);
+            toast.error("Erro ao fazer login.");
             console.error('Erro ao fazer login:', error)
             setLoginError(message);
             setHasError(true);

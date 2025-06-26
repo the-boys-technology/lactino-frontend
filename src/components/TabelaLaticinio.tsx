@@ -10,6 +10,7 @@ import Botao from "./Botao";
 import Modal from "./Modal";
 import LaticinioAddForm from "./LaticinioAddForm";
 import LaticinioEditForm from "./LaticinioEditForm";
+import { toast } from "react-toastify";
 
 
 export default function TabelaLaticinio() {
@@ -74,6 +75,7 @@ export default function TabelaLaticinio() {
               },
             };
           } catch (e) {
+            toast.error(`Erro ao buscar leite ${item.leiteUtilizadoId}.`);
             console.warn(`Erro ao buscar leite ${item.leiteUtilizadoId}`, e);
             return item;
           }
@@ -84,6 +86,7 @@ export default function TabelaLaticinio() {
       setTotalPages(res.data.totalPages);
       setPage(pagina);
     } catch (error: any) {
+      toast.error(`Erro ao carregar dados`);
       console.error("Erro ao carregar dados:", error);
     }
   }
@@ -226,7 +229,9 @@ export default function TabelaLaticinio() {
               try {
                 await registrarLaticinio(dados)
                 await carregarPagina(page)
+                toast.success(`Laticínio adicionado com sucesso!`);
               } catch (error) {
+                toast.error(`Erro ao adicionar laticínio.`);
                 console.log(`ERRO: ${error}`)
               }
               setModalAberto(null) 
@@ -251,7 +256,9 @@ export default function TabelaLaticinio() {
               console.log('Dados enviados:', dadosEditados);
               await editarLaticinio(itemSelecionado.id, dadosEditados)
               await carregarPagina(page)
+              toast.success(`Laticínio editado com sucesso!`);
             } catch (error) {
+              toast.error(`Erro ao editar laticínio.`);
               console.log(`ERRO: ${error}`)
             }
             setModalAberto(null) 
@@ -280,8 +287,10 @@ export default function TabelaLaticinio() {
                   try {
                     await removerLaticinio(itemSelecionado.id)
                     await carregarPagina(page)
+                    toast.success(`Laticínio removido com sucesso!`);
                   } catch (error) {
-                    console.error('Erro ao remover insumo:', error)
+                    toast.error(`Erro ao remover laticínio.`);
+                    console.error('Erro ao remover laticínio:', error)
                   }
                   setModalAberto(null)
                   setItemSelecionado(null)
