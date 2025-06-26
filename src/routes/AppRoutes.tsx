@@ -22,6 +22,7 @@ import RedefinirSenhaPage from '../pages/Auth/RedefinirSenhaPage';
 import NovaSenhaPage from '../pages/Auth/NovaSenhaPage';
 import HistoricoLeitePage from '../pages/GestaoLeiteLaticinio/HstoricoLeitePage';
 import HistoricoLaticinioPage from '../pages/GestaoLeiteLaticinio/HistoricoLaticinioPage';
+import GerenciadorDeNotificacoes from '../components/GerenciadorDeNotificações';
 
 
 function LayoutWithHeader(): React.ReactElement {
@@ -94,6 +95,7 @@ export default function AppRoutes(): React.ReactElement {
   return (
     <NotificacoesProvider>
       <BrowserRouter>
+      <GerenciadorDeNotificacoes />
         <ToastContainer position="top-right" />
         <Routes>
           <Route element={<ProtectedRoute />}> 

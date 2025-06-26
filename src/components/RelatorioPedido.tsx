@@ -18,14 +18,13 @@ export default function RelatorioPedido({ transacaoId, onClose }: Props) {
   const [spinner, setSpinner] = useState(true);
   const [toast, setToast] = useState("");
 
-useEffect(() => {
-  if (!transacaoId) return;
-
-  buscarRelatorioPedido(transacaoId)
-    .then((r) => setRelatorio(r))
-    .catch(() => setToast("❌ Erro ao carregar relatório."))
-    .finally(() => setSpinner(false));
-}, [transacaoId]);
+  useEffect(() => {
+    if (!transacaoId) return;
+    buscarRelatorioPedido(transacaoId)
+      .then((r) => setRelatorio(r))
+      .catch(() => setToast("❌ Erro ao carregar relatório."))
+      .finally(() => setSpinner(false));
+  }, [transacaoId]);
 
   const imprimir = () => window.print();
 
@@ -80,26 +79,20 @@ useEffect(() => {
         <h2 id="relatorio-title">Relatório de Pedido</h2>
 
         <section className="relatorio-pedido__dados">
-          <p>
-            <strong>Data:</strong>{" "}
-            {new Date(relatorio.data).toLocaleDateString()}
-          </p>
-          {relatorio.clienteNome && (
-            <p>
-              <strong>Cliente:</strong> {relatorio.clienteNome}
-            </p>
+          <p><strong>Data:</strong> {new Date(relatorio.data).toLocaleDateString()}</p>
+          
+          {relatorio.tipo === "VENDA" && relatorio.clienteNome && (
+            <p><strong>Cliente:</strong> {relatorio.clienteNome}</p>
           )}
-          {relatorio.fornecedorNome && (
-            <p>
-              <strong>Fornecedor:</strong> {relatorio.fornecedorNome}
-            </p>
+          {relatorio.tipo === "COMPRA" && relatorio.fornecedorNome && (
+            <p><strong>Fornecedor:</strong> {relatorio.fornecedorNome}</p>
           )}
-          <p>
-            <strong>Pagamento:</strong> {relatorio.formaPagamento}
-          </p>
-          <p>
-            <strong>Descrição:</strong> {relatorio.descricao}
-          </p>
+
+          <p><strong>Pagamento:</strong> {relatorio.formaPagamento}</p>
+          
+          {relatorio.descricao && (
+            <p><strong>Descrição:</strong> {relatorio.descricao}</p>
+          )}
         </section>
 
         <table className="relatorio-pedido__tabela">

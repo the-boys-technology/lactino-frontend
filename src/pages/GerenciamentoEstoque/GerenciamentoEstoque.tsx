@@ -24,41 +24,6 @@ export default function EstoquePage() {
       const lista = res.data.content;
       setInsumos(lista);
 
-      // Gerar notificações a partir dos insumos prestes a vencer
-      const hoje = new Date();
-      const notificacoesGeradas = lista
-        .filter((item: any) => item.validade)
-        .map((item: any) => {
-          const validade = new Date(item.validade);
-          const diffTime = validade.getTime() - hoje.getTime();
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-          return {
-            diasParaVencer: diffDays,
-            id: item.id,
-            nome: item.nome,
-            validade: item.validade,
-          };
-        })
-        .filter((n: { diasParaVencer: number; }) => n.diasParaVencer >= 0 && n.diasParaVencer <= 2)
-        .map((n: { diasParaVencer: number; nome: any; validade: any; id: any; }) => ({
-          id: uuidv4(), // id fictício para a notificação (frontend)
-          titulo:
-            n.diasParaVencer === 0
-              ? 'INSUMO VENCE HOJE!'
-              : n.diasParaVencer === 1
-              ? 'Insumo vence em 1 dia'
-              : 'Insumo vence em 2 dias',
-          mensagem: `${n.nome} com validade em ${n.validade}`,
-          tipo: 'INSUMO',
-          referencia_id: n.id,
-          referencia_tipo: 'INSUMO',
-          usuario_id: 1, // mock (será vindo do backend futuramente)
-          data_criacao: new Date().toISOString(),
-          lida: false,
-        }));
-
-      setNotificacoes(notificacoesGeradas);
     } catch (error) {
       console.error('Erro ao carregar insumos:', error);
     }

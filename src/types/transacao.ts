@@ -18,8 +18,8 @@ export interface Transacao {
   data: string;
   valorTotal: number;
   formaPagamento: FormaPagamento;
-  clienteId?: number;
-  fornecedorId?: number;
+  clienteId?: string;
+  fornecedorId?: string;
   leiteId?: number;
   laticinioId?: number;
   descricao: string;

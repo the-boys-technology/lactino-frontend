@@ -24,73 +24,95 @@ export default function ProdutosForm({
   const [nomeProdutoBusca, setNomeProdutoBusca] = useState("");
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<CategoriaItem | undefined>();
   const [estoqueDisponivel, setEstoqueDisponivel] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
-  const [quantidadeError, setQuantidadeError] = useState("");
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
-  useEffect(() => {
-    async function carregarProdutos() {
-      if (!categoriaSelecionada) return;
-      setLoading(true);
-      setError("");
-      try {
-        let response;
-        if (categoriaSelecionada === CategoriaItem.LEITE) response = await buscarLeites();
-        else if (categoriaSelecionada === CategoriaItem.LATICINIO) response = await buscarLaticinios();
-        else if (categoriaSelecionada === CategoriaItem.INSUMO) response = await buscarInsumos();
+    // "Travas" para o modo de edição dos campos
+    const [isPrecoAutomatico, setIsPrecoAutomatico] = useState(false);
+    const [isUnidadeAutomatica, setIsUnidadeAutomatica] = useState(false);
+    
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+    const [quantidadeError, setQuantidadeError] = useState("");
 
-        if (response && response.data && Array.isArray(response.data.content)) {
-          setProdutosOriginais(response.data.content);
-          setProdutos(response.data.content);
-        } else {
-          setProdutosOriginais([]);
-          setProdutos([]);
+    useEffect(() => {
+      async function carregarProdutos() {
+        if (!categoriaSelecionada) return;
+        setLoading(true);
+        setError("");
+        setProdutosOriginais([]);
+        setProdutos([]);
+        try {
+          let response;
+          if (categoriaSelecionada === CategoriaItem.LEITE) response = await buscarLeites(0, 1000);
+          else if (categoriaSelecionada === CategoriaItem.LATICINIO) response = await buscarLaticinios(0, 1000);
+          else if (categoriaSelecionada === CategoriaItem.INSUMO) response = await buscarInsumos();
+  
+          if (response && response.data && Array.isArray(response.data.content)) {
+            const listaDaApi = response.data.content;
+            const produtosPadronizados = listaDaApi.map((p: any) => ({
+              id: p.id,
+              nome: p.nome || p.tipoProduto,
+              unidadeDeMedida: p.unidadeMedida, // Só existe em Insumo, será undefined para outros
+              preco: p.preco, // Só existe em Insumo
+              quantidadeTotal: p.quantidadeTotal || p.quantidadeProduzida
+            }));
+            setProdutosOriginais(produtosPadronizados);
+            setProdutos(produtosPadronizados);
+          }
+        } catch (error) {
+          console.error("Erro ao carregar produtos:", error);
+          setError("Erro ao carregar produtos.");
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error("Erro ao carregar produtos:", error);
-        setError("Erro ao carregar produtos.");
-      } finally {
-        setLoading(false);
       }
-    }
-    carregarProdutos();
-  }, [categoriaSelecionada]);
+      carregarProdutos();
+    }, [categoriaSelecionada]);
 
   useEffect(() => {
-    if (itemEdicao && !categoriaSelecionada) {
-      setCategoriaSelecionada(itemEdicao.categoria);
-    }
-    if (itemEdicao && produtosOriginais.length > 0) {
-      const produtoExistente = produtosOriginais.find(p => p.id === itemEdicao.produtoId);
-      if (produtoExistente) {
-        setNomeProdutoBusca(produtoExistente.nome);
+    if (itemEdicao) {
+        setCategoriaSelecionada(itemEdicao.categoria);
+        setNomeProdutoBusca(itemEdicao.nome || ""); // Supondo que itemEdicao tenha nome
         setProduto(itemEdicao);
-        setEstoqueDisponivel(produtoExistente.quantidadeTotal);
-      }
     }
-  }, [itemEdicao, produtosOriginais]);
+  }, [itemEdicao]);
 
   const handleBuscaChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const textoBusca = e.target.value;
     setNomeProdutoBusca(textoBusca);
-    const produtoSelecionado = produtosOriginais.find(p => p.nome.toLowerCase() === textoBusca.toLowerCase());
+    const produtoSelecionado = produtosOriginais.find(p => p.nome?.toLowerCase() === textoBusca.toLowerCase());
 
     if (produtoSelecionado) {
       setProduto(prev => ({
         ...prev,
         produtoId: produtoSelecionado.id,
         precoUnitario: produtoSelecionado.preco,
-        unidadeDeMedida: produtoSelecionado.unidadeMedida,
+        unidadeDeMedida: produtoSelecionado.unidadeDeMedida,
       }));
       setEstoqueDisponivel(produtoSelecionado.quantidadeTotal);
+      // Define as "travas" de edição
+      setIsPrecoAutomatico(produtoSelecionado.preco != null);
+      setIsUnidadeAutomatica(produtoSelecionado.unidadeDeMedida != null);
     } else {
-      setProduto(prev => ({ ...prev, produtoId: undefined, precoUnitario: undefined, unidadeDeMedida: undefined }));
+      setProduto(prev => ({ 
+        categoria: prev.categoria, 
+        produtoId: undefined, 
+        precoUnitario: undefined, 
+        unidadeDeMedida: undefined,
+        quantidade: undefined,
+      }));
       setEstoqueDisponivel(null);
+      // Libera as "travas"
+      setIsPrecoAutomatico(false);
+      setIsUnidadeAutomatica(false);
     }
 
-    const filtered = produtosOriginais.filter(p => p.nome.toLowerCase().includes(textoBusca.toLowerCase()));
+    const filtered = produtosOriginais.filter(p => p.nome?.toLowerCase().includes(textoBusca.toLowerCase()));
     setProdutos(filtered);
+  };
+  
+  const handleGenericChange = (campo: keyof ItemTransacao, valor: any) => {
+    setProduto(prev => ({ ...prev, [campo]: valor }));
   };
 
   const validateQuantidade = (quantidade: number) => {
@@ -104,106 +126,87 @@ export default function ProdutosForm({
   };
 
   const handleSalvar = () => {
-    if (
-      produto.produtoId != null &&
-      produto.categoria &&
-      produto.quantidade != null &&
-      produto.precoUnitario != null &&
-      produto.unidadeDeMedida &&
-      validateQuantidade(produto.quantidade)
-    ) {
-      setIsButtonDisabled(true);
-      onSalvar({
-        id: itemEdicao?.id ?? Date.now(),
-        transacaoId: 0,
-        produtoId: produto.produtoId,
-        categoria: produto.categoria,
-        quantidade: produto.quantidade,
-        precoUnitario: produto.precoUnitario,
-        unidadeDeMedida: produto.unidadeDeMedida,
-      });
-    } else {
-        toast.warn("Por favor, preencha todos os campos do produto corretamente.");
+    // Validações
+    if (!produto.produtoId || !produto.categoria || !produto.quantidade || !produto.precoUnitario || !produto.unidadeDeMedida) {
+      toast.warn("Todos os campos do produto devem ser preenchidos.");
+      return;
     }
+    onSalvar(produto as ItemTransacao);
   };
 
   const handleCancelar = () => {
     onCancelar();
   };
 
+  const produtoFoiSelecionado = !!produto.produtoId;
+  const isPrecoReadOnly = produtoFoiSelecionado && produto.precoUnitario != null;
+  const isUnidadeReadOnly = produtoFoiSelecionado && produto.unidadeDeMedida != null;
+
+  console.log("Status dos campos:", { 
+      produtoSelecionado: produtoFoiSelecionado, 
+      isPrecoReadOnly, 
+      isUnidadeReadOnly, 
+      preco: produto.precoUnitario,
+      unidade: produto.unidadeDeMedida
+  });
+
   return (
     <div className="formulario-produto">
       <h3 className="formulario-produto__titulo">{itemEdicao ? "Editar Produto" : "Adicionar Produto"}</h3>
       
       <div className="formulario-produto__campos">
-        
         <div className="formulario-produto__coluna">
-          <Campo
-            label="Categoria"
-            type="select"
-            disabled={!!itemEdicao}
-            options={[
-              { label: "Leite", value: "LEITE" },
-              { label: "Laticínio", value: "LATICINIO" },
-              { label: "Insumo", value: "INSUMO" },
-            ]}
-            value={categoriaSelecionada || ""}
+          <Campo label="Categoria" type="select" disabled={!!itemEdicao}
+            options={Object.values(CategoriaItem).map(c => ({ label: c, value: c }))} value={categoriaSelecionada || ""}
             selectFunction={(e) => {
               setCategoriaSelecionada(e.target.value as CategoriaItem);
               setNomeProdutoBusca("");
               setProduto({ categoria: e.target.value as CategoriaItem });
               setEstoqueDisponivel(null);
+              setIsPrecoAutomatico(false);
+              setIsUnidadeAutomatica(false);
             }}
           />
-          <Campo
-            label="Produto"
-            type="text"
-            disabled={!categoriaSelecionada || loading}
-            value={nomeProdutoBusca}
-            inputFunction={handleBuscaChange}
-            placeHolder={categoriaSelecionada ? "Digite para buscar" : "Selecione uma categoria"}
-            list="produtos-lista"
-          />
-          <datalist id="produtos-lista">
-            {produtos.map(p => <option key={p.id} value={p.nome} />)}
-          </datalist>
+          <Campo label="Produto" type="text" disabled={!categoriaSelecionada || loading} value={nomeProdutoBusca}
+            inputFunction={handleBuscaChange} placeHolder={categoriaSelecionada ? "Digite para buscar" : "Selecione uma categoria"} list="produtos-lista" />
+          <datalist id="produtos-lista">{produtos.map(p => <option key={p.id} value={p.nome} />)}</datalist>
         </div>
-  
         <div className="formulario-produto__coluna">
           <Campo
             label="Preço Unitário"
-            type="text"
-            readOnly
-            value={produto.precoUnitario ? `R$ ${produto.precoUnitario.toFixed(2)}` : ""}
-            placeHolder="Automático"
+            type="number"
+            readOnly={isPrecoAutomatico}
+            value={produto.precoUnitario || ""}
+            placeHolder={isPrecoAutomatico ? "Automático" : "Digite o preço"}
+            inputFunction={(e) => {
+              if (!isPrecoAutomatico) {
+                const val = parseFloat(e.target.value);
+                handleGenericChange('precoUnitario', isNaN(val) ? undefined : val);
+              }
+            }}
           />
           <Campo
             label="Unidade de Medida"
             type="text"
-            readOnly
+            readOnly={isUnidadeAutomatica}
             value={produto.unidadeDeMedida || ""}
-            placeHolder="Automático"
-          />
-          <Campo
-            label="Quantidade"
-            type="number"
-            value={produto.quantidade || ""}
-            placeHolder={`Ex: 10 (${produto.unidadeDeMedida || 'unid.'})`}
+            placeHolder={isUnidadeAutomatica ? "Automático" : "Ex: kg, L, g"}
             inputFunction={(e) => {
-              const qtd = parseFloat(e.target.value);
-              setProduto(prev => ({ ...prev, quantidade: isNaN(qtd) ? undefined : qtd }));
-              validateQuantidade(qtd);
+              if(!isUnidadeAutomatica) {
+                handleGenericChange('unidadeDeMedida', e.target.value);
+              }
             }}
           />
-          {estoqueDisponivel !== null && (
-            <p className="formulario-produto__info-estoque">
-              Disponível: {estoqueDisponivel} {produto.unidadeDeMedida || ''}
-            </p>
-          )}
-          {quantidadeError && <p className="error-message">{quantidadeError}</p>}
+          <Campo label="Quantidade" type="number" value={produto.quantidade || ""} placeHolder="0"
+            inputFunction={(e) => {
+              const qtd = parseFloat(e.target.value);
+              handleGenericChange('quantidade', isNaN(qtd) ? undefined : qtd);
+            }}
+          />
+          {estoqueDisponivel !== null && <p className="formulario-produto__info-estoque">Disponível: {estoqueDisponivel}</p>}
         </div>
       </div>
-  
+
       {loading && <div className="loading-container"><ClipLoader size={35} color="#0F306E" /></div>}
       {error && <p className="error-message">{error}</p>}
   

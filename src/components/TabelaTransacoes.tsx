@@ -26,9 +26,15 @@ export default function TabelaTransacoes({
 }: TabelaTransacoesProps) {
   const getPessoaNome = (t: Transacao) => {
     if (tipoTransacao === "VENDA") {
-      return clientes.find((c) => c.id === t.clienteId)?.nome || "—";
+      return (
+        clientes.find((c) => c.id.toString() === t.clienteId?.toString())
+          ?.nome || "—"
+      );
     } else {
-      return fornecedores.find((f) => f.id === t.fornecedorId)?.nome || "—";
+      return (
+        fornecedores.find((f) => f.id.toString() === t.fornecedorId?.toString())
+          ?.nome || "—"
+      );
     }
   };
 
@@ -66,18 +72,21 @@ export default function TabelaTransacoes({
               >
                 📝 Ver Relatório
               </button>
-              <button
-                className="tabela-transacoes__editar"
-                onClick={() => editarItem(t)}
-              >
-                ✏️ Editar
-              </button>
-              <button
-                className="tabela-transacoes__excluir"
-                onClick={() => removerItem(t.id)}
-              >
-                🗑 Excluir
-              </button>
+
+              <div className="tabela-transacoes__acoes-secundarias">
+                <button
+                  className="tabela-transacoes__editar"
+                  onClick={() => editarItem(t)}
+                >
+                  ✏️ Editar
+                </button>
+                <button
+                  className="tabela-transacoes__excluir"
+                  onClick={() => removerItem(t.id)}
+                >
+                  🗑 Excluir
+                </button>
+              </div>
             </div>
           </div>
         ))

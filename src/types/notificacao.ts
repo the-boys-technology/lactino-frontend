@@ -1,5 +1,5 @@
 // Tipos de notificações
-export type TipoNotificacao = 'LEITE' | 'LATICINIO' | 'INSUMO' | 'GERAL';
+export type TipoNotificacao = 'LEITE' | 'LATICINIO' | 'INSUMO';
 export type PrioridadeNotificacao = 'BAIXA' | 'MEDIA' | 'ALTA' | 'URGENTE';
 
 export interface Notificacao {

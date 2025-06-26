@@ -28,27 +28,47 @@
   font-size: 0.95rem;
 }
 
+.tabela-transacoes__acoes {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+
+.tabela-transacoes__acoes-secundarias {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.tabela-transacoes__editar,
+.tabela-transacoes__excluir {
+  flex: 1;
+}
+
 .tabela-transacoes__ver-relatorio,
 .tabela-transacoes__editar,
 .tabela-transacoes__excluir {
-  background: #007bff;
-  border: none;
+  padding: 0.3rem 0.6rem;
+  font-size: 0.85rem;
   color: white;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  margin: 0;               
+  white-space: nowrap;     
 }
 
 .tabela-transacoes__ver-relatorio:hover,
 .tabela-transacoes__editar:hover,
 .tabela-transacoes__excluir:hover {
-  background-color: #0056b3;
+  filter: brightness(1.15); 
 }
 
 .tabela-transacoes__ver-relatorio {
-  background-color: #17a2b8;
+  background-color: #007bff;
 }
 
 .tabela-transacoes__editar {
@@ -57,56 +77,6 @@
 
 .tabela-transacoes__excluir {
   background-color: #dc3545;
-}
-
-.tabela-transacoes__acoes {
-  display: flex;
-  gap: 0.5rem;
-  align-items: center;
-}
-
-.tabela-transacoes__ver-relatorio,
-.tabela-transacoes__editar,
-.tabela-transacoes__excluir {
-  display: inline-block;
-  padding: 0.25rem 0.75rem;
-  margin: 0.2rem;
-  font-size: 1rem;
-  text-align: center;
-  cursor: pointer;
-}
-
-.tabela-transacoes__ver-relatorio {
-  background-color: #007bff;
-  color: white;
-  border-radius: 5px;
-  border: none;
-}
-
-.tabela-transacoes__ver-relatorio:hover {
-  background-color: #0056b3;
-}
-
-.tabela-transacoes__editar {
-  background-color: #4CAF50;
-  color: white;
-  border-radius: 5px;
-  border: none;
-}
-
-.tabela-transacoes__editar:hover {
-  background-color: #45a049;
-}
-
-.tabela-transacoes__excluir {
-  background-color: #e63946;
-  color: white;
-  border-radius: 5px;
-  border: none;
-}
-
-.tabela-transacoes__excluir:hover {
-  background-color: #c02e35;
 }
 
 

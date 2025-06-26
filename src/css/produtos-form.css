@@ -13,18 +13,23 @@
   color: #1f2937;
 }
 
+/* Container principal que segura as colunas */
 .formulario-produto__campos {
   display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-  margin-bottom: 1rem;
-  background-color: #ef4444;
+  flex-direction: row; /* Garante que as colunas fiquem lado a lado */
+  gap: 2rem;           /* Espaço ENTRE as colunas */
+  align-items: flex-start; /* Alinha o topo das colunas */
 }
 
+/* Estilo para AMBAS as colunas */
 .formulario-produto__coluna {
   display: flex;
-  gap: 1rem;
+  flex-direction: column; /* <<< ESSENCIAL: Empilha os campos na vertical */
+  gap: 1rem;              /* Espaço entre os campos na mesma coluna */
+  flex: 1;                /* <<< ESSENCIAL: Faz as colunas dividirem o espaço */
+  min-width: 0;           /* Boa prática para evitar encolhimento inesperado */
 }
+
 .formulario-produto__botoes {
   display: flex;
   justify-content: flex-end;

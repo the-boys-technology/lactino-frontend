@@ -7,6 +7,7 @@ export interface ItemRelatorio {
 }
 
 export interface RelatorioPedidoTipo {
+  tipo: string;
   transacaoId: string;
   data: string;
   clienteNome?: string;

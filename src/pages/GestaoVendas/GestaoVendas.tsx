@@ -9,7 +9,7 @@ import { Campo } from "../../components/Campo";
 import { api } from "../../services/api";
 import "./GestaoVendas.css";
 import { CategoriaItem } from "../../types/item-transacao";
-
+ 
 export default function GestaoVendas() {
   const [loading, setLoading] = useState(true);
   const [modalAberto, setModalAberto] = useState(false);
@@ -134,14 +134,9 @@ export default function GestaoVendas() {
                 />
 
                 <Campo
-                  label="Categoria"
+                  label="Categoria do Produto"
                   type="select"
-                  options={[
-                    { label: "Pix", value: "PIX" },
-                    { label: "Cartão", value: "CARTAO" },
-                    { label: "Dinheiro", value: "DINHEIRO" },
-                    { label: "Boleto", value: "BOLETO" },
-                  ]}
+                  options={Object.values(CategoriaItem).map(cat => ({ label: cat, value: cat }))}
                   value={filtroCategoria}
                   selectFunction={(e) => setFiltroCategoria(e.target.value)}
                 />
@@ -233,10 +228,21 @@ export default function GestaoVendas() {
           clientes={clientes}
           fornecedores={[]}
           transacaoEditando={transacaoEditando}
-          onSalvar={(novaTransacao) => {
-            setTransacoes(prev => 
-              prev.map(t => t.id === novaTransacao.id ? novaTransacao : t)
-            );
+          onSalvar={(transacaoAtualizada) => {
+            setTransacoes(prevTransacoes => {
+              const transacaoExiste = prevTransacoes.some(t => t.id === transacaoAtualizada.id);
+              
+              if (transacaoExiste) {
+                // Se a transação já existe, atualiza (modo de edição)
+                return prevTransacoes.map(t => 
+                  t.id === transacaoAtualizada.id ? transacaoAtualizada : t
+                );
+              } else {
+                // Se for nova, adiciona no início da lista
+                return [transacaoAtualizada, ...prevTransacoes];
+              }
+            });
+        
             setModalAberto(false);
             setTransacaoEditando(null);
           }}
