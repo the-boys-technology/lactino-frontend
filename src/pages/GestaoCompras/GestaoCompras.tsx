@@ -2,188 +2,225 @@ import { useEffect, useState } from "react";
 import Botao from "../../components/Botao";
 import ModalTransacoes from "../../components/ModalTransacoes";
 import RelatorioPedido from "../../components/RelatorioPedido";
+import TabelaTransacoes from "../../components/TabelaTransacoes";
 import { TipoTransacao, Transacao } from "../../types/transacao";
-import { Fornecedor } from "../../types/fornecedor";
 import { Campo } from "../../components/Campo";
 import { api } from "../../services/api";
-import "../GestaoCompras/GestaoCompras.css";
+import "./GestaoCompras.css";
+import { CategoriaItem } from "../../types/item-transacao";
+import { Fornecedor } from "../../types/fornecedor";
 
-export default function GestaoCompras() {
-  const [modalAberto, setModalAberto] = useState<false | "compra">(false);
+export default function GestaoVendas() {
+  const [loading, setLoading] = useState(true);
+  const [modalAberto, setModalAberto] = useState(false);
   const [relatorioId, setRelatorioId] = useState<string | null>(null);
-  const [transacaoEditando, setTransacaoEditando] = useState<Transacao | null>(null);
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
 
-  // filtros
   const [filtroFornecedor, setFiltroFornecedor] = useState("");
   const [dataInicial, setDataInicial] = useState("");
   const [dataFinal, setDataFinal] = useState("");
   const [valorMin, setValorMin] = useState("");
   const [valorMax, setValorMax] = useState("");
+  const [filtroProduto, setFiltroProduto] = useState("");
+  const [filtroCategoria, setFiltroCategoria] = useState("");
   const [resultadoFiltro, setResultadoFiltro] = useState<Transacao[]>([]);
 
-  // Busca e filtros
-  const filtrar = () => {
-    const filtrado = transacoes.filter(t => {
+  useEffect(() => {
+    async function carregarDados() {
+      setLoading(true);
+      try {
+        const [resFor, resCom] = await Promise.all([
+          api.get<Fornecedor[]>("/fornecedores"),
+          api.get<Transacao[]>("/transacoes?tipo=COMPRA"),
+        ]);
+        setFornecedores(resFor.data);
+        setTransacoes(resCom.data);
+      } catch (e) {
+        console.error("Erro ao carregar dados:", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+    carregarDados();
+  }, []);
+
+  const aplicarFiltros = () => {
+    const filtrado = transacoes.filter((t) => {
       const data = new Date(t.data);
-      const dentroData =
+      const matchData =
         (!dataInicial || data >= new Date(dataInicial)) &&
-        (!dataFinal   || data <= new Date(dataFinal));
-      const dentroValor =
+        (!dataFinal || data <= new Date(dataFinal));
+      const matchValor =
         (!valorMin || t.valorTotal >= parseFloat(valorMin)) &&
         (!valorMax || t.valorTotal <= parseFloat(valorMax));
-      const forn = fornecedores.find(f => f.id === t.fornecedorId)?.nome.toLowerCase() || "";
-      const matchForn = !filtroFornecedor || forn.includes(filtroFornecedor.toLowerCase());
-      return t.tipo === TipoTransacao.COMPRA && dentroData && dentroValor && matchForn;
+      const fornecedor = fornecedores.find((f) => f.id === t.fornecedorId);
+      const matchFornecedor =
+        !filtroFornecedor ||
+        fornecedor?.nome.toLowerCase().includes(filtroFornecedor.toLowerCase());
+
+      const matchProduto =
+        !filtroProduto ||
+        t.itens.some((item) =>
+          item.nome.toLowerCase().includes(filtroProduto.toLowerCase())
+        );
+
+      const matchCategoria =
+        !filtroCategoria ||
+        t.itens.some((item) => item.categoria === filtroCategoria);
+
+      return (
+        matchData &&
+        matchValor &&
+        matchFornecedor &&
+        matchProduto &&
+        matchCategoria
+      );
     });
+
     setResultadoFiltro(filtrado);
   };
 
-  const mostrar = resultadoFiltro.length ? resultadoFiltro : transacoes;
-
-  // carregar dados iniciais
-  useEffect(() => {
-    api.get<Fornecedor[]>("/fornecedores")
-      .then(r => setFornecedores(r.data))
-      .catch(() => alert("Erro ao carregar fornecedores"));
-
-    api.get<Transacao[]>("/transacoes?tipo=COMPRA")
-      .then(r => setTransacoes(r.data))
-      .catch(() => alert("Erro ao carregar compras"));
-  }, []);
-
-  // após criar/editar, recarrega a lista
-  const recarregar = async () => {
-    const r = await api.get<Transacao[]>("/transacoes?tipo=COMPRA");
-    setTransacoes(r.data);
-    setResultadoFiltro([]);
-  };
+  const exibicao = resultadoFiltro.length ? resultadoFiltro : transacoes;
 
   return (
     <div className="compras">
       <header className="compras__header">
-        <h1>Gestão de Compras</h1>
+        <h1 className="compras__title">Gestão de Compras</h1>
       </header>
 
-      <section className="compras__filtros">
-        <div className="compras__linha">
-          <Campo
-            type="text"
-            label="Fornecedor"
-            placeHolder="Digite parte do nome"
-            list="lista-forn"
-            value={filtroFornecedor}
-            inputFunction={e => setFiltroFornecedor(e.target.value)}
-          />
-          <datalist id="lista-forn">
-            {fornecedores.map(f => <option key={f.id} value={f.nome} />)}
-          </datalist>
+      <section className="compras__container">
+        {loading ? (
+          <p className="compras__loading">Carregando dados...</p>
+        ) : (
+          <>
+            <div className="compras__filtros">
+              <div className="compras__filtros__linha">
+                <Campo
+                  type="text"
+                  label="Fornecedor"
+                  list="fornecedores-lista"
+                  styleInput={{ flex: 1, minWidth: "18rem" }}
+                  value={filtroFornecedor}
+                  placeHolder="Digite o nome do fornecedor"
+                  inputFunction={(e) => setFiltroFornecedor(e.target.value)}
+                />
+                <datalist id="fornecedores-lista">
+                  {fornecedores.map((f) => (
+                    <option key={f.id} value={f.nome} />
+                  ))}
+                </datalist>
 
-          <Campo
-            type="date"
-            label="De"
-            value={dataInicial}
-            inputFunction={e => setDataInicial(e.target.value)}
-          />
-          <Campo
-            type="date"
-            label="Até"
-            value={dataFinal}
-            inputFunction={e => setDataFinal(e.target.value)}
-          />
+                <Campo
+                  label="Produto"
+                  placeHolder="Insira o nome do produto"
+                  type="text"
+                  styleInput={{ flex: 1, minWidth: "18rem" }}
+                  value={filtroProduto}
+                  inputFunction={(e) => setFiltroProduto(e.target.value)}
+                />
 
-          <Campo
-            type="text"
-            label="Valor Mín."
-            leftAdd="R$"
-            styleInput={{ width: "7rem" }}
-            value={valorMin}
-            inputFunction={e => {
-              const raw = e.target.value.replace(/[^\d]/g, "");
-              setValorMin((Number(raw) / 100).toFixed(2));
-            }}
-          />
-          <Campo
-            type="text"
-            label="Valor Máx."
-            leftAdd="R$"
-            styleInput={{ width: "7rem" }}
-            value={valorMax}
-            inputFunction={e => {
-              const raw = e.target.value.replace(/[^\d]/g, "");
-              setValorMax((Number(raw) / 100).toFixed(2));
-            }}
-          />
-        </div>
+                <Campo
+                  label="Categoria"
+                  type="select"
+                  options={[
+                    { label: "Pix", value: "PIX" },
+                    { label: "Cartão", value: "CARTAO" },
+                    { label: "Dinheiro", value: "DINHEIRO" },
+                    { label: "Boleto", value: "BOLETO" },
+                  ]}
+                  value={filtroCategoria}
+                  selectFunction={(e) => setFiltroCategoria(e.target.value)}
+                />
+              </div>
 
-        <div className="compras__buscar">
-          <Botao tipo="primary" label="🔍 Filtrar" onClick={filtrar} htmlType="button" />
-        </div>
+              <div className="compras__filtros__linha">
+                <Campo
+                  type="date"
+                  label="Data Início"
+                  value={dataInicial}
+                  inputFunction={(e) => setDataInicial(e.target.value)}
+                />
+
+                <Campo
+                  type="date"
+                  label="Data Fim"
+                  value={dataFinal}
+                  inputFunction={(e) => setDataFinal(e.target.value)}
+                />
+
+                <Campo
+                  type="text"
+                  label="Valor Mínimo"
+                  leftAdd="R$"
+                  value={valorMin}
+                  styleInput={{ width: "8rem" }}
+                  inputFunction={(e) => {
+                    const raw = e.target.value.replace(/\D/g, "");
+                    const formatado = (Number(raw) / 100)
+                      .toFixed(2)
+                      .replace(".", ",");
+                    setValorMin(formatado);
+                  }}
+                />
+
+                <Campo
+                  type="text"
+                  label="Valor Máximo"
+                  leftAdd="R$"
+                  value={valorMax}
+                  styleInput={{ width: "8rem" }}
+                  inputFunction={(e) => {
+                    const raw = e.target.value.replace(/\D/g, "");
+                    const formatado = (Number(raw) / 100)
+                      .toFixed(2)
+                      .replace(".", ",");
+                    setValorMax(formatado);
+                  }}
+                />
+              </div>
+
+              <div className="compras__filtros__botao">
+                <Botao
+                  tipo="primary"
+                  label="🔍Buscar Compra"
+                  onClick={aplicarFiltros}
+                  htmlType="button"
+                />
+              </div>
+            </div>
+
+            <TabelaTransacoes
+              transacoes={exibicao}
+              fornecedores={fornecedores}
+              tipoTransacao="COMPRA"
+              onVerRelatorio={(t) => setRelatorioId(String(t.id))}
+            />
+          </>
+        )}
+
+        <footer className="compras__footer">
+          <Botao
+            tipo="success"
+            label="+ Nova Compra"
+            htmlType="button"
+            onClick={() => setModalAberto(true)}
+          />
+        </footer>
       </section>
 
-      <section className="compras__lista">
-        {mostrar.length === 0
-          ? <p className="compras__vazio">Nenhuma compra encontrada.</p>
-          : mostrar.map(t => {
-              const forn = fornecedores.find(f => f.id === t.fornecedorId)?.nome || "—";
-              return (
-                <div key={t.id} className="compras__linha-tabela">
-                  <span>{forn}</span>
-                  <span>{t.itens.length}</span>
-                  <span>{new Date(t.data).toLocaleDateString()}</span>
-                  <span>R$ {t.valorTotal.toFixed(2)}</span>
-                  <span>{t.formaPagamento}</span>
-                  <div className="compras__acoes">
-                    <Botao
-                      tipo="secondary"
-                      label="✏️"
-                      htmlType="button"
-                      onClick={() => {
-                        setTransacaoEditando(t);
-                        setModalAberto("compra");
-                      }}
-                    />
-                    <Botao
-                      tipo="primary"
-                      label="📄"
-                      htmlType="button"
-                      onClick={() => setRelatorioId(String(t.id))}
-                    />
-                  </div>
-                </div>
-              );
-            })
-        }
-      </section>
-
-      <footer className="compras__footer">
-        <Botao
-          tipo="success"
-          label="+ Nova Compra"
-          htmlType="button"
-          onClick={() => {
-            setTransacaoEditando(null);
-            setModalAberto("compra");
-          }}
-        />
-      </footer>
-
-      {modalAberto === "compra" && (
+      {modalAberto && (
         <ModalTransacoes
           tipoTransacao={TipoTransacao.COMPRA}
-          clientes={[]}          // não usado em compra
+          clientes={[]}
           fornecedores={fornecedores}
-          transacaoEditando={transacaoEditando}
-          onSalvar={async () => {
-            await recarregar();
+          onSalvar={(novaTransacao) => {
+            setTransacoes((prev) => [novaTransacao, ...prev]);
             setModalAberto(false);
-          }}
-          onCancelar={() => setModalAberto(false)}
-        />
+          } }
+          onCancelar={() => setModalAberto(false)}        />
       )}
 
-      {/* Modal de relatório */}
       {relatorioId && (
         <RelatorioPedido
           transacaoId={relatorioId}
@@ -191,5 +228,5 @@ export default function GestaoCompras() {
         />
       )}
     </div>
-);
+  );
 }

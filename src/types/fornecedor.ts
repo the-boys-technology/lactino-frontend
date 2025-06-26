@@ -1,7 +1,7 @@
 import { Transacao } from "./transacao";
 
 export interface Fornecedor {
-  id: number;
+  id: string;
   nome: string;
   email?: string;
   localizacao?: string;

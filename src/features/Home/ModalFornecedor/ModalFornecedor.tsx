@@ -17,30 +17,25 @@ export default function ModalFornecedor({ onClose, onSave }: Props) {
   const [localizacao, setLocalizacao] = useState("");
   const [mensagem, setMensagem] = useState("");
 
-  const handleSubmit = async () => {
+  const handleSubmit = async () => { // MEXI AQUI - PEDRO CORREIA
     if (!nome.trim()) {
       toast.error("O nome do fornecedor é obrigatório."); 
       return;
     }
 
     try {
-      await criarFornecedor({ nome, email, localizacao });
-      toast.success("Fornecedor cadastrado com sucesso!"); 
-      const novoFornecedor: Fornecedor = {
-        id: Date.now(),
-        nome,
-        email: "",
-        localizacao: "",
-      };
-      onSave(novoFornecedor);
-      setTimeout(() => {
-        onClose();
-      }, 1500);
+      const novoFornecedor = await criarFornecedor({ nome, email, localizacao });
+      console.log("novoFornecedor recebido:", novoFornecedor);
+      toast.success("Fornecedor cadastrado com sucesso!");
+
+      onSave(novoFornecedor); // ✅ Passa o fornecedor completo, incluindo o id da API
+      setTimeout(() => onClose(), 1500);
     } catch (error) {
       console.error("Erro ao cadastrar fornecedor", error);
       toast.error("Erro ao cadastrar fornecedor. Tente novamente.");
     }
   };
+
 
   return (
     <div className="modal-fornecedor" onClick={onClose}>
