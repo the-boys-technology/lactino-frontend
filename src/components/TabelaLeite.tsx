@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { DataTable } from "./Tabela";
 import { COLUNAS_LEITE } from "../data/COLUNAS";
-import { type RowData } from "../data/ROW_DATA";   
+import { type RowDataLeite } from "../data/ROW_DATA";   
 import { useNavigate } from "react-router-dom";
 import { buscarLeites, editarLeite, registrarLeite, removerLeite } from "../services/gestao_leite_laticinio";
 import "../css/historico_tabela.css";
@@ -10,12 +10,14 @@ import Botao from "./Botao";
 import Modal from "./Modal";
 import LeiteAddForm from "./LeiteAddForm";
 import LeiteEditForm from "./LeiteEditForm";
-
+import { Fornecedor } from "../types/fornecedor";
+import { buscarFornecedorPorId } from '../services/fornecedores';
+import { toast } from "react-toastify";
 
 export default function TabelaLeite() {
   const navigate = useNavigate();
 
-  const [rows, setRows] = useState<RowData[]>([]);
+  const [rows, setRows] = useState<RowDataLeite[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize] = useState(10);
@@ -26,8 +28,8 @@ export default function TabelaLeite() {
 
   const [modalAberto, setModalAberto] = useState<null | 'adicionar' | 'editar' | 'remover'>(null);
   const [itemSelecionado, setItemSelecionado] = useState<any | null>(null);
+  const [fornecedorSelecionado, setFornecedorSelecionado] = useState<Fornecedor | null>(null);
   const formRef = useRef<HTMLFormElement>(null)
-
 
   const toggle = (arr: string[], val: string) =>
     arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val];
@@ -44,15 +46,60 @@ export default function TabelaLeite() {
     navigate('/selecionar-produto');
   }
 
+
+  const filteredRows = useMemo(() => {
+  return rows.filter((row) => {
+    const searchMatch =
+      search.trim() === '' ||
+      Object.values(row).some((value) =>
+        String(value || '').toLowerCase().includes(search.toLowerCase())
+      );
+
+    const turnoMatch =
+      turnoFilter.length === 0 ||
+      turnoFilter.map((v) => v.toLowerCase()).includes(row.turno?.toLowerCase());
+
+    const statusMatch =
+      statusFilter.length === 0 ||
+      statusFilter.map((v) => v.toLowerCase()).includes(row.status?.toLowerCase());
+
+    return searchMatch && turnoMatch && statusMatch;
+  });
+}, [rows, search, turnoFilter, statusFilter]);
+
+
   async function carregarPagina(pagina: number) {
     try {
       console.log(`Páginas: ${pagina}`)
       const res = await buscarLeites(pagina, pageSize);
       console.log(res);
-      setRows(res.data.content);
+
+      const leites = res.data.content;
+
+      const leitesComFornecedor = await Promise.all(
+        leites.map(async (leite: RowDataLeite) => {
+          try {
+            const fornecedor = await buscarFornecedorPorId(leite.fornecedorId);
+            return {
+              ...leite,
+              fornecedor: {
+                nome: fornecedor.nome,
+                email: fornecedor.email,
+                localizacao: fornecedor.localizacao,
+              },
+            };
+          } catch {
+            return leite; // fallback: não achou fornecedor
+          }
+        })
+      );
+
+      setRows(leitesComFornecedor);
+
       setTotalPages(res.data.totalPages);
       setPage(pagina);
     } catch (error: any) {
+      toast.error("Erro ao carregar dados.");
       console.error("Erro ao carregar dados:", error);
     } finally {
     }
@@ -157,8 +204,8 @@ export default function TabelaLeite() {
         </section>
 
         <div className="historico-container__tabela-wrapper">
-          <DataTable<RowData>
-            data={rows}
+          <DataTable<RowDataLeite>
+            data={filteredRows}
             columns={COLUNAS_LEITE}
             onRowClick={(row) => setItemSelecionado(row)}
             selectedItem={itemSelecionado}
@@ -223,8 +270,10 @@ export default function TabelaLeite() {
             onSubmit={async (dados) => {
               try {
                 await registrarLeite(dados)
-                //await carregarInsumos()
+                await carregarPagina(page)
+                toast.success("Leite adicionado com sucesso!");
               } catch (error) {
+                toast.error("Erro ao adicionar leite.");
                 console.log(`ERRO: ${error}`)
               }
               setModalAberto(null) 
@@ -248,8 +297,10 @@ export default function TabelaLeite() {
               console.log('ID para editar:', itemSelecionado.id);
               console.log('Dados enviados:', dadosEditados);
               await editarLeite(itemSelecionado.id, dadosEditados)
-              //await carregarInsumos()
+              await carregarPagina(page)
+              toast.success("Leite atualizado com sucesso!");
             } catch (error) {
+              toast.error("Erro ao atualizar leite.");
               console.log(`ERRO: ${error}`)
             }
             setModalAberto(null) 
@@ -277,8 +328,10 @@ export default function TabelaLeite() {
                 onClick={async () => {
                   try {
                     await removerLeite(itemSelecionado.id)
-                    //await carregarInsumos()
+                    await carregarPagina(page)
+                    toast.success("Leite removido com sucesso!");
                   } catch (error) {
+                    toast.error("Erro ao remover leite.");
                     console.error('Erro ao remover insumo:', error)
                   }
                   setModalAberto(null)

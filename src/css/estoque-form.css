@@ -26,6 +26,14 @@
     min-width: 180px;
 }
 
+.estoque-form__input.fornecedor {
+    padding: 0.5rem;
+    border: 1px solid #464433;
+    border-radius: 20px;
+    min-width: 180px;
+    cursor: not-allowed;
+}
+
 .estoque-form__input-group {
   position: relative;
   display: flex;

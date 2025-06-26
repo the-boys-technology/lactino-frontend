@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import '../css/sidebar.css';
 import { AiFillEye, AiFillEyeInvisible } from 'react-icons/ai';
 import { mudarSenha } from '../services/auth'; 
+import { toast } from "react-toastify";
 
 interface NovaSenhaProps {
   open: boolean;
@@ -79,12 +80,16 @@ export default function NovaSenhaSidebar ({
         confirmPassword: '',
       });
 
+      toast.success("Senha alterada com sucesso!");
       console.log("Senha alterada com sucesso!");
       onClose();
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
     } catch (error) {
+      toast.error(`${currentPassword}`);
+      toast.error(`${newPassword}`);
+      toast.error(`${confirmPassword}`);
       setErrors(prev => ({
         ...prev,
         currentPassword: 'Senha atual incorreta.',

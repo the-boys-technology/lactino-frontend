@@ -1,16 +1,18 @@
 import Botao from "../../components/Botao";
-import { Link, useNavigate } from "react-router-dom";   
+import { Link, useLocation, useNavigate } from "react-router-dom";   
 import '../../css/login_page.css';
 import { useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { redefinirSenhaApi } from "../../services/auth";
+import { toast } from "react-toastify";
 
 function NovaSenhaPage(): React.ReactElement {
     const navigate = useNavigate();
 
     const [formData, setFormData] = useState<Record<string, any>>({})
     const [showPassword, setShowPassword] = useState(false);
-
+    const location = useLocation();
+    const email = location.state?.email
 
     function handleReturn() {
     navigate('/redefinir-senha');
@@ -20,15 +22,22 @@ function NovaSenhaPage(): React.ReactElement {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
     
-    async function redefinirSenha(data: Record<string, any>) {
+    async function redefinirSenha(req: Record<string, any>) {
             try {
+                const data = {
+                    email,
+                    codigo: formData.codigo,
+                    novaSenha: formData.senha,
+                };
                 console.log(data);
                 const res = await redefinirSenhaApi(data);
                 console.log(res);
-                navigate("/");
+                toast.success(`Senha redefinida com sucesso!`);
+                navigate("/login");
             } catch (error: any) {
                 const message = error?.response?.data?.message || "E-mail inválido";
-                console.log(data);
+                console.log(req);
+                toast.error(`Erro ao solicitar redefição de senha.`);
                 console.error('Erro ao solicitar redefição de senha:', error)
             }
         }
@@ -37,7 +46,6 @@ function NovaSenhaPage(): React.ReactElement {
         const handleSubmit: React.FormEventHandler = async (e) => {
             e.preventDefault();
             await redefinirSenha(formData);
-            navigate('/login');     
         };
 
     return(

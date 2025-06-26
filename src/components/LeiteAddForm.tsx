@@ -1,5 +1,9 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useState } from 'react'
+import ModalFornecedor from '../features/Home/ModalFornecedor/ModalFornecedor';
+import { Fornecedor } from '../types/fornecedor';
 import '../css/estoque-form.css'
+
+
 
 interface EstoqueAddFormProps {
   onSubmit?: (data: any) => void
@@ -8,6 +12,8 @@ interface EstoqueAddFormProps {
 
 export default function LeiteAddForm({ onSubmit, formRef }: EstoqueAddFormProps) {
   const localRef = useRef<HTMLFormElement>(null)
+  const [fornecedor, setFornecedor] = useState<Fornecedor | null>(null);
+  const [mostrarModal, setMostrarModal] = useState(false);
 
   useEffect(() => {
     if (formRef && localRef.current) {
@@ -16,6 +22,7 @@ export default function LeiteAddForm({ onSubmit, formRef }: EstoqueAddFormProps)
   }, [formRef])
 
   return (
+    <>
     <form
       ref={localRef}
       onSubmit={(e) => {
@@ -29,10 +36,13 @@ export default function LeiteAddForm({ onSubmit, formRef }: EstoqueAddFormProps)
           dataObtencao: formData.get('dataObtencao') as string,
           dataValidade: formData.get('dataValidade') as string,
           status: formData.get('status') as string,
-          fornecedor: formData.get('fornecedorId') as string,
+          fornecedorId: fornecedor?.id,
           descricao: formData.get('descricao') as string,
         }
         if (onSubmit) onSubmit(dados)
+        console.log("Dados enviados para criação do leite:", {
+          fornecedorId: fornecedor?.id,
+        });
       }}
     >
       <div className="estoque-form__row">
@@ -113,14 +123,24 @@ export default function LeiteAddForm({ onSubmit, formRef }: EstoqueAddFormProps)
           />
         </label>
         <label className="estoque-form__label">
-          Fornecedor:
-          <input
-            type="text"
-            name="fornecedorId"
-            className="estoque-form__input"
-            placeholder="Fornecedor"
-          />
-        </label>
+            Fornecedor:
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <input
+                type="text"
+                readOnly
+                value={fornecedor ? `${fornecedor.nome} (${fornecedor.email})` : ''}
+                placeholder="Cadastre um fornecedor"
+                className="estoque-form__input fornecedor"
+              />
+              <button
+                type="button"
+                className="estoque-form__botao-modal"
+                onClick={() => setMostrarModal(true)}
+              >
+                +
+              </button>
+            </div>
+          </label>
       </div>
 
       <div className="estoque-form__row">
@@ -134,5 +154,15 @@ export default function LeiteAddForm({ onSubmit, formRef }: EstoqueAddFormProps)
         </label>
       </div>
     </form>
-  )
+    {mostrarModal && (
+        <ModalFornecedor
+          onClose={() => setMostrarModal(false)}
+          onSave={(novoFornecedor) => {
+            setFornecedor(novoFornecedor);
+            setMostrarModal(false);
+          }}
+        />
+      )}
+    </>
+  );
 }

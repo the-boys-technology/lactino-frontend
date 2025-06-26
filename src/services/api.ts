@@ -5,7 +5,7 @@ export const api = axios.create({
 });
 
 export const api_ibge = axios.create({
-  baseURL: 'http://servicodados.ibge.gov.br/api/v1/localidades',
+  baseURL: 'https://servicodados.ibge.gov.br/api/v1/localidades',
 });
 
 // Interceptor de requisição para adicionar o token JWT

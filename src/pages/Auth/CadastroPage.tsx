@@ -7,6 +7,7 @@ import { api_ibge } from "../../services/api";
 import { consultarEstadoEId, consultarCEP } from "../../services/consulta_ibge";
 import { cadastrarConta } from "../../services/auth";
 import { AiFillEyeInvisible, AiFillEye } from 'react-icons/ai';
+import { toast } from "react-toastify";
 
 function CadastroPage(): React.ReactElement {
 
@@ -66,6 +67,7 @@ function updateField(name: string, value: string) {
         (await resp).data.sort((a: { nome: string; }, b: { nome: any; }) => a.nome.localeCompare(b.nome));
         setEstados((await resp).data);
       } catch (e) {
+        toast.error("Erro ao carregar os estados.");
         setError("Não foi possível carregar os estados");
       }
     })();
@@ -91,6 +93,7 @@ function updateField(name: string, value: string) {
           .sort((a, b) => a.localeCompare(b));
         setMunicipios(nomes);
       } catch (e) {
+        toast.error("Erro ao buscar municípios.");
         setError("Erro ao buscar municípios.");
       } finally {
         setLoading(false);
@@ -104,9 +107,11 @@ function updateField(name: string, value: string) {
             console.log(data);
             const req = await cadastrarConta(data);
             console.log(req);
+            toast.success("Cadastrado realizado com sucesso!");
             navigate("/login");
         } catch (error) {
             console.log(data);
+            toast.error("Erro ao cadastrar o usuário."); 
             console.error('Erro ao cadastrar usuário:', error)
         }
         
@@ -120,6 +125,7 @@ function updateField(name: string, value: string) {
   const handleCepBlur = async () => {
     const cleaned = cep.replace(/\D/g, "");
     if (cleaned.length !== 8) {
+      toast.error("Formato de CEP inválido.");
       setCepError("Formato de CEP inválido");
       setIsCepValid(false);
       return;
@@ -132,6 +138,7 @@ function updateField(name: string, value: string) {
       const data = resp.data;
 
       if (data.erro) {
+        toast.error("CEP não encontrado.");
         setCepError("CEP não encontrado");
         setIsCepValid(false);
         return;
@@ -143,6 +150,7 @@ function updateField(name: string, value: string) {
       // — encontra e seta o Estado
       const ufObj = estados.find(e => e.sigla === data.uf);
       if (!ufObj) {
+        toast.error("Estado do CEP não encontrado.");
         setCepError("Estado do CEP não encontrado");
         setIsCepValid(false);
         return;
@@ -170,6 +178,7 @@ function updateField(name: string, value: string) {
 
     } catch (err) {
       console.error(err);
+      toast.error("Erro ao buscar CEP.");
       setCepError("Erro ao buscar CEP");
       setIsCepValid(false);
     } finally {

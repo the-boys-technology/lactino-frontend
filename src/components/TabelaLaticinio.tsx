@@ -1,27 +1,27 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { DataTable } from "./Tabela";
 import { COLUNAS_LATICINIO } from "../data/COLUNAS";
-import { type RowData } from "../data/ROW_DATA";   
+import { type RowDataLaticinio } from "../data/ROW_DATA";   
 import { useNavigate } from "react-router-dom";
-import { buscarLaticinios, editarLaticinio, registrarLaticinio, removerLaticinio } from "../services/gestao_leite_laticinio";
+import { buscarLaticinios, editarLaticinio, registrarLaticinio, removerLaticinio, buscarLeiteId } from "../services/gestao_leite_laticinio";
 import "../css/historico_tabela.css";
 import retornarIcon from '../assets/retornar.png';
 import Botao from "./Botao";
 import Modal from "./Modal";
 import LaticinioAddForm from "./LaticinioAddForm";
 import LaticinioEditForm from "./LaticinioEditForm";
+import { toast } from "react-toastify";
 
 
 export default function TabelaLaticinio() {
   const navigate = useNavigate();
 
-  const [rows, setRows] = useState<RowData[]>([]);
+  const [rows, setRows] = useState<RowDataLaticinio[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize] = useState(10);
 
   const [search, setSearch] = useState("");
-  const [turnoFilter, setTurnoFilter] = useState<string[]>([]);
   const [statusFilter, setStatusFilter] = useState<string[]>([]);
 
   const [modalAberto, setModalAberto] = useState<null | 'adicionar' | 'editar' | 'remover'>(null);
@@ -32,10 +32,6 @@ export default function TabelaLaticinio() {
   const toggle = (arr: string[], val: string) =>
     arr.includes(val) ? arr.filter(x => x !== val) : [...arr, val];
 
-  function handleTurnoFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setTurnoFilter(prev => toggle(prev, e.target.value));
-  }
-
   function handleStatusFilterChange(e: React.ChangeEvent<HTMLInputElement>) {
     setStatusFilter(prev => toggle(prev, e.target.value));
   }
@@ -44,17 +40,54 @@ export default function TabelaLaticinio() {
     navigate('/selecionar-produto');
   }
 
+  const filteredRows = useMemo(() => {
+  return rows.filter((row) => {
+    const searchMatch =
+      search.trim() === '' ||
+      Object.values(row).some((value) =>
+        String(value || '').toLowerCase().includes(search.toLowerCase())
+      );
+
+    const statusMatch =
+      statusFilter.length === 0 ||
+      statusFilter.map((v) => v.toLowerCase()).includes(row.status?.toLowerCase());
+
+    return searchMatch && statusMatch;
+  });
+}, [rows, search, statusFilter]);
+
+
   async function carregarPagina(pagina: number) {
     try {
-      console.log(`Páginas: ${pagina}`)
       const res = await buscarLaticinios(pagina, pageSize);
-      console.log(res);
-      setRows(res.data.content);
+      const laticinios = res.data.content;
+
+      const laticiniosComLeite = await Promise.all(
+        laticinios.map(async (item: RowDataLaticinio) => {
+          try {
+            const resLeite = await buscarLeiteId(item.leiteUtilizadoId);
+            console.log(resLeite);
+            return {
+              ...item,
+              leite: {
+                nome: resLeite.data.nome,
+                origem: resLeite.data.origem,
+              },
+            };
+          } catch (e) {
+            toast.error(`Erro ao buscar leite ${item.leiteUtilizadoId}.`);
+            console.warn(`Erro ao buscar leite ${item.leiteUtilizadoId}`, e);
+            return item;
+          }
+        })
+      );
+
+      setRows(laticiniosComLeite);
       setTotalPages(res.data.totalPages);
       setPage(pagina);
     } catch (error: any) {
+      toast.error(`Erro ao carregar dados`);
       console.error("Erro ao carregar dados:", error);
-    } finally {
     }
   }
 
@@ -93,34 +126,6 @@ export default function TabelaLaticinio() {
         </div>
 
         <section className='historico-container__filter-group'>
-          <h3 className='historico-container__input-label'>Turno:</h3>
-          <label>
-            <input
-              type="checkbox"
-              value="Matutino"
-              checked={turnoFilter.includes('Matutino')}
-              onChange={handleTurnoFilterChange}
-            /> Matutino
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="Vespertino"
-              checked={turnoFilter.includes('Vespertino')}
-              onChange={handleTurnoFilterChange}
-            /> Vespertino
-          </label>
-          <label>
-            <input
-              type="checkbox"
-              value="Noturno"
-              checked={turnoFilter.includes('Noturno')}
-              onChange={handleTurnoFilterChange}
-            /> Noturno
-          </label>
-        </section>
-
-        <section className='historico-container__filter-group'>
           <h3 className='historico-container__input-label'>Status:</h3>
           <label>
             <input
@@ -144,7 +149,7 @@ export default function TabelaLaticinio() {
               value="Vendido"
               checked={statusFilter.includes('Vendido')}
               onChange={handleStatusFilterChange}
-            /> Utilizado
+            /> Vendido
           </label>
           <label>
             <input
@@ -157,8 +162,8 @@ export default function TabelaLaticinio() {
         </section>
 
         <div className="historico-container__tabela-wrapper">
-          <DataTable<RowData>
-            data={rows}
+          <DataTable<RowDataLaticinio>
+            data={filteredRows}
             columns={COLUNAS_LATICINIO}
             onRowClick={(row) => setItemSelecionado(row)}
             selectedItem={itemSelecionado}
@@ -223,8 +228,10 @@ export default function TabelaLaticinio() {
             onSubmit={async (dados) => {
               try {
                 await registrarLaticinio(dados)
-                //await carregarInsumos()
+                await carregarPagina(page)
+                toast.success(`Laticínio adicionado com sucesso!`);
               } catch (error) {
+                toast.error(`Erro ao adicionar laticínio.`);
                 console.log(`ERRO: ${error}`)
               }
               setModalAberto(null) 
@@ -248,8 +255,10 @@ export default function TabelaLaticinio() {
               console.log('ID para editar:', itemSelecionado.id);
               console.log('Dados enviados:', dadosEditados);
               await editarLaticinio(itemSelecionado.id, dadosEditados)
-              //await carregarInsumos()
+              await carregarPagina(page)
+              toast.success(`Laticínio editado com sucesso!`);
             } catch (error) {
+              toast.error(`Erro ao editar laticínio.`);
               console.log(`ERRO: ${error}`)
             }
             setModalAberto(null) 
@@ -277,9 +286,11 @@ export default function TabelaLaticinio() {
                 onClick={async () => {
                   try {
                     await removerLaticinio(itemSelecionado.id)
-                    //await carregarInsumos()
+                    await carregarPagina(page)
+                    toast.success(`Laticínio removido com sucesso!`);
                   } catch (error) {
-                    console.error('Erro ao remover insumo:', error)
+                    toast.error(`Erro ao remover laticínio.`);
+                    console.error('Erro ao remover laticínio:', error)
                   }
                   setModalAberto(null)
                   setItemSelecionado(null)

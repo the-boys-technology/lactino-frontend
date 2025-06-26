@@ -3,6 +3,7 @@ import { FaPen } from 'react-icons/fa';
 import '../css/sidebar.css';
 import avatarImg from '../assets/avatar.jpg';
 import { editarDados } from '../services/auth'; 
+import { toast } from "react-toastify";
 
 interface SidebarProps {
   open: boolean;
@@ -84,10 +85,10 @@ export default function Sidebar({ open, onClose, onReset }: SidebarProps) {
         setPreviewImage(`data:image/jpeg;base64,${base64Image}`);
       }
       setEditable({ nome: false, cep: false });
-      alert('Dados atualizados com sucesso!');
+      toast.success("Dados atualizados com sucesso!");
     } catch (error) {
       console.error(error);
-      alert('Erro ao atualizar os dados.');
+      toast.success("Erro ao atualizar os dados.");
     }
   };
 

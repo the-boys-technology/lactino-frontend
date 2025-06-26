@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import '../../css/login_page.css';
 import { useState } from "react";
 import { solicitarRedefinirSenhaApi } from "../../services/auth";
+import { toast } from "react-toastify";
 
 function RedefinirSenhaPage(): React.ReactElement {
     const navigate = useNavigate();
@@ -22,10 +23,12 @@ function RedefinirSenhaPage(): React.ReactElement {
                 console.log(data);
                 const res = await solicitarRedefinirSenhaApi(data.email);
                 console.log(res);
-                navigate("/");
+                toast.success(`Código enviado ao e-mail!`);
+                navigate('/nova-senha', { state: { email: formData.email } }); 
             } catch (error: any) {
                 const message = error?.response?.data?.message || "E-mail inválido";
                 console.log(data);
+                toast.error(`Erro ao solicitar redefição de senha.`);
                 console.error('Erro ao solicitar redefição de senha:', error)
             }
         }
@@ -34,7 +37,6 @@ function RedefinirSenhaPage(): React.ReactElement {
         const handleSubmit: React.FormEventHandler = async (e) => {
             e.preventDefault();
             await solicitarRedefinirSenha(formData); 
-            navigate('/nova-senha');         
         };
 
     return(
