@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react';
 import Header from './Header'
 import Card from './Card'
 import '../css/dashboard.css'
@@ -6,12 +6,34 @@ import Botao from '../components/Botao'
 import PopupVigilancia from '../features/Home/PopUpVigilancia/PopupVigilancia'
 import { useNavigate } from 'react-router-dom';
 import { Fornecedor } from '../types/fornecedor'
+import GraficoInsumos from '../components/GraficoInsumos';
+import { getEstoqueResumo, getUltimasCompras, getUltimasVendas } from '../services/dashboard';
 import ModalFornecedor from '../features/Home/ModalFornecedor/ModalFornecedor'
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [showPopup, setShowPopup] = useState(false);
   const [showModalFornecedor, setShowModalFornecedor] = useState(false);
+  const [compras, setCompras] = useState<any[]>([]);
+  const [vendas, setVendas] = useState<any[]>([]);
+  const [estoqueTotal, setEstoqueTotal] = useState(0);
+  const [estoquePorTipo, setEstoquePorTipo] = useState<{ tipo: string; quantidade: number }[]>([]);
+
+  
+  useEffect(() => {
+    const carregarDados = async () => {
+      const { total, porTipo } = await getEstoqueResumo();
+      const ultCompras = await getUltimasCompras();
+      const ultVendas = await getUltimasVendas();
+
+      setEstoqueTotal(total);
+      setEstoquePorTipo(porTipo);
+      setCompras(ultCompras);
+      setVendas(ultVendas);
+    };
+
+    carregarDados();
+  }, []);
   
   const handleSaveFornecedor = (fornecedor: Fornecedor) => {
     console.log("Fornecedor salvo", fornecedor);
@@ -20,39 +42,52 @@ export default function Dashboard() {
 
   return (
     <div className="dashboard">
-        <h1 className='dashboard__welcome'>Bem-vindo(a), Fulano!</h1>
+        <h1 className='dashboard__welcome'>Bem-vindo(a), {sessionStorage.getItem('nome') }!</h1>
       <div className="dashboard__grid">
-        <Card title="A Receber" value="R$ 2.460,00" type='inflow' size='medium'>
-          <Botao label='Novo Recebimento' tipo='primary' htmlType='button'/>
+        <Card title="Resumo do Estoque" size="medium" className="card--center">
+          <p><strong>Total de insumos em estoque:</strong> {estoqueTotal} itens</p>
+          <GraficoInsumos data={estoquePorTipo} />
+          <div style={{ textAlign: 'right', marginTop: '8px' }}>
+            <Botao label="Ver mais" tipo="secondary" htmlType="button" onClick={() => navigate('/estoque')} />
+          </div>
         </Card>
 
-        <Card title="A Pagar" value="R$ 3.276,00" type='outflow' size='medium'>
-          <Botao label='Novo Pagamento' tipo='primary' htmlType='button'/>
-
+        <Card title="Últimas Compras" size="medium" className="card--center">
+          {compras.length === 0 ? (
+            <p>Nenhuma compra recente.</p>
+          ) : (
+            compras.slice(0, 5).map((compra, idx) => (
+              <p key={idx}>
+                {compra.formaPagamento} - R$ {compra.valorTotal.toFixed(2)}
+              </p>
+            ))
+          )}
+          {compras.length > 3 && <p>...</p>}
+          <div style={{ textAlign: 'right', marginTop: '120px' }}>
+            <Botao label="Ver mais" tipo="secondary" htmlType="button" onClick={() => navigate('/gestao-compras')} />
+          </div>
         </Card>
 
-        <Card title="A Vencer">
-          <p><strong>Nos próximos dias:</strong><br />
-            Leite (Lote LT-20250421) – vence em 1 dia
-          </p>
-          <p><strong>Nas próximas semanas:</strong><br />
-            Queijo Coalho: vence em 12 dias<br />
-            Lote LT-20250422-B: 18 dias
-          </p>
-        </Card>
-
-        <Card title="Resumo diário da produção" size='large'>
-          <p><strong>Leite recebido hoje:</strong> 1.250 L</p>
-          <p><strong>Produção:</strong><br />
-            Queijo Coalho: 320 kg (3 lotes)<br />
-            Queijo Manteiga: 185 kg (2 lotes)<br />
-            Ricota: 110 kg (1 lote)
-          </p>
+        <Card title="Últimas Vendas" size="medium" className="card--center">
+          {vendas.length === 0 ? (
+            <p>Nenhuma venda recente.</p>
+          ) : (
+            vendas.slice(0, 5).map((venda, idx) => (
+              <p key={idx}>
+                {venda.formaPagamento} - R$ {venda.valorTotal.toFixed(2)}
+              </p>
+            ))
+          )}
+          {vendas.length > 3 && <p>...</p>}
+          <div style={{ textAlign: 'right', marginTop: '120px' }}>
+            <Botao label="Ver mais" tipo="secondary" htmlType="button" onClick={() => navigate('/gestao-vendas')} />
+          </div>
         </Card>
 
         <Card 
           className="card--center"
-          title={"Gerencie seus clientes"}>
+          title={"Gerencie todos os seus clientes"}
+          size="medium">
           <Botao 
           label='Acessar CRM'
           tipo='primary' 
@@ -62,7 +97,8 @@ export default function Dashboard() {
 
         <Card 
           className="card--center"
-          title={"Cadastro simples \n de Fornecedor"}>
+          title={"Cadastro simples \n de Fornecedor"}
+          size="medium">
           <Botao
             tipo="primary"
             label="Clique aqui"
@@ -72,7 +108,8 @@ export default function Dashboard() {
 
         <Card 
           className="card--center"
-          title={"Mantenha-se em dia com \na Vigilância Sanitária"}>
+          title={"Mantenha-se em dia com \na Vigilância Sanitária"}
+          size="medium">
           <Botao
             tipo="primary" 
             label="Saiba Mais"
