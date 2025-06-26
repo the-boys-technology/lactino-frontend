@@ -1,5 +1,5 @@
 import { type ColumnDef } from '@tanstack/react-table';
-import { RowData } from './ROW_DATA';
+import { RowDataLeite, RowDataLaticinio } from './ROW_DATA';
 
 function formatarDataDDMMAAAA(dataISO: string): string {
   if (!dataISO) return '';
@@ -9,7 +9,7 @@ function formatarDataDDMMAAAA(dataISO: string): string {
 }
 
 
-export const COLUNAS_LEITE: ColumnDef<RowData, any>[] = [
+export const COLUNAS_LEITE: ColumnDef<RowDataLeite, any>[] = [
   {
     header: 'Data de Obtenção',
     accessorKey: 'dataObtencao',
@@ -44,7 +44,7 @@ export const COLUNAS_LEITE: ColumnDef<RowData, any>[] = [
 ];
 
 
-export const COLUNAS_LATICINIO: ColumnDef<RowData, any>[] = [
+export const COLUNAS_LATICINIO: ColumnDef<RowDataLaticinio, any>[] = [
   {
     header: 'Data de Produção',
     accessorKey: 'dataProducao',

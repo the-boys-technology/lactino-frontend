@@ -48,3 +48,7 @@
 .tabela-container__row--selecionada td {
   background-color: #e0f0ff;
 }
+
+input[type="checkbox"] {
+  cursor: pointer;
+}

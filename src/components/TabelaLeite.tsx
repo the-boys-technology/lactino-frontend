@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, useRef } from "react";
 import { DataTable } from "./Tabela";
 import { COLUNAS_LEITE } from "../data/COLUNAS";
-import { type RowData } from "../data/ROW_DATA";   
+import { type RowDataLeite } from "../data/ROW_DATA";   
 import { useNavigate } from "react-router-dom";
 import { buscarLeites, editarLeite, registrarLeite, removerLeite } from "../services/gestao_leite_laticinio";
 import "../css/historico_tabela.css";
@@ -15,7 +15,7 @@ import LeiteEditForm from "./LeiteEditForm";
 export default function TabelaLeite() {
   const navigate = useNavigate();
 
-  const [rows, setRows] = useState<RowData[]>([]);
+  const [rows, setRows] = useState<RowDataLeite[]>([]);
   const [page, setPage] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
   const [pageSize] = useState(10);
@@ -43,6 +43,27 @@ export default function TabelaLeite() {
   function handleReturn() {
     navigate('/selecionar-produto');
   }
+
+  const filteredRows = useMemo(() => {
+  return rows.filter((row) => {
+    const searchMatch =
+      search.trim() === '' ||
+      Object.values(row).some((value) =>
+        String(value || '').toLowerCase().includes(search.toLowerCase())
+      );
+
+    const turnoMatch =
+      turnoFilter.length === 0 ||
+      turnoFilter.map((v) => v.toLowerCase()).includes(row.turno?.toLowerCase());
+
+    const statusMatch =
+      statusFilter.length === 0 ||
+      statusFilter.map((v) => v.toLowerCase()).includes(row.status?.toLowerCase());
+
+    return searchMatch && turnoMatch && statusMatch;
+  });
+}, [rows, search, turnoFilter, statusFilter]);
+
 
   async function carregarPagina(pagina: number) {
     try {
@@ -157,8 +178,8 @@ export default function TabelaLeite() {
         </section>
 
         <div className="historico-container__tabela-wrapper">
-          <DataTable<RowData>
-            data={rows}
+          <DataTable<RowDataLeite>
+            data={filteredRows}
             columns={COLUNAS_LEITE}
             onRowClick={(row) => setItemSelecionado(row)}
             selectedItem={itemSelecionado}

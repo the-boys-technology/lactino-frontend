@@ -1,4 +1,4 @@
-export type RowData = {
+export type RowDataLeite = {
   id: string;                   
   nome: string;
   descricao: string;
@@ -9,4 +9,16 @@ export type RowData = {
   status: "DISPONIVEL" | "UTILIZADO" | "VENCIDO" | "DESCARTADO";
   finalidade: string;
   fornecedorId: string;
+};
+
+export type RowDataLaticinio = {
+  id: string;                   
+  nome: string;
+  descricao: string;
+  dataProducao: string;         
+  dataValidade: string;
+  leiteOrigem: string;
+  tipoProduto: string;
+  status: "DISPONIVEL" | "VENDIDO" | "VENCIDO" | "DESCARTADO";
+  leiteUtilizadoId: string;
 };
