@@ -16,7 +16,7 @@ export default function GestaoVendas() {
   const [relatorioId, setRelatorioId] = useState<string | null>(null);
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
-  const [transacaoEditando, setTransacaoEditando] = useState<Transacao | null>(null); // <-- ADICIONE ESTA LINHA
+  const [transacaoEditando, setTransacaoEditando] = useState<Transacao | null>(null);
 
   const [filtroCliente, setFiltroCliente] = useState("");
   const [dataInicial, setDataInicial] = useState("");

@@ -142,7 +142,11 @@ export default function ProdutosForm({
             label="Categoria"
             type="select"
             disabled={!!itemEdicao}
-            options={Object.values(CategoriaItem).map(c => ({ label: c, value: c }))}
+            options={[
+              { label: "Leite", value: "LEITE" },
+              { label: "Laticínio", value: "LATICINIO" },
+              { label: "Insumo", value: "INSUMO" },
+            ]}
             value={categoriaSelecionada || ""}
             selectFunction={(e) => {
               setCategoriaSelecionada(e.target.value as CategoriaItem);

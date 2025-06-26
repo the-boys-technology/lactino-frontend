@@ -53,9 +53,9 @@ export default function GestaoCompras() {
         (!dataInicial || data >= new Date(dataInicial)) &&
         (!dataFinal || data <= new Date(dataFinal));
       const matchValor =
-        (!valorMin || t.valorTotal >= parseFloat(valorMin)) &&
-        (!valorMax || t.valorTotal <= parseFloat(valorMax));
-      const fornecedor = fornecedores.find((f) => f.id === t.fornecedorId);
+        (!valorMin || !isNaN(parseFloat(valorMin)) && t.valorTotal >= parseFloat(valorMin)) &&
+        (!valorMax || !isNaN(parseFloat(valorMax)) && t.valorTotal <= parseFloat(valorMax));
+      const fornecedor = fornecedores.find((f) => String(f.id) === String(t.fornecedorId));
       const matchFornecedor =
         !filtroFornecedor ||
         fornecedor?.nome.toLowerCase().includes(filtroFornecedor.toLowerCase());
@@ -216,7 +216,7 @@ export default function GestaoCompras() {
         <footer className="compras__footer">
         <Botao
           tipo="success"
-          label="+ Nova Venda"
+          label="+ Nova Compra"
           htmlType="button"
           onClick={() => {
             setTransacaoEditando(null);
@@ -241,7 +241,7 @@ export default function GestaoCompras() {
           }}
           onCancelar={() => {
             setModalAberto(false);
-            setTransacaoEditando(null); // <-- LIMPE O ESTADO AO CANCELAR
+            setTransacaoEditando(null);
           }}
         />
       )}

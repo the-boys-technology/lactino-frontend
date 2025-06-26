@@ -74,7 +74,7 @@ export default function ModalTransacoes({
       }
       if (dados.fornecedorId) {
         const nomeFornecedor =
-          fornecedores.find((f) => f.id === dados.fornecedorId)?.nome || "";
+          fornecedores.find((f) => f.id === String(dados.fornecedorId))?.nome || "";
         setNomeFornecedorBusca(nomeFornecedor);
       }
       // -----------------------------------------------------------
