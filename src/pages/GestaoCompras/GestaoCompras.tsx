@@ -13,7 +13,7 @@ import { Fornecedor } from "../../types/fornecedor";
 export default function GestaoCompras() {
   const [loading, setLoading] = useState(true);
   const [modalAberto, setModalAberto] = useState(false);
-  const [relatorioId, setRelatorioId] = useState<string | null>(null);
+  const [relatorioParaExibir, setRelatorioParaExibir] = useState<Transacao | null>(null);
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
   const [transacaoEditando, setTransacaoEditando] = useState<Transacao | null>(null);
@@ -206,7 +206,7 @@ export default function GestaoCompras() {
               transacoes={exibicao}
               fornecedores={fornecedores}
               tipoTransacao="COMPRA"
-              onVerRelatorio={(t) => setRelatorioId(String(t.id))}
+              onVerRelatorio={(t) => setRelatorioParaExibir(t)}
               editarItem={editarItem}
               removerItem={removerItem}
             />
@@ -232,10 +232,16 @@ export default function GestaoCompras() {
           clientes={[]}
           fornecedores={fornecedores}
           transacaoEditando={transacaoEditando}
-          onSalvar={(novaTransacao) => {
-            setTransacoes(prev => 
-              prev.map(t => t.id === novaTransacao.id ? novaTransacao : t)
-            );
+          // --- MUDANÇA 3: Lógica robusta para salvar/atualizar ---
+          onSalvar={(transacaoAtualizada) => {
+            setTransacoes(prevTransacoes => {
+              const transacaoExiste = prevTransacoes.some(t => t.id === transacaoAtualizada.id);
+              if (transacaoExiste) {
+                return prevTransacoes.map(t => t.id === transacaoAtualizada.id ? transacaoAtualizada : t);
+              } else {
+                return [transacaoAtualizada, ...prevTransacoes];
+              }
+            });
             setModalAberto(false);
             setTransacaoEditando(null);
           }}
@@ -245,11 +251,11 @@ export default function GestaoCompras() {
           }}
         />
       )}
-
-      {relatorioId && (
+        {relatorioParaExibir && (
         <RelatorioPedido
-          transacaoId={relatorioId}
-          onClose={() => setRelatorioId(null)}
+          transacao={relatorioParaExibir}
+          fornecedores={fornecedores} // Passa a lista de fornecedores
+          onClose={() => setRelatorioParaExibir(null)}
         />
       )}
     </div>

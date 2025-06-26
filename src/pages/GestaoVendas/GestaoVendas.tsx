@@ -13,7 +13,7 @@ import { CategoriaItem } from "../../types/item-transacao";
 export default function GestaoVendas() {
   const [loading, setLoading] = useState(true);
   const [modalAberto, setModalAberto] = useState(false);
-  const [relatorioId, setRelatorioId] = useState<string | null>(null);
+  const [relatorioParaExibir, setRelatorioParaExibir] = useState<Transacao | null>(null);
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [transacaoEditando, setTransacaoEditando] = useState<Transacao | null>(null);
@@ -197,15 +197,14 @@ export default function GestaoVendas() {
                 />
               </div>
             </div>
-
             <TabelaTransacoes
-              transacoes={exibicao}
-              clientes={clientes}
-              tipoTransacao="VENDA"
-              onVerRelatorio={(t) => setRelatorioId(String(t.id))}
-              editarItem={editarItem}
-              removerItem={removerItem}
-            />
+      transacoes={exibicao}
+      clientes={clientes}
+      tipoTransacao="VENDA"
+      onVerRelatorio={(t) => setRelatorioParaExibir(t)}
+      editarItem={editarItem}
+      removerItem={removerItem}
+    />
           </>
         )}
 
@@ -253,11 +252,12 @@ export default function GestaoVendas() {
         />
       )}
 
-      {relatorioId && (
-        <RelatorioPedido
-          transacaoId={relatorioId}
-          onClose={() => setRelatorioId(null)}
-        />
+{relatorioParaExibir && (
+      <RelatorioPedido
+        transacao={relatorioParaExibir}
+        clientes={clientes} // Passa a lista de clientes para ele poder achar o nome
+        onClose={() => setRelatorioParaExibir(null)}
+      />
       )}
     </div>
   );
