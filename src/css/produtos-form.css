@@ -9,15 +9,22 @@
 .formulario-produto__titulo {
   font-size: 1.5rem;
   font-weight: 600;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   color: #1f2937;
 }
 
 .formulario-produto__campos {
   display: flex;
-  gap: 1rem;
+  justify-content: space-between;
+  gap: 2rem;
+  margin-bottom: 1rem;
+  background-color: #ef4444;
 }
 
+.formulario-produto__coluna {
+  display: flex;
+  gap: 1rem;
+}
 .formulario-produto__botoes {
   display: flex;
   justify-content: flex-end;
@@ -25,20 +32,22 @@
   gap: 1rem;
 }
 
+.formulario-produto__info-estoque {
+  font-size: 0.8rem;
+  color: #555;
+  margin-top: -0.5rem;
+  text-align: left;
+}
+
 .loading-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 200px;
-}
-
-.loading-gif {
-  width: 56px;
-  height: 56px;
+  padding: 1rem 0;
 }
 
 .error-message {
-  color: red;
+  color: #ef4444;
   font-size: 0.875rem;
-  margin-top: 0.5rem;
+  margin-top: -0.5rem;
 }

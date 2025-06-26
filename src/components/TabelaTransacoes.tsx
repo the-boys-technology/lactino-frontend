@@ -1,3 +1,4 @@
+import React from "react";
 import "../css/tabela-trasacoes.css";
 import { Cliente } from "../types/cliente";
 import { Fornecedor } from "../types/fornecedor";
@@ -10,6 +11,8 @@ interface TabelaTransacoesProps {
   fornecedores?: Fornecedor[];
   onVerRelatorio: (transacao: Transacao) => void;
   tipoTransacao: "VENDA" | "COMPRA";
+  editarItem: (transacao: Transacao) => void;
+  removerItem: (id: string) => void;
 }
 
 export default function TabelaTransacoes({
@@ -18,6 +21,8 @@ export default function TabelaTransacoes({
   fornecedores = [],
   onVerRelatorio,
   tipoTransacao,
+  editarItem,
+  removerItem,
 }: TabelaTransacoesProps) {
   const getPessoaNome = (t: Transacao) => {
     if (tipoTransacao === "VENDA") {
@@ -53,15 +58,27 @@ export default function TabelaTransacoes({
             <span>{formatarData(t.data)}</span>
             <span>{formatarDinheiro(t.valorTotal)}</span>
             <span>{t.formaPagamento}</span>
-            <button
-              className="tabela-transacoes__ver-relatorio"
-              onClick={() => onVerRelatorio(t)}
-              aria-label={`Ver relatório da ${tipoTransacao.toLowerCase()} de ${getPessoaNome(
-                t
-              )}`}
-            >
-              📝Ver Relatório
-            </button>
+            <div className="tabela-transacoes__acoes">
+              <button
+                className="tabela-transacoes__ver-relatorio"
+                onClick={() => onVerRelatorio(t)}
+                aria-label={`Ver relatório da ${tipoTransacao.toLowerCase()} de ${getPessoaNome(t)}`}
+              >
+                📝 Ver Relatório
+              </button>
+              <button
+                className="tabela-transacoes__editar"
+                onClick={() => editarItem(t)}
+              >
+                ✏️ Editar
+              </button>
+              <button
+                className="tabela-transacoes__excluir"
+                onClick={() => removerItem(t.id)}
+              >
+                🗑 Excluir
+              </button>
+            </div>
           </div>
         ))
       )}

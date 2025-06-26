@@ -10,12 +10,13 @@ import "./GestaoCompras.css";
 import { CategoriaItem } from "../../types/item-transacao";
 import { Fornecedor } from "../../types/fornecedor";
 
-export default function GestaoVendas() {
+export default function GestaoCompras() {
   const [loading, setLoading] = useState(true);
   const [modalAberto, setModalAberto] = useState(false);
   const [relatorioId, setRelatorioId] = useState<string | null>(null);
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [fornecedores, setFornecedores] = useState<Fornecedor[]>([]);
+  const [transacaoEditando, setTransacaoEditando] = useState<Transacao | null>(null);
 
   const [filtroFornecedor, setFiltroFornecedor] = useState("");
   const [dataInicial, setDataInicial] = useState("");
@@ -82,6 +83,17 @@ export default function GestaoVendas() {
   };
 
   const exibicao = resultadoFiltro.length ? resultadoFiltro : transacoes;
+
+  const editarItem = (transacao: Transacao) => {
+    console.log("Abrindo modal para editar a transação:", transacao);
+    setTransacaoEditando(transacao); 
+    setModalAberto(true);
+  };
+
+  const removerItem = (id: string) => {
+    setTransacoes(transacoes.filter((transacao) => transacao.id !== id));
+    api.delete(`/transacoes/${id}`);
+  };
 
   return (
     <div className="compras">
@@ -195,17 +207,22 @@ export default function GestaoVendas() {
               fornecedores={fornecedores}
               tipoTransacao="COMPRA"
               onVerRelatorio={(t) => setRelatorioId(String(t.id))}
+              editarItem={editarItem}
+              removerItem={removerItem}
             />
           </>
         )}
 
         <footer className="compras__footer">
-          <Botao
-            tipo="success"
-            label="+ Nova Compra"
-            htmlType="button"
-            onClick={() => setModalAberto(true)}
-          />
+        <Botao
+          tipo="success"
+          label="+ Nova Venda"
+          htmlType="button"
+          onClick={() => {
+            setTransacaoEditando(null);
+            setModalAberto(true);
+          }}
+        />
         </footer>
       </section>
 
@@ -214,11 +231,19 @@ export default function GestaoVendas() {
           tipoTransacao={TipoTransacao.COMPRA}
           clientes={[]}
           fornecedores={fornecedores}
+          transacaoEditando={transacaoEditando}
           onSalvar={(novaTransacao) => {
-            setTransacoes((prev) => [novaTransacao, ...prev]);
+            setTransacoes(prev => 
+              prev.map(t => t.id === novaTransacao.id ? novaTransacao : t)
+            );
             setModalAberto(false);
-          } }
-          onCancelar={() => setModalAberto(false)}        />
+            setTransacaoEditando(null);
+          }}
+          onCancelar={() => {
+            setModalAberto(false);
+            setTransacaoEditando(null); // <-- LIMPE O ESTADO AO CANCELAR
+          }}
+        />
       )}
 
       {relatorioId && (

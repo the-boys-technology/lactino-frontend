@@ -16,6 +16,7 @@ export default function GestaoVendas() {
   const [relatorioId, setRelatorioId] = useState<string | null>(null);
   const [transacoes, setTransacoes] = useState<Transacao[]>([]);
   const [clientes, setClientes] = useState<Cliente[]>([]);
+  const [transacaoEditando, setTransacaoEditando] = useState<Transacao | null>(null); // <-- ADICIONE ESTA LINHA
 
   const [filtroCliente, setFiltroCliente] = useState("");
   const [dataInicial, setDataInicial] = useState("");
@@ -82,6 +83,18 @@ export default function GestaoVendas() {
   };
 
   const exibicao = resultadoFiltro.length ? resultadoFiltro : transacoes;
+
+  const editarItem = (transacao: Transacao) => {
+    console.log("Abrindo modal para editar a transação:", transacao);
+    setTransacaoEditando(transacao); 
+    setModalAberto(true);
+};
+
+  const removerItem = (id: string) => {
+    setTransacoes(transacoes.filter((transacao) => transacao.id !== id));
+    // Chama a função de exclusão no backend
+    api.delete(`/transacoes/${id}`);
+  };
 
   return (
     <div className="vendas">
@@ -195,17 +208,22 @@ export default function GestaoVendas() {
               clientes={clientes}
               tipoTransacao="VENDA"
               onVerRelatorio={(t) => setRelatorioId(String(t.id))}
+              editarItem={editarItem}
+              removerItem={removerItem}
             />
           </>
         )}
 
         <footer className="vendas__footer">
-          <Botao
-            tipo="success"
-            label="+ Nova Venda"
-            htmlType="button"
-            onClick={() => setModalAberto(true)}
-          />
+        <Botao
+          tipo="success"
+          label="+ Nova Venda"
+          htmlType="button"
+          onClick={() => {
+            setTransacaoEditando(null);
+            setModalAberto(true);
+          }}
+        />
         </footer>
       </section>
 
@@ -214,11 +232,18 @@ export default function GestaoVendas() {
           tipoTransacao={TipoTransacao.VENDA}
           clientes={clientes}
           fornecedores={[]}
+          transacaoEditando={transacaoEditando}
           onSalvar={(novaTransacao) => {
-            setTransacoes((prev) => [novaTransacao, ...prev]);
+            setTransacoes(prev => 
+              prev.map(t => t.id === novaTransacao.id ? novaTransacao : t)
+            );
             setModalAberto(false);
+            setTransacaoEditando(null);
           }}
-          onCancelar={() => setModalAberto(false)}
+          onCancelar={() => {
+            setModalAberto(false);
+            setTransacaoEditando(null);
+          }}
         />
       )}
 

@@ -11,7 +11,6 @@ import ProdutosForm from "./ProdutosForm";
 import {
   criarTransacao,
   editarTransacao,
-  removerTransacao,
 } from "../services/transacoes";
 import { toast } from "react-toastify";
 
@@ -48,8 +47,6 @@ export default function ModalTransacoes({
     formaPagamento: "",
     clienteId: undefined,
     fornecedorId: undefined,
-    leiteId: undefined,
-    laticinioId: undefined,
     descricao: "",
   });
 
@@ -58,7 +55,8 @@ export default function ModalTransacoes({
   const [itemEditando, setItemEditando] = useState<ItemTransacao | null>(null);
   const [exibirFormularioProduto, setExibirFormularioProduto] = useState(false);
   const [salvando, setSalvando] = useState(false);
-  const [clienteNomeTemp, setClienteNomeTemp] = useState("");
+  const [nomeClienteBusca, setNomeClienteBusca] = useState("");
+  const [nomeFornecedorBusca, setNomeFornecedorBusca] = useState("");
 
   useEffect(() => {
     if (transacaoEditando) {
@@ -68,8 +66,20 @@ export default function ModalTransacoes({
         formaPagamento: formaPagamento || "",
       });
       setItens(itens);
+
+      if (dados.clienteId) {
+        const nomeCliente =
+          clientes.find((c) => c.id === dados.clienteId)?.nome || "";
+        setNomeClienteBusca(nomeCliente);
+      }
+      if (dados.fornecedorId) {
+        const nomeFornecedor =
+          fornecedores.find((f) => f.id === dados.fornecedorId)?.nome || "";
+        setNomeFornecedorBusca(nomeFornecedor);
+      }
+      // -----------------------------------------------------------
     }
-  }, [transacaoEditando]);
+  }, [transacaoEditando, clientes, fornecedores]);
 
   const handleChange = (campo: string, valor: any) => {
     setFormulario((prev) => ({
@@ -140,18 +150,6 @@ export default function ModalTransacoes({
     }
   };
 
-  const handleExcluir = async () => {
-    if (transacaoEditando) {
-      const confirmar = confirm(
-        "Tem certeza que deseja excluir esta transação?"
-      );
-      if (confirmar) {
-        await removerTransacao((transacaoEditando.id));
-        onCancelar();
-      }
-    }
-  };
-
   const valorTotalCalculado = itens.reduce(
     (t, i) => t + i.precoUnitario * i.quantidade,
     0
@@ -174,24 +172,29 @@ export default function ModalTransacoes({
               <Campo
                 label="Fornecedor"
                 type="text"
-                value={
-                  fornecedores.find((f) => f.id === formulario.fornecedorId)
-                    ?.nome || ""
-                }
+                value={nomeFornecedorBusca}
                 placeHolder="Digite para buscar fornecedor"
                 styleInput={{ width: "20rem" }}
                 list="lista-fornecedores"
                 inputFunction={(e) => {
+                  const textoBusca = e.target.value;
+                  setNomeFornecedorBusca(textoBusca);
                   const selecionado = fornecedores.find(
-                    (f) => f.nome === e.target.value
+                    (f) => f.nome.toLowerCase() === textoBusca.toLowerCase()
                   );
-                  handleChange("fornecedorId", selecionado?.id || undefined);
+                  handleChange("fornecedorId", selecionado?.id);
                 }}
               />
               <datalist id="lista-fornecedores">
-                {fornecedores.map((f) => (
-                  <option key={f.id} value={f.nome} />
-                ))}
+                {fornecedores
+                  .filter((f) =>
+                    f.nome
+                      .toLowerCase()
+                      .includes(nomeFornecedorBusca.toLowerCase())
+                  )
+                  .map((f) => (
+                    <option key={f.id} value={f.nome} />
+                  ))}
               </datalist>
             </>
           ) : (
@@ -199,21 +202,29 @@ export default function ModalTransacoes({
               <Campo
                 label="Cliente"
                 type="text"
-                value={clienteNomeTemp}
+                value={nomeClienteBusca}
                 placeHolder="Digite para buscar cliente"
                 styleInput={{ width: "20rem" }}
                 list="lista-clientes"
                 inputFunction={(e) => {
-                  const nome = e.target.value;
-                  setClienteNomeTemp(nome);
-                  const selecionado = clientes.find((c) => c.nome === nome);
-                  handleChange("clienteId", selecionado?.id || undefined);
+                  const textoBusca = e.target.value;
+                  setNomeClienteBusca(textoBusca);
+                  const selecionado = clientes.find(
+                    (c) => c.nome.toLowerCase() === textoBusca.toLowerCase()
+                  );
+                  handleChange("clienteId", selecionado?.id);
                 }}
               />
               <datalist id="lista-clientes">
-                {clientes.map((c) => (
-                  <option key={c.id} value={c.nome} />
-                ))}
+                {clientes
+                  .filter((c) =>
+                    c.nome
+                      .toLowerCase()
+                      .includes(nomeClienteBusca.toLowerCase())
+                  )
+                  .map((c) => (
+                    <option key={c.id} value={c.nome} />
+                  ))}
               </datalist>
             </>
           )}
@@ -294,14 +305,7 @@ export default function ModalTransacoes({
               htmlType="button"
               onClick={onCancelar}
             />
-            {transacaoEditando && (
-              <Botao
-                label="🗑 Excluir"
-                tipo="danger"
-                htmlType="button"
-                onClick={handleExcluir}
-              />
-            )}
+
             <Botao
               label={salvando ? "Salvando..." : "Salvar Venda"}
               tipo="primary"

@@ -19,7 +19,7 @@
 .tabela-transacoes__cabecalho {
   background-color: #f3f4f6;
   font-weight: var(--bold);
-  color: #1F2937;
+  color: #1f2937;
 }
 
 .tabela-transacoes__linha {
@@ -28,14 +28,87 @@
   font-size: 0.95rem;
 }
 
-.tabela-transacoes__ver-relatorio {
-  background: none;
+.tabela-transacoes__ver-relatorio,
+.tabela-transacoes__editar,
+.tabela-transacoes__excluir {
+  background: #007bff;
   border: none;
-  color: var(--primary-background-color);
+  color: white;
   cursor: pointer;
-  text-decoration: underline;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
   font-weight: bold;
+  transition: background-color 0.3s ease;
 }
+
+.tabela-transacoes__ver-relatorio:hover,
+.tabela-transacoes__editar:hover,
+.tabela-transacoes__excluir:hover {
+  background-color: #0056b3;
+}
+
+.tabela-transacoes__ver-relatorio {
+  background-color: #17a2b8;
+}
+
+.tabela-transacoes__editar {
+  background-color: #28a745;
+}
+
+.tabela-transacoes__excluir {
+  background-color: #dc3545;
+}
+
+.tabela-transacoes__acoes {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.tabela-transacoes__ver-relatorio,
+.tabela-transacoes__editar,
+.tabela-transacoes__excluir {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  margin: 0.2rem;
+  font-size: 1rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.tabela-transacoes__ver-relatorio {
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  border: none;
+}
+
+.tabela-transacoes__ver-relatorio:hover {
+  background-color: #0056b3;
+}
+
+.tabela-transacoes__editar {
+  background-color: #4CAF50;
+  color: white;
+  border-radius: 5px;
+  border: none;
+}
+
+.tabela-transacoes__editar:hover {
+  background-color: #45a049;
+}
+
+.tabela-transacoes__excluir {
+  background-color: #e63946;
+  color: white;
+  border-radius: 5px;
+  border: none;
+}
+
+.tabela-transacoes__excluir:hover {
+  background-color: #c02e35;
+}
+
 
 .tabela-transacoes__vazio {
   padding: 1rem;
