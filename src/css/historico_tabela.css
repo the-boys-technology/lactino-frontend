@@ -68,6 +68,7 @@
   background-color: transparent;
   border: none;
   border-radius: var(--border-radius-value);
+  margin: 0 1rem;
 }
 
 .historico-container__filter-group {
@@ -206,7 +207,7 @@
 /* ─────────── Pill Buttons ─────────── */
 /* 2d) FOOTER with three buttons */
 .historico-container__footer {
-  padding: 0px 24px;
+  padding: 0px 24px 50px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -253,4 +254,121 @@
 .loading-gif {
   width: 64px;
   height: 64px;
+}
+
+/* ─────────── Paginação ─────────── */
+.paginacao {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  padding: 0.5rem 0;
+  background-color: var(--primary-font-color);
+  border-top: 1px solid var(--border-color);
+}
+
+/* Texto “Página X de Y” */
+.paginacao span {
+  font-size: 0.9rem;
+  color: var(--primary-text-color);
+  font-weight: var(--semibold);
+}
+
+/* Botões de navegação */
+.paginacao button {
+  background-color: var(--primary-button-color);
+  color: var(--primary-font-color);
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: var(--border-radius-value);
+  font-size: 0.9rem;
+  font-weight: var(--semibold);
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover — só se não estiver desabilitado */
+.paginacao button:hover:not(:disabled) {
+  background-color: #1e4bb8; /* sombra mais escura do azul primário */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* Estado desabilitado */
+.paginacao button:disabled {
+  background-color: var(--secondary-button-color);
+  color: var(--secondary-text-color);
+  cursor: not-allowed;
+  box-shadow: none;
+  opacity: 0.7;
+}
+
+/* 1) Garanta que o container geral não ultrapasse os limites */
+.historico-container {
+  display: flex;
+  flex-direction: column;
+  height: 80%;        /* já definido por você */
+  overflow: hidden;    /* impede que footer vaze para fora */
+}
+
+/* 2) Corpo cresce e ganha scroll interno */
+.historico-container__body {
+  flex: 1;                /* ocupa tudo entre header e footer */
+  overflow-y: auto;       /* scroll só aqui */
+  padding: 24px;          /* seus gutters originais */
+  padding-bottom: 100px;  /* espaço extra para “cabe o footer” */
+  position: relative;
+}
+
+/* 3) Footer “gruda” embaixo, sem participar do scroll do body */
+.historico-container__footer {
+  flex-shrink: 0;               /* nunca encolhe */
+  padding: 16px 24px;
+  background: var(--primary-font-color);
+  border-top: 1px solid var(--border-color);
+  box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+}
+
+/* 4) Botões do footer, alinhados e com estilo consistente */
+.historico-container__footer--botoes-criacao {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+.historico-container__footer .btn {
+  flex: 1;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  border-radius: var(--border-radius-value);
+  transition: transform 0.15s ease;
+}
+
+.historico-container__footer .btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Se quiser botões menores */
+.historico-container__footer .btn {
+  max-width: 120px;
+}
+
+/* garante que o wrapper ocupe todo o espaço disponível */
+.historico-container__tabela-wrapper {
+  width: 100%;               /* se ainda não estiver assim */
+  box-sizing: border-box;    /* inclui bordas/padding no cálculo */
+}
+
+/* faz a tabela sempre ter a largura do wrapper */
+.tabela-container__table,
+.historico-container__tabela-wrapper > table {
+  width: 100%;               /* usa todo o “100%” do pai */
+  max-width: 100%;           /* não ultrapassa o pai */
+  table-layout: fixed;       /* colunas se ajustam uniformemente */
+}
+
+.tabela-container__table th,
+.tabela-container__table td {
+  word-break: break-word;
 }

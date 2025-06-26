@@ -14,7 +14,7 @@ interface SidebarProps {
 export default function Sidebar({ open, onClose, onReset }: SidebarProps) {
 
   const [fotoPerfil, setFotoPerfil] = useState<File | null>(null);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [previewImage, setPreviewImage] = useState<string>(avatarImg);
 
 
   const [form, setForm] = useState({
@@ -103,13 +103,16 @@ export default function Sidebar({ open, onClose, onReset }: SidebarProps) {
       reader.onerror = reject;
     });
 
+    console.log({ previewImage });
+    console.log('avatarImg →', avatarImg);
+
   return (
     <>
       <aside className={`sidebar ${open ? 'open' : ''}`}>
         <div className="sidebar__profile">
           <label htmlFor="profile-pic-input">
             <img
-              src={previewImage || avatarImg}
+              src={previewImage}
               alt="Foto de perfil"
               className="profile-img-clickable"
               title="Clique para mudar a foto"
